@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>Tasks</title>
+    <meta charset="UTF-8">
+
+    <style>
+        body {
+            margin: 0;
+            overflow-x: hidden;
+            font-family: Arial, sans-serif;
+            background: white;
+        }
+
+        .menu-global {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            font-size: 22px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 1500;
+            padding: 8px 10px;
+            border-radius: 8px;
+        }
+
+        .menu-global:hover {
+            background: #f5f5f5;
+        }
+
+        .page-content {
+            flex: 1;
+            padding: 30px;
+            padding-left: 70px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .tasks-container {
+            width: 100%;
+            max-width: 620px;
+        }
+
+        .top-links {
+            margin-bottom: 22px;
+        }
+
+        .top-links a {
+            text-decoration: none;
+            color: black;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .top-links a:hover {
+            text-decoration: underline;
+        }
+
+        .task-block {
+            padding: 18px 0;
+            border-bottom: 1px solid #e6e6e6;
+        }
+
+        .task-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 18px;
+            width: 100%;
+        }
+
+        .task-left {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .task-content {
+            flex: 1;
+            min-width: 0;
+            max-width: 430px;
+        }
+
+        .task-title {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+
+        .task-title.done {
+            color: gray;
+        }
+
+        .task-title.active {
+            font-weight: bold;
+            color: #111;
+        }
+
+        .task-desc {
+            margin-top: 5px;
+            line-height: 1.5;
+            color: #444;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            font-size: 14px;
+        }
+
+        .task-desc.done {
+            color: gray;
+        }
+
+        .task-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .priority-label,
+        .category-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+        }
+
+        .priority-label {
+            color: #555;
+        }
+
+        .category-label {
+            color: #888;
+        }
+
+        .priority-dot,
+        .category-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .task-date {
+            font-size: 13px;
+            color: #555;
+        }
+
+        .task-date.done {
+            color: gray;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 12px;
+            flex-shrink: 0;
+            align-items: flex-start;
+            white-space: nowrap;
+            padding-top: 2px;
+        }
+
+        .task-actions a {
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .task-actions a:hover {
+            opacity: 0.75;
+        }
+
+        .desc-short,
+        .desc-full {
+            display: inline;
+        }
+
+        .desc-full {
+            display: none;
+        }
+
+        .more-btn {
+            color: #666;
+            cursor: pointer;
+            font-size: 13px;
+            margin-left: 6px;
+            text-decoration: underline;
+        }
+
+        .more-btn:hover {
+            color: black;
+        }
+
+        .task-checkbox {
+            margin-top: 2px;
+            width: 17px;
+            height: 17px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        #sidebar a {
+            text-decoration: none;
+            color: black;
+        }
+
+        #sidebar a:hover {
+            text-decoration: underline;
+        }
+
+        .empty-state {
+            color: #666;
+            font-size: 15px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<button class="menu-global" onclick="toggleSidebar()">
+    <i class="fa-solid fa-bars"></i>
+</button>
+
+<div style="display:flex; min-height:100vh; position:relative;">
+
+    <div id="sidebar"
+         style="width:220px; background:#f5f5f5; min-height:100vh;
+         padding:20px; box-sizing:border-box; position:fixed; top:0; left:0;
+         transform:translateX(-100%); transition:transform 0.3s ease; z-index:3000;">
+
+        <h3 style="margin-top:45px;">Menu</h3>
+
+        <div style="margin-top:20px;">
+            <a href="/tasks">
+                <i class="fa-solid fa-list"></i> All Tasks
+            </a>
+        </div>
+
+        <div style="margin-top:15px;">
+            <a href="/priorities">
+                <i class="fa-solid fa-filter"></i> Filter by priority
+            </a>
+        </div>
+
+        <div style="margin-top:15px;">
+            <a href="/categories">
+                <i class="fa-solid fa-layer-group"></i> Categories
+            </a>
+        </div>
+
+        <div style="margin-top:15px;">
+            <a href="/upcoming">
+                <i class="fa-solid fa-calendar"></i> Upcoming
+            </a>
+        </div>
+    </div>
+
+    <div id="overlay"
+         onclick="toggleSidebar()"
+         style="display:none; position:fixed; top:0; left:0; width:100%;
+         height:100%; background:rgba(0,0,0,0.2); z-index:2000;">
+    </div>
+
+    <div class="page-content">
+
+        <div class="tasks-container">
+
+            <h1 th:text="${pageTitle != null ? pageTitle : (currentPriority != null ? 'Tasks - ' + currentPriority : 'All Tasks')}"></h1>
+
+            <div class="top-links">
+                <a href="/tasks/new" th:if="${showAddButton}">+ Add task</a>
+                <a th:if="${showBackToTasks}"
+                   th:href="${backUrl}"
+                   style="display:inline-flex; align-items:center; justify-content:center;
+                      width:36px; height:36px; border-radius:50%;
+                      text-decoration:none; color:black;
+                      margin-bottom:15px; transition:0.2s;"
+                   onmouseover="this.style.background='#f0f0f0'"
+                   onmouseout="this.style.background='transparent'">
+
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+            </div>
+
+            <div th:if="${#lists.isEmpty(tasks)}" class="empty-state">
+                <p>No tasks yet</p>
+            </div>
+
+            <div th:if="${!#lists.isEmpty(tasks)}">
+
+                <div th:each="task : ${tasks}" class="task-block">
+
+                    <div class="task-row">
+
+                        <div class="task-left">
+
+                            <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post" style="margin:0;">
+                                <input type="hidden" name="priority" th:value="${currentPriority}" />
+                                <input type="hidden" name="category" th:value="${currentCategory}" />
+                                <input type="checkbox"
+                                       class="task-checkbox"
+                                       th:checked="${task.done}"
+                                       onchange="this.form.submit()" />
+                            </form>
+
+                            <div class="task-content">
+
+                                <div th:class="${task.done} ? 'task-title done' : 'task-title active'"
+                                     th:text="${task.title}">
+                                </div>
+
+                                <div th:if="${task.description != null and !#strings.isEmpty(task.description)}"
+                                     th:class="${task.done} ? 'task-desc done' : 'task-desc'">
+
+                                    <span th:if="${task.description.length() > 90}">
+                                        <span class="desc-short"
+                                              th:text="${task.description.substring(0,90)}"></span>...
+                                        <span class="more-btn" onclick="toggleDesc(this)">More</span>
+                                        <span class="desc-full"
+                                              th:text="${task.description}"></span>
+                                    </span>
+
+                                    <span th:if="${task.description.length() <= 90}"
+                                          th:text="${task.description}">
+                                    </span>
+
+                                </div>
+
+                                <div class="task-meta-row">
+
+                                    <div class="priority-label" th:if="${task.priority != null}">
+                                        <span class="priority-dot"
+                                              th:style="${
+                                                  task.priority == 'P1' ? 'background:red;' :
+                                                  (task.priority == 'P2' ? 'background:#ff8800;' :
+                                                  (task.priority == 'P3' ? 'background:#f4f128;' :
+                                                  'background:gray;'))
+                                              }">
+                                        </span>
+                                        <span th:text="${task.priority}"></span>
+                                    </div>
+
+                                    <div class="category-label" th:if="${task.category != null and !#strings.isEmpty(task.category)}">
+                                        <span class="category-dot"
+                                              th:style="${
+                                                  task.category == 'Work' ? 'background:#4a90e2;' :
+                                                  (task.category == 'Study' ? 'background:#9b59b6;' :
+                                                  (task.category == 'Personal' ? 'background:#ff6fa5;' :
+                                                  (task.category == 'Shopping' ? 'background:#2ecc71;' :
+                                                  'background:#cfcfcf;')))
+                                              }">
+                                        </span>
+                                        <span th:text="${task.category}"></span>
+                                    </div>
+
+                                    <div th:if="${task.dueDate != null}"
+                                         th:class="${task.done} ? 'task-date done' : 'task-date'">
+                                        <i class="fa-regular fa-calendar"></i>
+                                        <span th:text="${task.formattedDueDate}"></span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="task-actions">
+
+                            <a th:href="@{/tasks/edit/{id}(id=${task.id}, priority=${currentPriority}, category=${currentCategory})}"
+                               th:style="${task.done} ? 'color:gray; pointer-events:none; cursor:not-allowed;' : 'color:black;'">
+                                <i class="fa-solid fa-pen"></i>
+                            </a>
+
+                            <a th:href="@{/tasks/delete/{id}(id=${task.id}, priority=${currentPriority}, category=${currentCategory})}"
+                               style="color:black;">
+                                <i class="fa-solid fa-xmark"></i>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    function toggleSidebar() {
+        var sidebar = document.getElementById("sidebar");
+        var overlay = document.getElementById("overlay");
+
+        if (sidebar.style.transform === "translateX(0%)") {
+            sidebar.style.transform = "translateX(-100%)";
+            overlay.style.display = "none";
+        } else {
+            sidebar.style.transform = "translateX(0%)";
+            overlay.style.display = "block";
+        }
+    }
+
+    function toggleDesc(el) {
+        var parent = el.parentElement;
+        var shortText = parent.querySelector(".desc-short");
+        var fullText = parent.querySelector(".desc-full");
+
+        if (fullText.style.display === "inline") {
+            fullText.style.display = "none";
+            shortText.style.display = "inline";
+            el.innerText = "More";
+        } else {
+            fullText.style.display = "inline";
+            shortText.style.display = "none";
+            el.innerText = "Less";
+        }
+    }
+</script>
+
+</body>
+</html>

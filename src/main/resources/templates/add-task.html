@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <title>Add Task</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: rgba(0, 0, 0, 0.25);
+        }
+
+        .modal-page {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-card {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+            padding: 24px;
+            box-sizing: border-box;
+        }
+
+        .modal-title {
+            margin: 0 0 20px 0;
+            text-align: center;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .error {
+            color: red;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .counter {
+            font-size: 13px;
+            color: gray;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .save-btn,
+        .cancel-btn {
+            flex: 1;
+            text-align: center;
+            padding: 11px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 15px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .save-btn {
+            background: black;
+            color: white;
+        }
+
+        .cancel-btn {
+            background: #f2f2f2;
+            color: black;
+        }
+
+        .save-btn:hover {
+            opacity: 0.92;
+        }
+
+        .cancel-btn:hover {
+            background: #e6e6e6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="modal-page">
+    <div class="modal-card">
+        <h1 class="modal-title">Add Task</h1>
+
+        <form th:action="@{/tasks}" th:object="${task}" method="post">
+            <input type="hidden" th:field="*{id}" />
+
+            <input type="hidden" name="source" th:value="${source}" />
+            <input type="hidden" name="startDate" th:value="${startDate}" />
+            <input type="hidden" name="targetDate" th:value="${targetDate}" />
+            <input type="hidden" name="priorityFilter" th:value="${currentPriority}" />
+            <input type="hidden" name="currentCategory" th:value="${currentCategory}" />
+
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" th:field="*{title}">
+                <div class="error"
+                     th:if="${#fields.hasErrors('title')}"
+                     th:errors="*{title}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea th:field="*{description}" maxlength="300" id="description"></textarea>
+
+                <div id="desc-counter" class="counter">0 / 300</div>
+
+                <div class="error"
+                     th:if="${#fields.hasErrors('description')}"
+                     th:errors="*{description}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Due Date</label>
+
+                <input type="date"th:if="${source == 'upcoming'}"
+                       th:value="${#temporals.format(task.dueDate, 'yyyy-MM-dd')}"
+                       readonly />
+
+                <input type="hidden"
+                       th:if="${source == 'upcoming'}"
+                       th:field="*{dueDate}" />
+
+                <input type="date"
+                       th:if="${source != 'upcoming'}"
+                       th:field="*{dueDate}" />
+            </div>
+
+            <div class="form-group">
+                <label>Priority</label>
+                <select th:field="*{priority}">
+                    <option value="">Select priority</option>
+                    <option value="P1">P1</option>
+                    <option value="P2">P2</option>
+                    <option value="P3">P3</option>
+                    <option value="P4">P4</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+                <select th:field="*{category}">
+                    <option value="">No category</option>
+                    <option value="Work">Work</option>
+                    <option value="Study">Study</option>
+                    <option value="Personal">Personal</option>
+                    <option value="Shopping">Shopping</option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="save-btn">Save</button>
+                <a href="javascript:history.back()" class="cancel-btn">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const desc = document.getElementById("description");
+    const counter = document.getElementById("desc-counter");
+
+    if (desc && counter) {
+        function updateCounter() {
+            counter.textContent = desc.value.length + " / 300";
+        }
+
+        desc.addEventListener("input", updateCounter);
+        updateCounter();
+    }
+</script>
+
+</body>
+</html>

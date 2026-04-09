@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <title>Priorities</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: white;
+        }
+
+        .container {
+            width: 550px;
+            margin: 50px auto;
+        }
+
+        .priority-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            height: 72px;
+            width: 100%;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 14px;
+            text-decoration: none;
+            font-size: 20px;
+            color: black;
+            background: white;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            transition: 0.2s;
+        }
+
+        .priority-btn:hover {
+            background-color: #f8f8f8;
+        }
+
+        .p1 { border-left: 8px solid red; }
+        .p2 { border-left: 8px solid #ff8800; }
+        .p3 { border-left: 8px solid #f4f128; }
+        .p4 { border-left: 8px solid gray; }
+
+        /* ✅ زر menu ثابت */
+        .menu-global {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            font-size: 22px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 1100;
+            padding: 8px 10px;
+            border-radius: 8px;
+        }
+
+        .menu-global:hover {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ✅ MENU BUTTON -->
+<button class="menu-global" onclick="toggleSidebar()">
+    <i class="fa-solid fa-bars"></i>
+</button>
+
+<div style="display:flex; min-height:100vh; position:relative;">
+
+    <!-- SIDEBAR -->
+    <div id="sidebar" style="width:220px; background:#f5f5f5; min-height:100vh; padding:20px; box-sizing:border-box; position:fixed; top:0; left:0; transform:translateX(-100%); transition:0.3s; z-index:2000;">
+        <h3 style="margin-top:45px;">Menu</h3>
+
+        <div style="margin-top:20px;">
+            <a href="/tasks" style="text-decoration:none; color:black;">
+                <i class="fa-solid fa-list"></i> All Tasks
+            </a>
+        </div>
+
+        <div style="margin-top:15px;">
+            <a href="/priorities" style="text-decoration:none; color:black;">
+                <i class="fa-solid fa-filter"></i> Filter by priority
+            </a>
+        </div>
+
+        <div style="margin-top:15px;">
+            <a href="/categories" style="text-decoration:none; color:black;">
+                <i class="fa-solid fa-layer-group"></i> Categories
+            </a>
+        </div>
+
+        <div style="margin-top:15px;">
+            <a href="/upcoming" style="text-decoration:none; color:black;">
+                <i class="fa-solid fa-calendar"></i> Upcoming
+            </a>
+        </div>
+    </div>
+
+    <!-- OVERLAY -->
+    <div id="overlay" onclick="toggleSidebar()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.2); z-index:1500;"></div>
+
+    <!-- CONTENT -->
+    <div style="flex:1; padding:30px; width:100%; padding-left:70px; box-sizing:border-box;">
+
+        <div class="container">
+
+            <h1 style="font-size:36px; text-align:center; margin-bottom:30px;">Priority</h1>
+
+            <a th:href="@{/tasks/priority/{p}(p='P1')}" class="priority-btn p1">
+                <i class="fa-solid fa-flag" style="color:red;"></i> Priority 1
+            </a>
+
+            <a th:href="@{/tasks/priority/{p}(p='P2')}" class="priority-btn p2">
+                <i class="fa-solid fa-flag" style="color:#ff8800;"></i> Priority 2
+            </a>
+
+            <a th:href="@{/tasks/priority/{p}(p='P3')}" class="priority-btn p3">
+                <i class="fa-solid fa-flag" style="color:#f4f128;"></i> Priority 3
+            </a>
+
+            <a th:href="@{/tasks/priority/{p}(p='P4')}" class="priority-btn p4">
+                <i class="fa-solid fa-flag" style="color:gray;"></i> Priority 4
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    function toggleSidebar() {
+        var sidebar = document.getElementById("sidebar");
+        var overlay = document.getElementById("overlay");
+
+        if (sidebar.style.transform === "translateX(0%)") {
+            sidebar.style.transform = "translateX(-100%)";
+            overlay.style.display = "none";
+        } else {
+            sidebar.style.transform = "translateX(0%)";
+            overlay.style.display = "block";
+        }
+    }
+</script>
+
+</body>
+</html>

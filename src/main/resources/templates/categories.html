@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <title>Categories</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: white;
+            margin: 0;
+        }
+
+        .container {
+            width: 550px;
+            margin: 50px auto;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .category-card {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: black;
+            border: 1px solid #ddd;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            height: 72px;
+            background: white;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+
+        .category-card:hover {
+            box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+        }
+
+        .color-bar {
+            width: 8px;
+            height: 100%;
+        }
+
+        .category-title {
+            flex: 1;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .menu-global {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            font-size: 22px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 1100;
+            padding: 8px 10px;
+            border-radius: 8px;
+        }
+
+        .menu-global:hover {
+            background: #f5f5f5;
+        }
+
+        /* COLORS */
+        .work { background-color: #4a90e2; }
+        .study { background-color: #9b59b6; }
+        .personal { background-color: #ff6fa5; }
+        .shopping { background-color: #2ecc71; }
+    </style>
+</head>
+
+<body>
+
+<!-- MENU BUTTON IN FAR LEFT -->
+<button class="menu-global" onclick="toggleSidebar()">
+    <i class="fa-solid fa-bars"></i>
+</button>
+
+<div style="display:flex; min-height:100vh; position:relative;">
+
+    <!-- SIDEBAR -->
+    <div id="sidebar" style="width:220px; background:#f5f5f5; min-height:100vh; padding:20px; box-sizing:border-box; position:fixed; top:0; left:0; transform:translateX(-100%); transition:0.3s; z-index:2000;">
+        <h3 style="margin-top:45px;">Menu</h3>
+
+        <div style="margin-top:20px;">
+            <a href="/tasks" style="text-decoration:none; color:black;">
+                <i class="fa-solid fa-list"></i> All Tasks
+            </a>
+        </div>
+
+        <div style="margin-top:15px;">
+            <a href="/priorities" style="text-decoration:none; color:black;">
+                <i class="fa-solid fa-filter"></i> Filter by priority
+            </a>
+        </div>
+
+        <div style="margin-top:15px;">
+            <a href="/categories" style="text-decoration:none; color:black;">
+                <i class="fa-solid fa-layer-group"></i> Categories
+            </a>
+        </div>
+
+        <div style="margin-top:15px;">
+            <a href="/upcoming" style="text-decoration:none; color:black;">
+                <i class="fa-solid fa-calendar"></i> Upcoming
+            </a>
+        </div>
+    </div>
+
+    <!-- OVERLAY -->
+    <div id="overlay" onclick="toggleSidebar()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.2); z-index:1500;"></div>
+
+    <!-- CONTENT -->
+    <div style="flex:1; padding:30px; width:100%; padding-left:70px; box-sizing:border-box;">
+
+        <div class="container">
+
+            <h1>Categories</h1>
+
+            <!-- Categories -->
+            <a href="/tasks/category/Work" class="category-card">
+                <div class="color-bar work"></div>
+                <div class="category-title">Work</div>
+            </a>
+
+            <a href="/tasks/category/Study" class="category-card">
+                <div class="color-bar study"></div>
+                <div class="category-title">Study</div>
+            </a>
+
+            <a href="/tasks/category/Personal" class="category-card">
+                <div class="color-bar personal"></div>
+                <div class="category-title">Personal</div>
+            </a>
+
+            <a href="/tasks/category/Shopping" class="category-card">
+                <div class="color-bar shopping"></div>
+                <div class="category-title">Shopping</div>
+            </a>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function toggleSidebar() {
+        var sidebar = document.getElementById("sidebar");
+        var overlay = document.getElementById("overlay");
+
+        if (sidebar.style.transform === "translateX(0%)") {
+            sidebar.style.transform = "translateX(-100%)";
+            overlay.style.display = "none";
+        } else {
+            sidebar.style.transform = "translateX(0%)";
+            overlay.style.display = "block";
+        }
+    }
+</script>
+
+</body>
+</html>

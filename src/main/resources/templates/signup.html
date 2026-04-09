@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            background: #f5f5f5;
+        }
+        .container-box {
+            max-width: 900px;
+            margin: 80px auto;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .left, .right {
+            padding: 40px;
+            width: 50%;
+        }
+        .left {
+            background: #7c2a49;
+            color: white;
+            text-align: center;
+        }
+        .custom-input .input-group-text {
+            background: white;
+            border-right: 1px solid #ddd;
+        }
+
+        .custom-input .form-control {
+            border-left: none;
+        }
+
+        .custom-input {
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+
+        .custom-input input:focus {
+            box-shadow: none;
+        }
+        .btn-custom {
+            background-color: #7c2a49;
+            color: white;
+            border: none;
+            transition: 0.3s;
+
+            /* Glow */
+            box-shadow: 0 0 10px #7c2a49,
+            0 0 20px #7c2a49;
+        }
+
+        .btn-custom:hover {
+            background-color: #7c2a49;
+            color: white;
+
+            /* Stronger glow on hover */
+            box-shadow: 0 0 20px #7c2a49,
+            0 0 40px #7c2a49,
+            0 0 60px #7c2a49;
+        }
+        .container-box {
+            max-width: 900px;
+            margin: 80px auto;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+
+            /* Neon Glow */
+            box-shadow:
+                    0 0 10px #7c2a49,
+                    0 0 25px #7c2a49,
+                    0 0 50px #7c2a49;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container-box">
+
+    <!-- LEFT (LOGIN LINK) -->
+    <div class="left">
+        <br>
+        <br>
+        <br>
+        <h3 class="mb-4">Let’s Get Started!</h3>
+        <p class="mb-4">Already have an account?</p>
+        <a href="/login" class="btn btn-light">Log In</a>
+    </div>
+
+    <!-- RIGHT (SIGN UP FORM) -->
+    <div class="right">
+        <h3>Create Account</h3>
+
+        <form action="/signup" method="post">
+            <!-- NAME -->
+            <div class="input-group mb-3 custom-input">
+    <span class="input-group-text">
+        <i class="bi bi-person"></i>
+    </span>
+                <input type="text" class="form-control" placeholder="Enter your name" name="name">
+            </div>
+
+            <!-- EMAIL -->
+            <div class="input-group mb-3 custom-input">
+    <span class="input-group-text">
+        <i class="bi bi-envelope"></i>
+    </span>
+                <input type="email" class="form-control" placeholder="Enter your email" name="email">
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="input-group mb-3 custom-input">
+    <span class="input-group-text">
+        <i class="bi bi-lock"></i>
+    </span>
+                <input type="password" class="form-control" placeholder="Create a password" name="password">
+            </div>
+
+            <button class="btn btn-custom w-100">Create Account</button>
+        </form>
+
+        <div class="text-center mt-3">
+
+            <p class="mb-2">or login with</p>
+
+            <a href="/google-login" class="btn btn-custom">
+                <i class="bi bi-google"></i> Google
+            </a>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
