@@ -22,7 +22,7 @@ public class TaskService {
     }
 
     public List<Task> getAllTasks() {
-        return taskRepository.findAllByOrderByDoneAsc();
+        return taskRepository.findAllByOrderByDoneAscIdDesc();
     }
 
     public Task saveTask(Task task) {

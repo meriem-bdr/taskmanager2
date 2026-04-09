@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    List<Task> findAllByOrderByDoneAsc();
+    List<Task> findAllByOrderByDoneAscIdDesc();
 
     List<Task> findByPriorityOrderByDoneAsc(String priority);
 

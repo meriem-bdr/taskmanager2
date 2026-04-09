@@ -488,15 +488,63 @@
                     No tasks for this day
                 </div>
 
-                <a th:href="@{/tasks/new(
-                        dueDate=${weekDates[stat.index]},
-                        source='upcoming',
-                        startDate=${currentStartDate},
-                        targetDate=${weekDates[stat.index]}
-                   )}"
-                   class="add-task-link">
+                <a href="javascript:void(0)"
+                   class="add-task-link"
+                   th:attr="onclick='toggleInlineTaskForm(\'upcomingForm' + ${stat.index} + '\')'">
                     <span class="plus-sign">+</span> Add task
                 </a>
+
+                <div th:id="'upcomingForm' + ${stat.index}"
+                     style="display:none; margin-top:14px; margin-bottom:16px; padding:18px; border:1px solid #e6e6e6; border-radius:12px; background:#fafafa;">
+
+                    <form th:action="@{/tasks}" th:object="${task}" method="post">
+                        <input type="hidden" name="source" value="upcoming">
+                        <input type="hidden" name="startDate" th:value="${currentStartDate}">
+                        <input type="hidden" name="targetDate" th:value="${weekDates[stat.index]}">
+
+                        <div style="margin-bottom:12px;">
+                            <input type="text" th:field="*{title}" placeholder="Task title"
+                                   style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; box-sizing:border-box;" required>
+                        </div>
+
+                        <div style="margin-bottom:12px;">
+                            <input type="text" th:field="*{description}" placeholder="Description"
+                                   style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; box-sizing:border-box;">
+                        </div>
+
+                        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+                            <input type="date" name="dueDate" th:value="${weekDates[stat.index]}"
+                                   style="padding:10px; border:1px solid #ddd; border-radius:8px;">
+
+                            <select th:field="*{priority}"
+                                    style="padding:10px; border:1px solid #ddd; border-radius:8px;">
+                                <option value="">Priority</option>
+                                <option value="P1">P1</option>
+                                <option value="P2">P2</option>
+                                <option value="P3">P3</option>
+                                <option value="P4">P4</option>
+                            </select>
+
+                            <select th:field="*{category}"
+                                    style="padding:10px; border:1px solid #ddd; border-radius:8px;">
+                                <option value="">Category</option>
+                                <option value="Work">Work</option>
+                                <option value="Study">Study</option>
+                                <option value="Personal">Personal</option>
+                                <option value="Shopping">Shopping</option>
+                            </select>
+                        </div>
+
+                        <div style="display:flex; gap:10px;">
+                            <button type="submit" style="padding:10px 16px; border:none; background:black; color:white; border-radius:8px; cursor:pointer;">Save</button>
+                            <button type="button"
+                                    th:attr="onclick='toggleInlineTaskForm(\'upcomingForm' + ${stat.index} + '\')'"
+                                    style="padding:10px 16px; border:1px solid #ddd; background:white; border-radius:8px; cursor:pointer;">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
 
                 <hr class="section-line">
             </div>
@@ -533,6 +581,14 @@
             fullText.style.display = "inline";
             shortText.style.display = "none";
             el.innerText = "Less";
+        }
+    }
+    function toggleInlineTaskForm(id) {
+        var form = document.getElementById(id);
+        if (form.style.display === "none" || form.style.display === "") {
+            form.style.display = "block";
+        } else {
+            form.style.display = "none";
         }
     }
 </script>

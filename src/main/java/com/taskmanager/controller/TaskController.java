@@ -27,6 +27,7 @@ public class TaskController {
     public String getAllTasks(Model model,
                               @RequestParam(required = false) String scrollPos) {
         model.addAttribute("tasks", taskService.getAllTasks());
+        model.addAttribute("task", new Task());
         model.addAttribute("showAddButton", true);
         model.addAttribute("showBackToTasks", false);
         model.addAttribute("backUrl", "/tasks");
@@ -47,6 +48,7 @@ public class TaskController {
                                      @RequestParam(required = false) String scrollPos,
                                      Model model) {
         model.addAttribute("tasks", taskService.getTasksByPriority(priority));
+        model.addAttribute("task", new Task());
         model.addAttribute("showAddButton", false);
         model.addAttribute("showBackToTasks", true);
         model.addAttribute("backUrl", "/priorities");
@@ -233,7 +235,7 @@ public class TaskController {
         model.addAttribute("nextWeekStart", nextWeekStart);
         model.addAttribute("currentStartDate", startDate);
         model.addAttribute("today", today);
-
+        model.addAttribute("task", new Task());
         return "upcoming";
     }
 
@@ -247,6 +249,7 @@ public class TaskController {
                                      @RequestParam(required = false) String scrollPos,
                                      Model model) {
         model.addAttribute("tasks", taskService.getTasksByCategory(category));
+        model.addAttribute("task", new Task());
         model.addAttribute("showAddButton", false);
         model.addAttribute("showBackToTasks", true);
         model.addAttribute("backUrl", "/categories");

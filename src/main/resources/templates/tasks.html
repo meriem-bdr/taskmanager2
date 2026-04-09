@@ -60,6 +60,57 @@
             text-decoration: underline;
         }
 
+        .inline-task-form {
+            display: none;
+            margin-bottom: 20px;
+            padding: 18px;
+            border: 1px solid #e6e6e6;
+            border-radius: 12px;
+            background: #fafafa;
+        }
+
+        .inline-task-form input,
+        .inline-task-form select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        .inline-task-form .full-input {
+            width: 100%;
+        }
+
+        .inline-task-form .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .inline-task-form .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .save-btn {
+            padding: 10px 16px;
+            border: none;
+            background: black;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .cancel-btn {
+            padding: 10px 16px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
         .task-block {
             padding: 18px 0;
             border-bottom: 1px solid #e6e6e6;
@@ -123,7 +174,6 @@
             margin-top: 8px;
             flex-wrap: wrap;
         }
-
         .priority-label,
         .category-label {
             display: inline-flex;
@@ -274,18 +324,57 @@
             <h1 th:text="${pageTitle != null ? pageTitle : (currentPriority != null ? 'Tasks - ' + currentPriority : 'All Tasks')}"></h1>
 
             <div class="top-links">
-                <a href="/tasks/new" th:if="${showAddButton}">+ Add task</a>
+                <a href="javascript:void(0)" th:if="${showAddButton}" onclick="toggleInlineTaskForm('tasksInlineForm')">+ Add task</a>
+
                 <a th:if="${showBackToTasks}"
                    th:href="${backUrl}"
-                   style="display:inline-flex; align-items:center; justify-content:center;
-                      width:36px; height:36px; border-radius:50%;
+                   style="display:inline-flex; align-items:center; justify-content:center;width:36px; height:36px; border-radius:50%;
                       text-decoration:none; color:black;
                       margin-bottom:15px; transition:0.2s;"
                    onmouseover="this.style.background='#f0f0f0'"
                    onmouseout="this.style.background='transparent'">
-
                     <i class="fa-solid fa-arrow-left"></i>
                 </a>
+            </div>
+
+            <div id="tasksInlineForm" class="inline-task-form">
+                <form th:action="@{/tasks}" th:object="${task}" method="post">
+                    <input type="hidden" name="priorityFilter" th:value="${currentPriority}">
+                    <input type="hidden" name="currentCategory" th:value="${currentCategory}">
+
+                    <div style="margin-bottom:12px;">
+                        <input type="text" th:field="*{title}" placeholder="Task title" class="full-input" required>
+                    </div>
+
+                    <div style="margin-bottom:12px;">
+                        <input type="text" th:field="*{description}" placeholder="Description" class="full-input">
+                    </div>
+
+                    <div class="row">
+                        <input type="date" th:field="*{dueDate}">
+
+                        <select th:field="*{priority}">
+                            <option value="">Priority</option>
+                            <option value="P1">P1</option>
+                            <option value="P2">P2</option>
+                            <option value="P3">P3</option>
+                            <option value="P4">P4</option>
+                        </select>
+
+                        <select th:field="*{category}">
+                            <option value="">Category</option>
+                            <option value="Work">Work</option>
+                            <option value="Study">Study</option>
+                            <option value="Personal">Personal</option>
+                            <option value="Shopping">Shopping</option>
+                        </select>
+                    </div>
+
+                    <div class="actions">
+                        <button type="submit" class="save-btn">Save</button>
+                        <button type="button" class="cancel-btn" onclick="toggleInlineTaskForm('tasksInlineForm')">Cancel</button>
+                    </div>
+                </form>
             </div>
 
             <div th:if="${#lists.isEmpty(tasks)}" class="empty-state">
@@ -317,7 +406,6 @@
 
                                 <div th:if="${task.description != null and !#strings.isEmpty(task.description)}"
                                      th:class="${task.done} ? 'task-desc done' : 'task-desc'">
-
                                     <span th:if="${task.description.length() > 90}">
                                         <span class="desc-short"
                                               th:text="${task.description.substring(0,90)}"></span>...
@@ -395,7 +483,6 @@
     </div>
 
 </div>
-
 <script>
     function toggleSidebar() {
         var sidebar = document.getElementById("sidebar");
@@ -423,6 +510,15 @@
             fullText.style.display = "inline";
             shortText.style.display = "none";
             el.innerText = "Less";
+        }
+    }
+
+    function toggleInlineTaskForm(id) {
+        var form = document.getElementById(id);
+        if (form.style.display === "none" || form.style.display === "") {
+            form.style.display = "block";
+        } else {
+            form.style.display = "none";
         }
     }
 </script>
