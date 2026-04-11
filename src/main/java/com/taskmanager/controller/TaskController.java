@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -43,8 +42,12 @@ public class TaskController {
     @GetMapping("/today")
     public String showTodayTasks(Model model,
                                  @RequestParam(required = false) String scrollPos) {
+
+        Task task = new Task();
+        task.setDueDate(LocalDate.now());
+
         model.addAttribute("tasks", taskService.getTodayTasks());
-        model.addAttribute("task", new Task());
+        model.addAttribute("task", task);
         model.addAttribute("showAddButton", true);
         model.addAttribute("showBackToTasks", false);
         model.addAttribute("backUrl", "/today");
@@ -53,9 +56,9 @@ public class TaskController {
         model.addAttribute("pageTitle", "Today");
         model.addAttribute("scrollPos", scrollPos);
         model.addAttribute("currentSource", "today");
+
         return "tasks";
     }
-
     @GetMapping("/priorities")
     public String showPrioritiesPage() {
         return "priorities";
