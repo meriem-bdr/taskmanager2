@@ -25,8 +25,26 @@ public class TaskController {
 
     @GetMapping("/tasks")
     public String getAllTasks(Model model,
-                              @RequestParam(required = false) String scrollPos) {
-        model.addAttribute("tasks", taskService.getAllTasks());
+                              @RequestParam(required = false) String scrollPos,
+                              @RequestParam(required = false) String sort) {
+
+        List<Task> tasks;
+
+        if ("oldest".equals(sort)) {
+            tasks = taskService.getTasksOldestFirst();
+        } else if ("priority".equals(sort)) {
+            tasks = taskService.getTasksByPriorityOrder();
+        } else if ("az".equals(sort)) {
+            tasks = taskService.getTasksAlphabetically();
+        } else if ("dueDate".equals(sort)) {
+            tasks = taskService.getTasksByNearestDueDate();
+        } else if ("overdue".equals(sort)) {
+            tasks = taskService.getOverdueTasks();
+        } else {
+            tasks = taskService.getTasksNewestFirst();
+        }
+
+        model.addAttribute("tasks", tasks);
         model.addAttribute("task", new Task());
         model.addAttribute("showAddButton", true);
         model.addAttribute("showBackToTasks", false);
@@ -35,7 +53,8 @@ public class TaskController {
         model.addAttribute("currentCategory", null);
         model.addAttribute("pageTitle", "All Tasks");
         model.addAttribute("scrollPos", scrollPos);
-        model.addAttribute("currentSource", "tasks");
+        model.addAttribute("currentSort", sort);
+
         return "tasks";
     }
 
@@ -86,6 +105,8 @@ public class TaskController {
                               @RequestParam(required = false) String source,
                               @RequestParam(required = false) String startDate,
                               @RequestParam(required = false) String targetDate,
+                              @RequestParam(required = false) String sort,
+
                               Model model) {
         Task task = new Task();
 
@@ -109,6 +130,7 @@ public class TaskController {
                            @RequestParam(required = false) String source,
                            @RequestParam(required = false) String startDate,
                            @RequestParam(required = false) String targetDate,
+                           @RequestParam(required = false) String sort,
                            Model model) {
 
         if (result.hasErrors()) {
@@ -160,8 +182,11 @@ public class TaskController {
             return "redirect:/tasks/category/" + currentCategory;
         }
 
-        return "redirect:/tasks";
-    }
+        if (sort != null && !sort.isEmpty()) {
+            return "redirect:/tasks?sort=" + sort;
+        }
+
+        return "redirect:/tasks";    }
 
     @GetMapping("/tasks/delete/{id}")
     public String deleteTask(@PathVariable Long id,
@@ -169,7 +194,8 @@ public class TaskController {
                              @RequestParam(required = false) String category,
                              @RequestParam(required = false) String source,
                              @RequestParam(required = false) String startDate,
-                             @RequestParam(required = false) String targetDate) {
+                             @RequestParam(required = false) String targetDate,
+                             @RequestParam(required = false) String sort) {
 
         taskService.deleteTask(id);
 
@@ -199,8 +225,11 @@ public class TaskController {
             return "redirect:/tasks/priority/" + priority;
         }
 
-        return "redirect:/tasks";
-    }
+        if (sort != null && !sort.isEmpty()) {
+            return "redirect:/tasks?sort=" + sort;
+        }
+
+        return "redirect:/tasks";    }
 
     @GetMapping("/tasks/edit/{id}")
     public String showEditForm(@PathVariable Long id,
@@ -235,7 +264,8 @@ public class TaskController {
                              @RequestParam(required = false) String currentCategory,
                              @RequestParam(required = false) String source,
                              @RequestParam(required = false) String startDate,
-                             @RequestParam(required = false) String targetDate) {
+                             @RequestParam(required = false) String targetDate,
+                             @RequestParam(required = false) String sort) {
 
         Task existingTask = taskService.getTaskById(id);
 
@@ -280,8 +310,11 @@ public class TaskController {
             return "redirect:/tasks/priority/" + priorityFilter;
         }
 
-        return "redirect:/tasks";
-    }
+        if (sort != null && !sort.isEmpty()) {
+            return "redirect:/tasks?sort=" + sort;
+        }
+
+        return "redirect:/tasks";    }
 
     @PostMapping("/tasks/toggle/{id}")
     public String toggleTaskDone(@PathVariable Long id,
@@ -289,7 +322,8 @@ public class TaskController {
                                  @RequestParam(required = false) String category,
                                  @RequestParam(required = false) String source,
                                  @RequestParam(required = false) String startDate,
-                                 @RequestParam(required = false) String targetDate) {
+                                 @RequestParam(required = false) String targetDate,
+                                 @RequestParam(required = false) String sort) {
 
         taskService.toggleDone(id);
 
@@ -319,9 +353,12 @@ public class TaskController {
             return redirectUrl;
         }
 
+        if (sort != null && !sort.isEmpty()) {
+            return "redirect:/tasks?sort=" + sort;
+        }
+
         return "redirect:/tasks";
     }
-
     @GetMapping("/upcoming")
     public String showUpcoming(
             @RequestParam(value = "startDate", required = false)
@@ -387,4 +424,5 @@ public class TaskController {
     public void reorderTasks(@RequestBody List<Long> orderedIds) {
         taskService.reorderTasks(orderedIds);
     }
+
 }

@@ -85,7 +85,6 @@ public class TaskService {
     }
 
     public Map<String, List<Task>> getUpcomingTasksGroupedByDay(LocalDate startDate) {
-
         LocalDate endDate = startDate.plusDays(6);
 
         List<Task> tasks = taskRepository
@@ -127,7 +126,6 @@ public class TaskService {
 
     public List<Task> getTodayTasks() {
         LocalDate today = LocalDate.now();
-
         return getAllTasks()
                 .stream()
                 .filter(task -> task.getDueDate() != null && task.getDueDate().equals(today))
@@ -182,5 +180,112 @@ public class TaskService {
         }
 
         taskRepository.saveAll(tasks);
+    }
+
+    public List<Task> getTasksNewestFirst() {
+        List<Task> allTasks = taskRepository.findAllByOrderByIdDesc();
+        return sortUndoneAndKeepDoneLast(allTasks);
+    }
+
+    public List<Task> getTasksOldestFirst() {
+        List<Task> allTasks = taskRepository.findAllByOrderByIdAsc();
+        return sortUndoneAndKeepDoneLast(allTasks);
+    }
+
+    public List<Task> getTasksAlphabetically() {
+        List<Task> allTasks = taskRepository.findAllByOrderByTitleAsc();
+        return sortUndoneAndKeepDoneLast(allTasks);
+    }
+
+    public List<Task> getTasksByNearestDueDate() {
+        List<Task> allTasks = taskRepository.findAll();
+        LocalDate today = LocalDate.now();
+
+        List<Task> undoneUpcomingWithDate = allTasks.stream()
+                .filter(task -> !task.isDone())
+                .filter(task -> task.getDueDate() != null)
+                .filter(task -> !task.getDueDate().isBefore(today))
+                .sorted(Comparator.comparing(Task::getDueDate))
+                .toList();
+
+        List<Task> undoneWithoutDate = allTasks.stream()
+                .filter(task -> !task.isDone())
+                .filter(task -> task.getDueDate() == null)
+                .toList();
+
+        List<Task> doneTasks = allTasks.stream()
+                .filter(Task::isDone)
+                .toList();
+
+        List<Task> result = new ArrayList<>();
+        result.addAll(undoneUpcomingWithDate);
+        result.addAll(undoneWithoutDate);
+        result.addAll(doneTasks);
+
+        return result;
+    }
+    public List<Task> getTasksByPriorityOrder() {
+        List<Task> allTasks = taskRepository.findAll();
+
+        List<Task> undoneTasks = allTasks.stream()
+                .filter(task -> !task.isDone())
+                .sorted(Comparator.comparingInt(task -> priorityRank(task.getPriority())))
+                .toList();
+
+        List<Task> doneTasks = allTasks.stream()
+                .filter(Task::isDone)
+                .toList();
+
+        List<Task> result = new ArrayList<>();
+        result.addAll(undoneTasks);
+        result.addAll(doneTasks);
+
+        return result;
+    }
+
+    private List<Task> sortUndoneAndKeepDoneLast(List<Task> allTasks) {
+        List<Task> undoneTasks = allTasks.stream()
+                .filter(task -> !task.isDone())
+                .toList();
+
+        List<Task> doneTasks = allTasks.stream()
+                .filter(Task::isDone)
+                .toList();
+
+        List<Task> result = new ArrayList<>();
+        result.addAll(undoneTasks);
+        result.addAll(doneTasks);
+
+        return result;
+    }
+    private int priorityRank(String priority) {
+        if (priority == null) return 4;
+
+        return switch (priority) {
+            case "P1" -> 1;
+            case "P2" -> 2;
+            case "P3" -> 3;
+            default -> 4;
+        };
+    }
+    public List<Task> getOverdueTasks() {
+        LocalDate today = LocalDate.now();
+
+        List<Task> overdueTasks = taskRepository.findAll().stream()
+                .filter(task -> !task.isDone())
+                .filter(task -> task.getDueDate() != null)
+                .filter(task -> task.getDueDate().isBefore(today))
+                .sorted(Comparator.comparing(Task::getDueDate))
+                .toList();
+
+        List<Task> doneTasks = taskRepository.findAll().stream()
+                .filter(Task::isDone)
+                .toList();
+
+        List<Task> result = new ArrayList<>();
+        result.addAll(overdueTasks);
+        result.addAll(doneTasks);
+
+        return result;
     }
 }

@@ -557,6 +557,163 @@
                 width: 95vw !important;
             }
         }
+        .sort-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 18px;
+        }
+
+        .sort-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #e3e3e3;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .sort-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .sort-btn i {
+            font-size: 15px;
+            color: #222;
+        }
+
+        .sort-tooltip {
+            position: absolute;
+            top: 48px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #111;
+            color: white;
+            font-size: 12px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.2s;
+            z-index: 2000;
+        }
+
+        .sort-wrapper:hover .sort-tooltip {
+            opacity: 1;
+        }
+
+        .sort-menu {
+            display: none;
+            position: absolute;
+            top: 52px;
+            left: 0;
+            min-width: 190px;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            padding: 8px;
+            z-index: 2500;
+        }
+
+        .sort-menu a {
+            display: block;
+            text-decoration: none;
+            color: #111;
+            font-size: 14px;
+            padding: 10px 12px;
+            border-radius: 10px;
+        }
+
+        .sort-menu a:hover {
+            background: #f5f5f5;
+        }
+        .title-sort-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .sort-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 18px;
+        }
+
+        .sort-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #e3e3e3;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .sort-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .sort-btn i {
+            font-size: 15px;
+            color: #222;
+        }
+
+        .sort-tooltip {
+            position: absolute;
+            top: 48px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #111;
+            color: white;
+            font-size: 12px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.2s;
+            z-index: 2000;
+        }
+
+        .sort-wrapper:hover .sort-tooltip {
+            opacity: 1;
+        }
+
+        .sort-menu {
+            display: none;
+            position: absolute;
+            top: 52px;
+            right: 0;
+            min-width: 190px;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            padding: 8px;
+            z-index: 2500;
+        }
+
+        .sort-menu a {
+            display: block;
+            text-decoration: none;
+            color: #111;
+            font-size: 14px;
+            padding: 10px 12px;
+            border-radius: 10px;
+        }
+
+        .sort-menu a:hover {
+            background: #f5f5f5;
+        }
     </style>
 </head>
 
@@ -605,7 +762,27 @@
     <div class="page-content">
         <div class="tasks-container">
 
-            <h1 th:text="${pageTitle != null ? pageTitle : (currentPriority != null ? 'Tasks - ' + currentPriority : 'All Tasks')}"></h1>
+            <div class="title-sort-row">
+                <h1 th:text="${pageTitle != null ? pageTitle : (currentPriority != null ? 'Tasks - ' + currentPriority : 'All Tasks')}"></h1>
+
+                <div class="sort-wrapper">
+                    <button type="button" class="sort-btn" onclick="toggleSortMenu()">
+                        <i class="fa-solid fa-arrow-up-wide-short"></i>
+                    </button>
+
+                    <div class="sort-tooltip">Group and sort</div>
+
+                    <div id="sortMenu" class="sort-menu">
+                        <a href="/tasks?sort=newest">Newest added</a>
+                        <a href="/tasks?sort=oldest">Oldest added</a>
+                        <a href="/tasks?sort=priority">Priority</a>
+                        <a href="/tasks?sort=az">A to Z</a>
+                        <a href="/tasks?sort=dueDate">Due date nearest</a>
+                        <a href="/tasks?sort=overdue">Overdue!</a>
+
+                    </div>
+                </div>
+            </div>
 
             <div class="top-links">
                 <a th:if="${showBackToTasks}" th:href="${backUrl}" class="back-btn">
@@ -623,6 +800,7 @@
                 <input type="hidden" name="priorityFilter" th:value="${currentPriority}">
                 <input type="hidden" name="currentCategory" th:value="${currentCategory}">
                 <input type="hidden" name="source" th:value="${currentSource}">
+                <input type="hidden" name="sort" th:value="${currentSort}">
 
                 <div class="quick-add-top">
                     <input type="text"
@@ -704,6 +882,8 @@
                                        class="task-checkbox"
                                        th:checked="${task.done}"
                                        onchange="this.form.submit()" />
+                                <input type="hidden" name="sort" th:value="${currentSort}" />
+
                             </form>
 
                             <div class="task-content">
@@ -769,8 +949,7 @@
                                 <i class="fa-solid fa-pen"></i>
                             </button>
 
-                            <a th:href="@{/tasks/delete/{id}(id=${task.id}, priority=${currentPriority}, category=${currentCategory}, source=${currentSource})}">
-                                <i class="fa-solid fa-xmark"></i>
+                            <a th:href="@{/tasks/delete/{id}(id=${task.id}, priority=${currentPriority}, category=${currentCategory}, source=${currentSource}, sort=${currentSort})}">                                <i class="fa-solid fa-xmark"></i>
                             </a>
                         </div>
                     </div>
@@ -780,7 +959,7 @@
                             <input type="hidden" name="priorityFilter" th:value="${currentPriority}">
                             <input type="hidden" name="currentCategory" th:value="${currentCategory}">
                             <input type="hidden" name="source" th:value="${currentSource}">
-
+                            <input type="hidden" name="sort" th:value="${currentSort}">
                             <div class="inline-edit-top">
                                 <input type="text"
                                        name="title"
@@ -1218,6 +1397,34 @@
         });
 
         initAdvancedDrag();
+    });
+
+
+    document.addEventListener("click", function(e) {
+        var wrapper = document.querySelector(".sort-wrapper");
+        var menu = document.getElementById("sortMenu");
+
+        if (wrapper && menu && !wrapper.contains(e.target)) {
+            menu.style.display = "none";
+        }
+    });
+
+    function toggleSortMenu() {
+        var menu = document.getElementById("sortMenu");
+        if (menu.style.display === "block") {
+            menu.style.display = "none";
+        } else {
+            menu.style.display = "block";
+        }
+    }
+
+    document.addEventListener("click", function(e) {
+        var wrapper = document.querySelector(".sort-wrapper");
+        var menu = document.getElementById("sortMenu");
+
+        if (wrapper && menu && !wrapper.contains(e.target)) {
+            menu.style.display = "none";
+        }
     });
 </script>
 
