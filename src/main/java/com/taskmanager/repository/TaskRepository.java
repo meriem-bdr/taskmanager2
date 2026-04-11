@@ -9,6 +9,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findAllByOrderByDoneAscIdDesc();
 
+    List<Task> findAllByOrderByDoneAsc();
+
     List<Task> findByPriorityOrderByDoneAsc(String priority);
 
     List<Task> findByDueDateBetweenOrderByDueDateAsc(LocalDate startDate, LocalDate endDate);
@@ -16,4 +18,10 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByDueDateBetweenAndDoneFalseOrderByDueDateAsc(LocalDate startDate, LocalDate endDate);
 
     List<Task> findByCategoryOrderByDoneAsc(String category);
+
+    List<Task> findAllByOrderByDoneAscDisplayOrderAscIdAsc();
+
+    List<Task> findByPriorityOrderByDoneAscDisplayOrderAscIdAsc(String priority);
+
+    List<Task> findByCategoryOrderByDoneAscDisplayOrderAscIdAsc(String category);
 }

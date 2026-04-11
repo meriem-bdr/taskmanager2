@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -22,15 +23,28 @@ public class TaskService {
     }
 
     public List<Task> getAllTasks() {
-        return taskRepository.findAllByOrderByDoneAscIdDesc();
+        initializeDisplayOrderIfNeeded();
+        return taskRepository.findAllByOrderByDoneAscDisplayOrderAscIdAsc();
     }
 
     public Task saveTask(Task task) {
+        if (task.getDisplayOrder() == null) {
+            Integer maxOrder = taskRepository.findAll()
+                    .stream()
+                    .map(Task::getDisplayOrder)
+                    .filter(order -> order != null)
+                    .max(Integer::compareTo)
+                    .orElse(0);
+
+            task.setDisplayOrder(maxOrder + 1);
+        }
+
         return taskRepository.save(task);
     }
 
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
+        normalizeDisplayOrders();
     }
 
     public Task getTaskById(Long id) {
@@ -46,7 +60,8 @@ public class TaskService {
     }
 
     public List<Task> getTasksByPriority(String priority) {
-        return taskRepository.findByPriorityOrderByDoneAsc(priority);
+        initializeDisplayOrderIfNeeded();
+        return taskRepository.findByPriorityOrderByDoneAscDisplayOrderAscIdAsc(priority);
     }
 
     public Map<LocalDate, List<Task>> getUpcomingTasksGroupedByDate() {
@@ -106,7 +121,66 @@ public class TaskService {
     }
 
     public List<Task> getTasksByCategory(String category) {
-        return taskRepository.findByCategoryOrderByDoneAsc(category);
+        initializeDisplayOrderIfNeeded();
+        return taskRepository.findByCategoryOrderByDoneAscDisplayOrderAscIdAsc(category);
     }
 
+    public List<Task> getTodayTasks() {
+        LocalDate today = LocalDate.now();
+
+        return getAllTasks()
+                .stream()
+                .filter(task -> task.getDueDate() != null && task.getDueDate().equals(today))
+                .toList();
+    }
+
+    public void reorderTasks(List<Long> orderedIds) {
+        List<Task> allTasks = taskRepository.findAll();
+
+        Map<Long, Task> taskMap = new LinkedHashMap<>();
+        for (Task task : allTasks) {
+            taskMap.put(task.getId(), task);
+        }
+
+        int order = 1;
+        for (Long id : orderedIds) {
+            Task task = taskMap.get(id);
+            if (task != null) {
+                task.setDisplayOrder(order++);
+            }
+        }
+
+        taskRepository.saveAll(allTasks);
+    }
+
+    private void initializeDisplayOrderIfNeeded() {
+        List<Task> tasks = taskRepository.findAll();
+
+        boolean needsInit = tasks.stream().anyMatch(task -> task.getDisplayOrder() == null);
+
+        if (needsInit) {
+            List<Task> sorted = tasks.stream()
+                    .sorted(Comparator.comparing(Task::isDone)
+                            .thenComparing(Task::getId))
+                    .toList();
+
+            int order = 1;
+            for (Task task : sorted) {
+                task.setDisplayOrder(order++);
+            }
+
+            taskRepository.saveAll(sorted);
+        }
+    }
+
+    private void normalizeDisplayOrders() {
+        List<Task> tasks = taskRepository.findAllByOrderByDoneAscDisplayOrderAscIdAsc();
+
+        int order = 1;
+        for (Task task : tasks) {
+            task.setDisplayOrder(order++);
+        }
+
+        taskRepository.saveAll(tasks);
+    }
 }

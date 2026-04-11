@@ -7,12 +7,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import org.springframework.web.bind.annotation.GetMapping;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+
 import jakarta.validation.Valid;
 
 @Controller
@@ -35,6 +36,23 @@ public class TaskController {
         model.addAttribute("currentCategory", null);
         model.addAttribute("pageTitle", "All Tasks");
         model.addAttribute("scrollPos", scrollPos);
+        model.addAttribute("currentSource", "tasks");
+        return "tasks";
+    }
+
+    @GetMapping("/today")
+    public String showTodayTasks(Model model,
+                                 @RequestParam(required = false) String scrollPos) {
+        model.addAttribute("tasks", taskService.getTodayTasks());
+        model.addAttribute("task", new Task());
+        model.addAttribute("showAddButton", true);
+        model.addAttribute("showBackToTasks", false);
+        model.addAttribute("backUrl", "/today");
+        model.addAttribute("currentPriority", null);
+        model.addAttribute("currentCategory", null);
+        model.addAttribute("pageTitle", "Today");
+        model.addAttribute("scrollPos", scrollPos);
+        model.addAttribute("currentSource", "today");
         return "tasks";
     }
 
@@ -54,8 +72,9 @@ public class TaskController {
         model.addAttribute("backUrl", "/priorities");
         model.addAttribute("currentPriority", priority);
         model.addAttribute("currentCategory", null);
-        model.addAttribute("pageTitle", "Priority- " + priority);
+        model.addAttribute("pageTitle", "Priority - " + priority);
         model.addAttribute("scrollPos", scrollPos);
+        model.addAttribute("currentSource", "priority");
         return "tasks";
     }
 
@@ -68,7 +87,7 @@ public class TaskController {
         Task task = new Task();
 
         if (dueDate != null && !dueDate.isEmpty()) {
-            task.setDueDate(java.time.LocalDate.parse(dueDate));
+            task.setDueDate(LocalDate.parse(dueDate));
         }
 
         model.addAttribute("task", task);
@@ -90,12 +109,18 @@ public class TaskController {
                            Model model) {
 
         if (result.hasErrors()) {
+            model.addAttribute("tasks", taskService.getAllTasks());
+            model.addAttribute("task", task);
+            model.addAttribute("showAddButton", true);
+            model.addAttribute("showBackToTasks", false);
+            model.addAttribute("backUrl", "/tasks");
             model.addAttribute("currentPriority", priorityFilter);
             model.addAttribute("currentCategory", currentCategory);
-            model.addAttribute("source", source);
+            model.addAttribute("currentSource", source);
+            model.addAttribute("pageTitle", "All Tasks");
             model.addAttribute("startDate", startDate);
             model.addAttribute("targetDate", targetDate);
-            return "add-task";
+            return "tasks";
         }
 
         if (task.getPriority() == null || task.getPriority().isEmpty()) {
@@ -104,7 +129,10 @@ public class TaskController {
 
         taskService.saveTask(task);
 
-        // مهم: upcoming قبل priority
+        if ("today".equals(source)) {
+            return "redirect:/today";
+        }
+
         if ("upcoming".equals(source)) {
             String redirectUrl = "redirect:/upcoming";
 
@@ -134,9 +162,35 @@ public class TaskController {
 
     @GetMapping("/tasks/delete/{id}")
     public String deleteTask(@PathVariable Long id,
-                             @RequestParam(required = false) String priority) {
+                             @RequestParam(required = false) String priority,
+                             @RequestParam(required = false) String category,
+                             @RequestParam(required = false) String source,
+                             @RequestParam(required = false) String startDate,
+                             @RequestParam(required = false) String targetDate) {
 
         taskService.deleteTask(id);
+
+        if ("today".equals(source)) {
+            return "redirect:/today";
+        }
+
+        if ("upcoming".equals(source)) {
+            String redirectUrl = "redirect:/upcoming";
+
+            if (startDate != null && !startDate.isEmpty()) {
+                redirectUrl += "?startDate=" + startDate;
+            }
+
+            if (targetDate != null && !targetDate.isEmpty()) {
+                redirectUrl += "#day-" + targetDate;
+            }
+
+            return redirectUrl;
+        }
+
+        if (category != null && !category.isEmpty()) {
+            return "redirect:/tasks/category/" + category;
+        }
 
         if (priority != null && !priority.isEmpty()) {
             return "redirect:/tasks/priority/" + priority;
@@ -166,6 +220,66 @@ public class TaskController {
         return "add-task";
     }
 
+    @PostMapping("/tasks/update/{id}")
+    public String updateTask(@PathVariable Long id,
+                             @RequestParam String title,
+                             @RequestParam(required = false) String description,
+                             @RequestParam(required = false) String priority,
+                             @RequestParam(required = false) String category,
+                             @RequestParam(required = false)
+                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dueDate,
+                             @RequestParam(required = false) String priorityFilter,
+                             @RequestParam(required = false) String currentCategory,
+                             @RequestParam(required = false) String source,
+                             @RequestParam(required = false) String startDate,
+                             @RequestParam(required = false) String targetDate) {
+
+        Task existingTask = taskService.getTaskById(id);
+
+        existingTask.setTitle(title);
+        existingTask.setDescription(description);
+        existingTask.setDueDate(dueDate);
+        existingTask.setCategory(category);
+
+        if (priority == null || priority.isEmpty()) {
+            existingTask.setPriority("P4");
+        } else {
+            existingTask.setPriority(priority);
+        }
+
+        taskService.saveTask(existingTask);
+
+        if ("today".equals(source)) {
+            return "redirect:/today";
+        }
+
+        if ("upcoming".equals(source)) {
+            String redirectUrl = "redirect:/upcoming";
+
+            if (startDate != null && !startDate.isEmpty()) {
+                redirectUrl += "?startDate=" + startDate;
+            }
+
+            if (existingTask.getDueDate() != null) {
+                redirectUrl += "#day-" + existingTask.getDueDate();
+            } else if (targetDate != null && !targetDate.isEmpty()) {
+                redirectUrl += "#day-" + targetDate;
+            }
+
+            return redirectUrl;
+        }
+
+        if (currentCategory != null && !currentCategory.isEmpty()) {
+            return "redirect:/tasks/category/" + currentCategory;
+        }
+
+        if (priorityFilter != null && !priorityFilter.isEmpty()) {
+            return "redirect:/tasks/priority/" + priorityFilter;
+        }
+
+        return "redirect:/tasks";
+    }
+
     @PostMapping("/tasks/toggle/{id}")
     public String toggleTaskDone(@PathVariable Long id,
                                  @RequestParam(required = false) String priority,
@@ -175,6 +289,10 @@ public class TaskController {
                                  @RequestParam(required = false) String targetDate) {
 
         taskService.toggleDone(id);
+
+        if ("today".equals(source)) {
+            return "redirect:/today";
+        }
 
         if (category != null && !category.isEmpty()) {
             return "redirect:/tasks/category/" + category;
@@ -255,9 +373,15 @@ public class TaskController {
         model.addAttribute("backUrl", "/categories");
         model.addAttribute("currentPriority", null);
         model.addAttribute("currentCategory", category);
-        model.addAttribute("pageTitle", "Category- " + category);
+        model.addAttribute("pageTitle", "Category - " + category);
         model.addAttribute("scrollPos", scrollPos);
+        model.addAttribute("currentSource", "category");
         return "tasks";
     }
 
+    @PostMapping("/tasks/reorder")
+    @ResponseBody
+    public void reorderTasks(@RequestBody List<Long> orderedIds) {
+        taskService.reorderTasks(orderedIds);
+    }
 }

@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <title>Tasks</title>
     <meta charset="UTF-8">
+    <title>Tasks</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <style>
         body {
@@ -11,6 +13,7 @@
             overflow-x: hidden;
             font-family: Arial, sans-serif;
             background: white;
+            color: #111;
         }
 
         .menu-global {
@@ -42,78 +45,141 @@
 
         .tasks-container {
             width: 100%;
-            max-width: 620px;
+            max-width: 760px;
         }
 
         .top-links {
-            margin-bottom: 22px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
         }
 
-        .top-links a {
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
             text-decoration: none;
             color: black;
-            font-weight: 500;
-            font-size: 15px;
+            transition: 0.2s;
         }
 
-        .top-links a:hover {
-            text-decoration: underline;
+        .back-btn:hover {
+            background: #f0f0f0;
         }
 
-        .inline-task-form {
-            display: none;
-            margin-bottom: 20px;
-            padding: 18px;
-            border: 1px solid #e6e6e6;
-            border-radius: 12px;
-            background: #fafafa;
+        .quick-add-box,
+        .inline-edit-box {
+            border: 1px solid #e5e5e5;
+            border-radius: 14px;
+            background: #fff;
+            padding: 12px 14px;
+            transition: box-shadow 0.2s ease, border-color 0.2s ease;
         }
 
-        .inline-task-form input,
-        .inline-task-form select {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 14px;
+        .quick-add-box {
+            margin-bottom: 24px;
+            position: relative;
         }
 
-        .inline-task-form .full-input {
-            width: 100%;
+        .quick-add-box:focus-within,
+        .inline-edit-box:focus-within {
+            border-color: #cfcfcf;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
         }
 
-        .inline-task-form .row {
+        .quick-add-top,
+        .inline-edit-top {
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 12px;
+            align-items: center;
+            gap: 12px;
         }
 
-        .inline-task-form .actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .save-btn {
-            padding: 10px 16px;
+        .quick-add-title,
+        .inline-edit-title {
+            flex: 1;
+            min-width: 0;
             border: none;
-            background: black;
-            color: white;
-            border-radius: 8px;
-            cursor: pointer;
+            outline: none;
+            font-size: 16px;
+            background: transparent;
+            color: #111;
+            padding: 6px 0;
+            font-family: Arial, sans-serif;
         }
 
-        .cancel-btn {
-            padding: 10px 16px;
-            border: 1px solid #ddd;
-            background: white;
-            border-radius: 8px;
-            cursor: pointer;
+        .quick-add-title::placeholder,
+        .inline-edit-title::placeholder {
+            color: #888;
+        }
+
+        .quick-add-actions,
+        .inline-edit-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .quick-add-description-wrap,
+        .inline-edit-description-wrap {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .quick-add-description-wrap {
+            display: none;
+        }
+
+        .quick-add-box.expanded .quick-add-description-wrap {
+            display: block;
+        }
+
+        .quick-add-description,
+        .inline-edit-description {
+            width: 100%;
+            min-height: 44px;
+            resize: vertical;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #444;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        .quick-add-description::placeholder,
+        .inline-edit-description::placeholder {
+            color: #9a9a9a;
+        }
+
+        .hint-text {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #8a8a8a;
+        }
+
+        .task-list-container {
+            position: relative;
         }
 
         .task-block {
             padding: 18px 0;
             border-bottom: 1px solid #e6e6e6;
+            position: relative;
+            transition: transform 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease;
+            background: white;
+        }
+
+        .task-block.drag-source-hidden {
+            opacity: 0;
         }
 
         .task-row {
@@ -132,10 +198,39 @@
             min-width: 0;
         }
 
+        .drag-handle {
+            width: 16px;
+            min-width: 16px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            color: #b8b8b8;
+            cursor: grab;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s ease, color 0.15s ease;
+            margin-top: 2px;
+            flex-shrink: 0;
+            user-select: none;
+        }
+
+        .task-block:hover .drag-handle {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .drag-handle:hover {
+            color: #666;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
         .task-content {
             flex: 1;
             min-width: 0;
-            max-width: 430px;
+            max-width: 520px;
         }
 
         .task-title {
@@ -174,6 +269,7 @@
             margin-top: 8px;
             flex-wrap: wrap;
         }
+
         .priority-label,
         .category-label {
             display: inline-flex;
@@ -216,12 +312,19 @@
             padding-top: 2px;
         }
 
-        .task-actions a {
+        .task-actions a,
+        .task-actions button {
             text-decoration: none;
             font-size: 15px;
+            color: black;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
         }
 
-        .task-actions a:hover {
+        .task-actions a:hover,
+        .task-actions button:hover {
             opacity: 0.75;
         }
 
@@ -268,6 +371,192 @@
             font-size: 15px;
             margin-top: 10px;
         }
+
+        .hidden-flatpickr-input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            width: 1px;
+            height: 1px;
+        }
+
+        .inline-edit-box {
+            display: none;
+            width: 100%;
+        }
+
+        .inline-edit-box.active {
+            display: block;
+        }
+
+        .inline-edit-save-row {
+            margin-top: 10px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .small-save-btn {
+            border: none;
+            background: black;
+            color: white;
+            border-radius: 8px;
+            padding: 8px 14px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .flatpickr-calendar {
+            border: none !important;
+            border-radius: 18px !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12) !important;
+            padding: 10px !important;
+            width: 360px !important;
+            max-width: 90vw !important;
+            font-family: Arial, sans-serif !important;
+        }
+
+        .flatpickr-current-month {
+            font-size: 16px !important;
+            padding-top: 4px !important;
+        }
+
+        .flatpickr-current-month .flatpickr-monthDropdown-months,
+        .flatpickr-current-month input.cur-year {
+            font-size: 16px !important;
+            font-weight: 600 !important;
+        }
+
+        span.flatpickr-weekday {
+            color: #555 !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+        }
+
+        .flatpickr-day {
+            border-radius: 999px !important;
+            font-size: 14px !important;
+            height: 42px !important;
+            line-height: 42px !important;
+            max-width: 42px !important;
+        }
+
+        .flatpickr-day.today {
+            border: 1px solid #999 !important;
+        }
+
+        .flatpickr-day.selected {
+            background: #111 !important;
+            border-color: #111 !important;
+            color: #fff !important;
+        }
+
+        .flatpickr-day:hover {
+            background: #f2f2f2 !important;
+        }
+
+        .flatpickr-prev-month,
+        .flatpickr-next-month {
+            top: 12px !important;
+        }
+
+        .smart-pill {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid #e1e1e1;
+            background: #fafafa;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 0;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }
+
+        .smart-pill:hover {
+            background: #f2f2f2;
+        }
+
+        .smart-pill i {
+            font-size: 14px;
+            color: #555;
+            flex-shrink: 0;
+        }
+
+        .smart-pill .pill-text {
+            display: none;
+            font-size: 13px;
+            color: #444;
+            white-space: nowrap;
+        }
+
+        .smart-pill.active {
+            width: auto;
+            min-width: 36px;
+            border-radius: 999px;
+            justify-content: flex-start;
+            padding: 0 12px;
+        }
+
+        .smart-pill.active .pill-text {
+            display: inline;
+        }
+
+        .smart-pill select,
+        .smart-pill input {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            border: none;
+        }
+
+        .drag-placeholder {
+            border: 1px dashed #cfcfcf;
+            border-radius: 12px;
+            background: #fafafa;
+            margin: 4px 0;
+        }
+
+        .drag-floating {
+            position: fixed;
+            z-index: 9999;
+            pointer-events: none;
+            width: 760px;
+            max-width: calc(100vw - 120px);
+            box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+            border-radius: 14px;
+            background: white;
+            opacity: 0.96;
+            transform: rotate(0.2deg);
+        }
+
+        @media (max-width: 720px) {
+            .quick-add-top,
+            .inline-edit-top {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .quick-add-actions,
+            .inline-edit-actions {
+                justify-content: flex-start;
+            }
+
+            .tasks-container {
+                max-width: 100%;
+            }
+
+            .flatpickr-calendar {
+                width: 95vw !important;
+            }
+        }
     </style>
 </head>
 
@@ -287,27 +576,23 @@
         <h3 style="margin-top:45px;">Menu</h3>
 
         <div style="margin-top:20px;">
-            <a href="/tasks">
-                <i class="fa-solid fa-list"></i> All Tasks
-            </a>
+            <a href="/today"><i class="fa-solid fa-calendar-day"></i> Today</a>
         </div>
 
         <div style="margin-top:15px;">
-            <a href="/priorities">
-                <i class="fa-solid fa-filter"></i> Filter by priority
-            </a>
+            <a href="/tasks"><i class="fa-solid fa-list"></i> All Tasks</a>
         </div>
 
         <div style="margin-top:15px;">
-            <a href="/categories">
-                <i class="fa-solid fa-layer-group"></i> Categories
-            </a>
+            <a href="/priorities"><i class="fa-solid fa-filter"></i> Filter by priority</a>
         </div>
 
         <div style="margin-top:15px;">
-            <a href="/upcoming">
-                <i class="fa-solid fa-calendar"></i> Upcoming
-            </a>
+            <a href="/categories"><i class="fa-solid fa-layer-group"></i> Categories</a>
+        </div>
+
+        <div style="margin-top:15px;">
+            <a href="/upcoming"><i class="fa-solid fa-calendar"></i> Upcoming</a>
         </div>
     </div>
 
@@ -318,80 +603,103 @@
     </div>
 
     <div class="page-content">
-
         <div class="tasks-container">
 
             <h1 th:text="${pageTitle != null ? pageTitle : (currentPriority != null ? 'Tasks - ' + currentPriority : 'All Tasks')}"></h1>
 
             <div class="top-links">
-                <a href="javascript:void(0)" th:if="${showAddButton}" onclick="toggleInlineTaskForm('tasksInlineForm')">+ Add task</a>
-
-                <a th:if="${showBackToTasks}"
-                   th:href="${backUrl}"
-                   style="display:inline-flex; align-items:center; justify-content:center;width:36px; height:36px; border-radius:50%;
-                      text-decoration:none; color:black;
-                      margin-bottom:15px; transition:0.2s;"
-                   onmouseover="this.style.background='#f0f0f0'"
-                   onmouseout="this.style.background='transparent'">
+                <a th:if="${showBackToTasks}" th:href="${backUrl}" class="back-btn">
                     <i class="fa-solid fa-arrow-left"></i>
                 </a>
             </div>
 
-            <div id="tasksInlineForm" class="inline-task-form">
-                <form th:action="@{/tasks}" th:object="${task}" method="post">
-                    <input type="hidden" name="priorityFilter" th:value="${currentPriority}">
-                    <input type="hidden" name="currentCategory" th:value="${currentCategory}">
+            <form th:if="${showAddButton}"
+                  th:action="@{/tasks}"
+                  th:object="${task}"
+                  method="post"
+                  class="quick-add-box"
+                  id="quickAddBox">
 
-                    <div style="margin-bottom:12px;">
-                        <input type="text" th:field="*{title}" placeholder="Task title" class="full-input" required>
+                <input type="hidden" name="priorityFilter" th:value="${currentPriority}">
+                <input type="hidden" name="currentCategory" th:value="${currentCategory}">
+                <input type="hidden" name="source" th:value="${currentSource}">
+
+                <div class="quick-add-top">
+                    <input type="text"
+                           th:field="*{title}"
+                           placeholder="Add a task..."
+                           class="quick-add-title"
+                           id="quickAddTitle"
+                           autocomplete="off"
+                           required>
+
+                    <div class="quick-add-actions">
+                        <div class="smart-pill" id="datePill">
+                            <i class="fa-regular fa-calendar"></i>
+                            <span class="pill-text" id="dateText"></span>
+                            <input type="text"
+                                   th:field="*{dueDate}"
+                                   id="dueDatePicker"
+                                   class="hidden-flatpickr-input"
+                                   readonly>
+                        </div>
+
+                        <div class="smart-pill" id="priorityPill">
+                            <i class="fa-solid fa-flag"></i>
+                            <span class="pill-text" id="priorityText"></span>
+                            <select th:field="*{priority}" id="prioritySelect">
+                                <option value=""></option>
+                                <option value="P1">P1</option>
+                                <option value="P2">P2</option>
+                                <option value="P3">P3</option>
+                                <option value="P4">P4</option>
+                            </select>
+                        </div>
+
+                        <div class="smart-pill" id="categoryPill">
+                            <i class="fa-solid fa-tag"></i>
+                            <span class="pill-text" id="categoryText"></span>
+                            <select th:field="*{category}" id="categorySelect">
+                                <option value=""></option>
+                                <option value="Work">Work</option>
+                                <option value="Study">Study</option>
+                                <option value="Personal">Personal</option>
+                                <option value="Shopping">Shopping</option>
+                            </select>
+                        </div>
                     </div>
+                </div>
 
-                    <div style="margin-bottom:12px;">
-                        <input type="text" th:field="*{description}" placeholder="Description" class="full-input">
-                    </div>
-
-                    <div class="row">
-                        <input type="date" th:field="*{dueDate}">
-
-                        <select th:field="*{priority}">
-                            <option value="">Priority</option>
-                            <option value="P1">P1</option>
-                            <option value="P2">P2</option>
-                            <option value="P3">P3</option>
-                            <option value="P4">P4</option>
-                        </select>
-
-                        <select th:field="*{category}">
-                            <option value="">Category</option>
-                            <option value="Work">Work</option>
-                            <option value="Study">Study</option>
-                            <option value="Personal">Personal</option>
-                            <option value="Shopping">Shopping</option>
-                        </select>
-                    </div>
-
-                    <div class="actions">
-                        <button type="submit" class="save-btn">Save</button>
-                        <button type="button" class="cancel-btn" onclick="toggleInlineTaskForm('tasksInlineForm')">Cancel</button>
-                    </div>
-                </form>
-            </div>
+                <div class="quick-add-description-wrap">
+                    <textarea th:field="*{description}"
+                              placeholder="Description..."
+                              class="quick-add-description"
+                              id="quickAddDescription"></textarea>
+                    <div class="hint-text">Press Enter in title to save</div>
+                </div>
+            </form>
 
             <div th:if="${#lists.isEmpty(tasks)}" class="empty-state">
                 <p>No tasks yet</p>
             </div>
 
-            <div th:if="${!#lists.isEmpty(tasks)}">
+            <div th:if="${!#lists.isEmpty(tasks)}" class="task-list-container" id="taskListContainer">
+                <div th:each="task : ${tasks}"
+                     class="task-block"
+                     th:attr="data-id=${task.id}"
+                     th:id="'taskBlock-' + ${task.id}">
 
-                <div th:each="task : ${tasks}" class="task-block">
-
-                    <div class="task-row">
+                    <div class="task-row" th:id="'taskView-' + ${task.id}">
 
                         <div class="task-left">
+                            <span class="drag-handle" title="Move task">
+                                <i class="fa-solid fa-grip-lines"></i>
+                            </span>
 
                             <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post" style="margin:0;">
                                 <input type="hidden" name="priority" th:value="${currentPriority}" />
                                 <input type="hidden" name="category" th:value="${currentCategory}" />
+                                <input type="hidden" name="source" th:value="${currentSource}" />
                                 <input type="checkbox"
                                        class="task-checkbox"
                                        th:checked="${task.done}"
@@ -399,7 +707,6 @@
                             </form>
 
                             <div class="task-content">
-
                                 <div th:class="${task.done} ? 'task-title done' : 'task-title active'"
                                      th:text="${task.title}">
                                 </div>
@@ -417,11 +724,9 @@
                                     <span th:if="${task.description.length() <= 90}"
                                           th:text="${task.description}">
                                     </span>
-
                                 </div>
 
                                 <div class="task-meta-row">
-
                                     <div class="priority-label" th:if="${task.priority != null}">
                                         <span class="priority-dot"
                                               th:style="${
@@ -452,37 +757,96 @@
                                         <i class="fa-regular fa-calendar"></i>
                                         <span th:text="${task.formattedDueDate}"></span>
                                     </div>
-
                                 </div>
-
                             </div>
-
                         </div>
 
                         <div class="task-actions">
-
-                            <a th:href="@{/tasks/edit/{id}(id=${task.id}, priority=${currentPriority}, category=${currentCategory})}"
-                               th:style="${task.done} ? 'color:gray; pointer-events:none; cursor:not-allowed;' : 'color:black;'">
+                            <button type="button"
+                                    th:style="${task.done} ? 'color:gray; pointer-events:none; cursor:not-allowed;' : 'color:black;'"
+                                    th:onclick="'toggleEditInline(' + ${task.id} + ')'"
+                                    style="border:none; background:transparent; cursor:pointer;">
                                 <i class="fa-solid fa-pen"></i>
-                            </a>
+                            </button>
 
-                            <a th:href="@{/tasks/delete/{id}(id=${task.id}, priority=${currentPriority}, category=${currentCategory})}"
-                               style="color:black;">
+                            <a th:href="@{/tasks/delete/{id}(id=${task.id}, priority=${currentPriority}, category=${currentCategory}, source=${currentSource})}">
                                 <i class="fa-solid fa-xmark"></i>
                             </a>
-
                         </div>
+                    </div>
 
+                    <div th:id="'taskEdit-' + ${task.id}" class="inline-edit-box">
+                        <form th:action="@{/tasks/update/{id}(id=${task.id})}" method="post">
+                            <input type="hidden" name="priorityFilter" th:value="${currentPriority}">
+                            <input type="hidden" name="currentCategory" th:value="${currentCategory}">
+                            <input type="hidden" name="source" th:value="${currentSource}">
+
+                            <div class="inline-edit-top">
+                                <input type="text"
+                                       name="title"
+                                       th:value="${task.title}"
+                                       class="inline-edit-title"
+                                       placeholder="Edit task..."
+                                       required>
+
+                                <div class="inline-edit-actions">
+                                    <div class="smart-pill edit-date-pill" onclick="openEditDate(this)">
+                                        <i class="fa-regular fa-calendar"></i>
+                                        <span class="pill-text"></span>
+                                        <input type="text"
+                                               name="dueDate"
+                                               th:value="${task.dueDate}"
+                                               class="hidden-flatpickr-input"
+                                               readonly>
+                                    </div>
+
+                                    <div class="smart-pill edit-priority-pill">
+                                        <i class="fa-solid fa-flag"></i>
+                                        <span class="pill-text"></span>
+                                        <select name="priority">
+                                            <option value=""></option>
+                                            <option value="P1" th:selected="${task.priority == 'P1'}">P1</option>
+                                            <option value="P2" th:selected="${task.priority == 'P2'}">P2</option>
+                                            <option value="P3" th:selected="${task.priority == 'P3'}">P3</option>
+                                            <option value="P4" th:selected="${task.priority == 'P4'}">P4</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="smart-pill edit-category-pill">
+                                        <i class="fa-solid fa-tag"></i>
+                                        <span class="pill-text"></span>
+                                        <select name="category">
+                                            <option value=""></option>
+                                            <option value="Work" th:selected="${task.category == 'Work'}">Work</option>
+                                            <option value="Study" th:selected="${task.category == 'Study'}">Study</option>
+                                            <option value="Personal" th:selected="${task.category == 'Personal'}">Personal</option>
+                                            <option value="Shopping" th:selected="${task.category == 'Shopping'}">Shopping</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="inline-edit-description-wrap">
+                                <textarea name="description"
+                                          class="inline-edit-description"
+                                          placeholder="Description..."
+                                          th:text="${task.description}"></textarea>
+                            </div>
+
+                            <div class="inline-edit-save-row">
+                                <button type="submit" class="small-save-btn">Save</button>
+                            </div>
+                        </form>
                     </div>
 
                 </div>
-
             </div>
+
         </div>
-
     </div>
-
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
     function toggleSidebar() {
         var sidebar = document.getElementById("sidebar");
@@ -513,14 +877,348 @@
         }
     }
 
-    function toggleInlineTaskForm(id) {
-        var form = document.getElementById(id);
-        if (form.style.display === "none" || form.style.display === "") {
-            form.style.display = "block";
-        } else {
-            form.style.display = "none";
+    function closeAllEditInline() {
+        document.querySelectorAll(".inline-edit-box").forEach(function(edit) {
+            edit.classList.remove("active");
+        });
+
+        document.querySelectorAll(".task-row").forEach(function(view) {
+            view.style.display = "flex";
+        });
+    }
+
+    function toggleEditInline(id) {
+        var view = document.getElementById("taskView-" + id);
+        var edit = document.getElementById("taskEdit-" + id);
+
+        if (!view || !edit) return;
+
+        var isOpen = edit.classList.contains("active");
+
+        closeAllEditInline();
+
+        if (!isOpen) {
+            view.style.display = "none";
+            edit.classList.add("active");
+
+            var titleInput = edit.querySelector(".inline-edit-title");
+            if (titleInput) {
+                setTimeout(function () {
+                    titleInput.focus();
+                    titleInput.select();
+                }, 50);
+            }
         }
     }
+
+    function openEditDate(el) {
+        var input = el.querySelector("input");
+        if (!input) return;
+
+        if (!input._flatpickr) {
+            flatpickr(input, {
+                dateFormat: "Y-m-d",
+                allowInput: false,
+                clickOpens: false,
+                monthSelectorType: "dropdown",
+                prevArrow: "&#10094;",
+                nextArrow: "&#10095;",
+                onChange: function(selectedDates, dateStr) {
+                    updateSmartPill(el, formatDateForPill(dateStr));
+                }
+            });
+        }
+
+        input._flatpickr.open();
+    }
+
+    function formatDateForPill(value) {
+        if (!value) return "";
+        const parts = value.split("-");
+        if (parts.length !== 3) return value;
+        return parts[2] + "/" + parts[1];
+    }
+
+    function updateSmartPill(pill, value) {
+        const text = pill.querySelector(".pill-text");
+        if (!text) return;
+
+        if (value && value.trim() !== "") {
+            text.textContent = value;
+            pill.classList.add("active");
+        } else {
+            text.textContent = "";
+            pill.classList.remove("active");
+        }
+    }
+
+    let activeDrag = null;
+    let autoScrollInterval = null;
+
+    function initAdvancedDrag() {
+        document.querySelectorAll(".drag-handle").forEach(handle => {
+            handle.addEventListener("mousedown", startDrag);
+        });
+    }
+
+    function startDrag(e) {
+        e.preventDefault();
+
+        const task = e.currentTarget.closest(".task-block");
+        const container = document.getElementById("taskListContainer");
+        if (!task || !container) return;
+
+        const rect = task.getBoundingClientRect();
+
+        const placeholder = document.createElement("div");
+        placeholder.className = "drag-placeholder";
+        placeholder.style.height = rect.height + "px";
+
+        const floating = task.cloneNode(true);
+        floating.classList.add("drag-floating");
+        floating.style.width = rect.width + "px";
+        floating.style.left = rect.left + "px";
+        floating.style.top = rect.top + "px";
+
+        document.body.appendChild(floating);
+
+        task.classList.add("drag-source-hidden");
+        task.parentNode.insertBefore(placeholder, task.nextSibling);
+
+        activeDrag = {
+            source: task,
+            floating: floating,
+            placeholder: placeholder,
+            container: container,
+            offsetY: e.clientY - rect.top
+        };
+
+        document.addEventListener("mousemove", onDrag);
+        document.addEventListener("mouseup", stopDrag);
+    }
+
+    function startAutoScroll(y) {
+        stopAutoScroll();
+
+        autoScrollInterval = setInterval(() => {
+            if (y < 120) window.scrollBy(0, -10);
+            if (y > window.innerHeight - 120) window.scrollBy(0, 10);
+        }, 16);
+    }
+
+    function stopAutoScroll() {
+        if (autoScrollInterval) {
+            clearInterval(autoScrollInterval);
+            autoScrollInterval = null;
+        }
+    }
+
+    function onDrag(e) {
+        if (!activeDrag) return;
+
+        const floating = activeDrag.floating;
+        const offsetY = activeDrag.offsetY;
+        const source = activeDrag.source;
+        const placeholder = activeDrag.placeholder;
+        const container = activeDrag.container;
+
+        startAutoScroll(e.clientY);
+        floating.style.top = (e.clientY - offsetY) + "px";
+
+        const items = Array.from(container.querySelectorAll(".task-block"))
+            .filter(item => item !== source);
+
+        for (let item of items) {
+            const rect = item.getBoundingClientRect();
+            if (e.clientY < rect.top + rect.height / 2) {
+                container.insertBefore(placeholder, item);
+                return;
+            }
+        }
+
+        container.appendChild(placeholder);
+    }
+
+    function stopDrag() {
+        if (!activeDrag) return;
+
+        stopAutoScroll();
+
+        const source = activeDrag.source;
+        const floating = activeDrag.floating;
+        const placeholder = activeDrag.placeholder;
+        const container = activeDrag.container;
+
+        container.insertBefore(source, placeholder);
+        source.classList.remove("drag-source-hidden");
+
+        floating.remove();
+        placeholder.remove();
+
+        activeDrag = null;
+
+        document.removeEventListener("mousemove", onDrag);
+        document.removeEventListener("mouseup", stopDrag);
+
+        saveOrder();
+    }
+
+    function saveOrder() {
+        const ids = [];
+
+        document.querySelectorAll(".task-block").forEach(el => {
+            const id = el.getAttribute("data-id");
+            if (id) {
+                ids.push(Number(id));
+            }
+        });
+
+        fetch("/tasks/reorder", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(ids)
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var quickAddBox = document.getElementById("quickAddBox");
+        var quickAddTitle = document.getElementById("quickAddTitle");
+        var quickAddDescription = document.getElementById("quickAddDescription");
+        var dateInput = document.getElementById("dueDatePicker");
+        var datePill = document.getElementById("datePill");
+
+        if (quickAddTitle && quickAddBox) {
+            quickAddTitle.addEventListener("focus", function () {
+                quickAddBox.classList.add("expanded");
+            });
+
+            quickAddTitle.addEventListener("keydown", function (e) {
+                if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+
+                    if (quickAddTitle.value.trim() === "") {
+                        quickAddTitle.reportValidity();
+                        return;
+                    }
+
+                    quickAddBox.requestSubmit();
+                }
+            });
+        }
+
+        if (quickAddDescription && quickAddBox) {
+            quickAddDescription.addEventListener("focus", function () {
+                quickAddBox.classList.add("expanded");
+            });
+        }
+
+        document.querySelectorAll(".inline-edit-box").forEach(function(edit) {
+            var titleInput = edit.querySelector(".inline-edit-title");
+            if (titleInput) {
+                titleInput.addEventListener("keydown", function(e) {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+
+                        if (titleInput.value.trim() === "") {
+                            titleInput.reportValidity();
+                            return;
+                        }
+
+                        var form = edit.querySelector("form");
+                        if (form) {
+                            form.requestSubmit();
+                        }
+                    }
+                });
+            }
+        });
+
+        document.addEventListener("click", function (e) {
+            if (quickAddBox && !quickAddBox.contains(e.target)) {
+                quickAddBox.classList.remove("expanded");
+            }
+
+            var clickedEditButton = e.target.closest("[onclick*='toggleEditInline']");
+            var clickedEditBox = e.target.closest(".inline-edit-box");
+
+            if (!clickedEditButton && !clickedEditBox) {
+                closeAllEditInline();
+            }
+        });
+
+        if (dateInput) {
+            var fp = flatpickr(dateInput, {
+                dateFormat: "Y-m-d",
+                allowInput: false,
+                clickOpens: false,
+                monthSelectorType: "dropdown",
+                prevArrow: "&#10094;",
+                nextArrow: "&#10095;",
+                onChange: function(selectedDates, dateStr) {
+                    updateSmartPill(datePill, formatDateForPill(dateStr));
+                }
+            });
+
+            if (datePill) {
+                datePill.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    fp.open();
+                });
+            }
+        }
+
+        const priorityPill = document.getElementById("priorityPill");
+        const prioritySelect = document.getElementById("prioritySelect");
+        const categoryPill = document.getElementById("categoryPill");
+        const categorySelect = document.getElementById("categorySelect");
+
+        if (dateInput && datePill) {
+            updateSmartPill(datePill, formatDateForPill(dateInput.value));
+        }
+
+        if (prioritySelect && priorityPill) {
+            updateSmartPill(priorityPill, prioritySelect.value);
+            prioritySelect.addEventListener("change", function () {
+                updateSmartPill(priorityPill, this.value);
+            });
+        }
+
+        if (categorySelect && categoryPill) {
+            updateSmartPill(categoryPill, categorySelect.value);
+            categorySelect.addEventListener("change", function () {
+                updateSmartPill(categoryPill, this.value);
+            });
+        }
+
+        document.querySelectorAll(".edit-date-pill").forEach(function (pill) {
+            const input = pill.querySelector("input");
+            if (input) {
+                updateSmartPill(pill, formatDateForPill(input.value));
+            }
+        });
+
+        document.querySelectorAll(".edit-priority-pill").forEach(function (pill) {
+            const select = pill.querySelector("select");
+            if (select) {
+                updateSmartPill(pill, select.value);
+                select.addEventListener("change", function () {
+                    updateSmartPill(pill, this.value);
+                });
+            }
+        });
+
+        document.querySelectorAll(".edit-category-pill").forEach(function (pill) {
+            const select = pill.querySelector("select");
+            if (select) {
+                updateSmartPill(pill, select.value);
+                select.addEventListener("change", function () {
+                    updateSmartPill(pill, this.value);
+                });
+            }
+        });
+
+        initAdvancedDrag();
+    });
 </script>
 
 </body>
