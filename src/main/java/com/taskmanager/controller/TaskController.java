@@ -38,13 +38,32 @@ public class TaskController {
             tasks = taskService.getTasksAlphabetically();
         } else if ("dueDate".equals(sort)) {
             tasks = taskService.getTasksByNearestDueDate();
-        } else if ("overdue".equals(sort)) {
-            tasks = taskService.getOverdueTasks();
         } else {
             tasks = taskService.getTasksNewestFirst();
         }
 
-        model.addAttribute("tasks", tasks);
+        List<Task> overdueTasks = tasks.stream()
+                .filter(task -> task.getDueDate() != null)
+                .filter(task -> task.getDueDate().isBefore(LocalDate.now()))
+                .filter(task -> !task.isDone())
+                .toList();
+
+        List<Task> completedTasks = tasks.stream()
+                .filter(Task::isDone)
+                .toList();
+
+        List<Task> activeTasks = tasks.stream()
+                .filter(task -> !task.isDone())
+                .filter(task -> !(task.getDueDate() != null
+                        && task.getDueDate().isBefore(LocalDate.now())))
+                .toList();
+
+        model.addAttribute("tasks", activeTasks);
+        model.addAttribute("overdueTasks", overdueTasks);
+        model.addAttribute("overdueCount", overdueTasks.size());
+        model.addAttribute("completedTasks", completedTasks);
+        model.addAttribute("completedCount", completedTasks.size());
+
         model.addAttribute("task", new Task());
         model.addAttribute("showAddButton", true);
         model.addAttribute("showBackToTasks", false);

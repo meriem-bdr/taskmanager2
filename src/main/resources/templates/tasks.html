@@ -88,7 +88,7 @@
         .quick-add-box:focus-within,
         .inline-edit-box:focus-within {
             border-color: #cfcfcf;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
         }
 
         .quick-add-top,
@@ -408,7 +408,7 @@
         .flatpickr-calendar {
             border: none !important;
             border-radius: 18px !important;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.12) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12) !important;
             padding: 10px !important;
             width: 360px !important;
             max-width: 90vw !important;
@@ -530,7 +530,7 @@
             pointer-events: none;
             width: 760px;
             max-width: calc(100vw - 120px);
-            box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
             border-radius: 14px;
             background: white;
             opacity: 0.96;
@@ -557,6 +557,7 @@
                 width: 95vw !important;
             }
         }
+
         .sort-wrapper {
             position: relative;
             display: inline-block;
@@ -615,7 +616,7 @@
             background: white;
             border: 1px solid #e5e5e5;
             border-radius: 14px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
             padding: 8px;
             z-index: 2500;
         }
@@ -632,6 +633,7 @@
         .sort-menu a:hover {
             background: #f5f5f5;
         }
+
         .title-sort-row {
             display: flex;
             justify-content: space-between;
@@ -697,7 +699,7 @@
             background: white;
             border: 1px solid #e5e5e5;
             border-radius: 14px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
             padding: 8px;
             z-index: 2500;
         }
@@ -713,6 +715,41 @@
 
         .sort-menu a:hover {
             background: #f5f5f5;
+        }
+
+        .overdue-date {
+            color: #ff4d4f;
+        }
+
+        .overdue-icon {
+            color: #ff4d4f !important;
+        }
+
+        .overdue-section {
+            margin-top: 20px;
+        }
+
+        .section-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            color: #111;
+            margin-bottom: 12px;
+        }
+
+        .section-toggle i {
+            font-size: 14px;
+            transition: transform 0.2s ease;
+        }
+
+        .section-toggle.open i {
+            transform: rotate(90deg);
+        }
+        .completed-section {
+            margin-top: 18px;
         }
     </style>
 </head>
@@ -875,14 +912,14 @@
                             </span>
 
                             <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post" style="margin:0;">
-                                <input type="hidden" name="priority" th:value="${currentPriority}" />
-                                <input type="hidden" name="category" th:value="${currentCategory}" />
-                                <input type="hidden" name="source" th:value="${currentSource}" />
+                                <input type="hidden" name="priority" th:value="${currentPriority}"/>
+                                <input type="hidden" name="category" th:value="${currentCategory}"/>
+                                <input type="hidden" name="source" th:value="${currentSource}"/>
                                 <input type="checkbox"
                                        class="task-checkbox"
                                        th:checked="${task.done}"
-                                       onchange="this.form.submit()" />
-                                <input type="hidden" name="sort" th:value="${currentSort}" />
+                                       onchange="this.form.submit()"/>
+                                <input type="hidden" name="sort" th:value="${currentSort}"/>
 
                             </form>
 
@@ -919,7 +956,8 @@
                                         <span th:text="${task.priority}"></span>
                                     </div>
 
-                                    <div class="category-label" th:if="${task.category != null and !#strings.isEmpty(task.category)}">
+                                    <div class="category-label"
+                                         th:if="${task.category != null and !#strings.isEmpty(task.category)}">
                                         <span class="category-dot"
                                               th:style="${
                                                   task.category == 'Work' ? 'background:#4a90e2;' :
@@ -934,8 +972,12 @@
 
                                     <div th:if="${task.dueDate != null}"
                                          th:class="${task.done} ? 'task-date done' : 'task-date'">
-                                        <i class="fa-regular fa-calendar"></i>
-                                        <span th:text="${task.formattedDueDate}"></span>
+                                        <i class="fa-regular fa-calendar"
+                                           th:classappend="${task.dueDate != null
+                                           and task.dueDate.isBefore(T(java.time.LocalDate).now())
+                                           and !task.done} ? ' overdue-icon'">
+                                        </i> <span th:text="${task.formattedDueDate}"
+                                                   th:classappend="${task.dueDate != null and task.dueDate.isBefore(T(java.time.LocalDate).now()) and !task.done} ? 'overdue-date'"></span>
                                     </div>
                                 </div>
                             </div>
@@ -949,7 +991,8 @@
                                 <i class="fa-solid fa-pen"></i>
                             </button>
 
-                            <a th:href="@{/tasks/delete/{id}(id=${task.id}, priority=${currentPriority}, category=${currentCategory}, source=${currentSource}, sort=${currentSort})}">                                <i class="fa-solid fa-xmark"></i>
+                            <a th:href="@{/tasks/delete/{id}(id=${task.id}, priority=${currentPriority}, category=${currentCategory}, source=${currentSource}, sort=${currentSort})}">
+                                <i class="fa-solid fa-xmark"></i>
                             </a>
                         </div>
                     </div>
@@ -997,9 +1040,14 @@
                                         <select name="category">
                                             <option value=""></option>
                                             <option value="Work" th:selected="${task.category == 'Work'}">Work</option>
-                                            <option value="Study" th:selected="${task.category == 'Study'}">Study</option>
-                                            <option value="Personal" th:selected="${task.category == 'Personal'}">Personal</option>
-                                            <option value="Shopping" th:selected="${task.category == 'Shopping'}">Shopping</option>
+                                            <option value="Study" th:selected="${task.category == 'Study'}">Study
+                                            </option>
+                                            <option value="Personal" th:selected="${task.category == 'Personal'}">
+                                                Personal
+                                            </option>
+                                            <option value="Shopping" th:selected="${task.category == 'Shopping'}">
+                                                Shopping
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
@@ -1019,6 +1067,169 @@
                     </div>
 
                 </div>
+            </div>
+            <div th:if="${!#lists.isEmpty(overdueTasks)}" class="overdue-section">
+
+                <div class="section-toggle" onclick="toggleOverdueSection()">
+                    <i id="overdueArrow" class="fa-solid fa-chevron-right"></i>
+                    <span>Overdue</span>
+                    <span th:text="${overdueCount}"></span>
+                </div>
+
+                <div id="overdueList" style="display:none;">
+                    <div th:each="task : ${overdueTasks}" class="task-block">
+                        <div class="task-row">
+
+                            <div class="task-left">
+                                <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post" style="margin:0;">
+                                    <input type="hidden" name="priority" th:value="${currentPriority}" />
+                                    <input type="hidden" name="category" th:value="${currentCategory}" />
+                                    <input type="hidden" name="source" th:value="${currentSource}" />
+                                    <input type="hidden" name="sort" th:value="${currentSort}" />
+                                    <input type="checkbox"
+                                           class="task-checkbox"
+                                           th:checked="${task.done}"
+                                           onchange="this.form.submit()" />
+                                </form>
+
+                                <div class="task-content">
+                                    <div th:class="${task.done} ? 'task-title done' : 'task-title active'"
+                                         th:text="${task.title}">
+                                    </div>
+
+                                    <div th:if="${task.description != null and !#strings.isEmpty(task.description)}"
+                                         th:class="${task.done} ? 'task-desc done' : 'task-desc'">
+                                        <span th:text="${task.description}"></span>
+                                    </div>
+
+                                    <div class="task-meta-row">
+                                        <div class="priority-label" th:if="${task.priority != null}">
+                                <span class="priority-dot"
+                                      th:style="${
+                                          task.priority == 'P1' ? 'background:red;' :
+                                          (task.priority == 'P2' ? 'background:#ff8800;' :
+                                          (task.priority == 'P3' ? 'background:#f4f128;' :
+                                          'background:gray;'))
+                                      }">
+                                </span>
+                                            <span th:text="${task.priority}"></span>
+                                        </div>
+
+                                        <div class="category-label" th:if="${task.category != null and !#strings.isEmpty(task.category)}">
+                                <span class="category-dot"
+                                      th:style="${
+                                          task.category == 'Work' ? 'background:#4a90e2;' :
+                                          (task.category == 'Study' ? 'background:#9b59b6;' :
+                                          (task.category == 'Personal' ? 'background:#ff6fa5;' :
+                                          (task.category == 'Shopping' ? 'background:#2ecc71;' :
+                                          'background:#cfcfcf;')))
+                                      }">
+                                </span>
+                                            <span th:text="${task.category}"></span>
+                                        </div>
+
+                                        <div th:if="${task.dueDate != null}" class="task-date">
+                                            <i class="fa-regular fa-calendar overdue-icon"></i>
+                                            <span th:text="${task.formattedDueDate}" class="overdue-date"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="task-actions">
+                                <button type="button"
+                                        th:style="${task.done} ? 'color:gray; pointer-events:none; cursor:not-allowed;' : 'color:black;'"
+                                        th:onclick="'toggleEditInline(' + ${task.id} + ')'"
+                                        style="border:none; background:transparent; cursor:pointer;">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+
+                                <a th:href="@{/tasks/delete/{id}(id=${task.id}, priority=${currentPriority}, category=${currentCategory}, source=${currentSource}, sort=${currentSort})}">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div th:if="${!#lists.isEmpty(completedTasks)}" class="completed-section">
+
+                <div class="section-toggle completed-toggle" onclick="toggleCompletedSection()">
+                    <i id="completedArrow" class="fa-solid fa-chevron-right"></i>
+                    <span>Completed</span>
+                    <span th:text="${completedCount}"></span>
+                </div>
+
+                <div id="completedList" style="display:none;">
+                    <div th:each="task : ${completedTasks}" class="task-block">
+                        <div class="task-row">
+
+                            <div class="task-left">
+                                <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post" style="margin:0;">
+                                    <input type="hidden" name="priority" th:value="${currentPriority}" />
+                                    <input type="hidden" name="category" th:value="${currentCategory}" />
+                                    <input type="hidden" name="source" th:value="${currentSource}" />
+                                    <input type="hidden" name="sort" th:value="${currentSort}" />
+                                    <input type="checkbox"
+                                           class="task-checkbox"
+                                           th:checked="${task.done}"
+                                           onchange="this.form.submit()" />
+                                </form>
+
+                                <div class="task-content">
+                                    <div class="task-title done" th:text="${task.title}"></div>
+
+                                    <div th:if="${task.description != null and !#strings.isEmpty(task.description)}"
+                                         class="task-desc done">
+                                        <span th:text="${task.description}"></span>
+                                    </div>
+
+                                    <div class="task-meta-row">
+                                        <div class="priority-label" th:if="${task.priority != null}">
+                                <span class="priority-dot"
+                                      th:style="${
+                                          task.priority == 'P1' ? 'background:red;' :
+                                          (task.priority == 'P2' ? 'background:#ff8800;' :
+                                          (task.priority == 'P3' ? 'background:#f4f128;' :
+                                          'background:gray;'))
+                                      }">
+                                </span>
+                                            <span th:text="${task.priority}"></span>
+                                        </div>
+
+                                        <div class="category-label" th:if="${task.category != null and !#strings.isEmpty(task.category)}">
+                                <span class="category-dot"
+                                      th:style="${
+                                          task.category == 'Work' ? 'background:#4a90e2;' :
+                                          (task.category == 'Study' ? 'background:#9b59b6;' :
+                                          (task.category == 'Personal' ? 'background:#ff6fa5;' :
+                                          (task.category == 'Shopping' ? 'background:#2ecc71;' :
+                                          'background:#cfcfcf;')))
+                                      }">
+                                </span>
+                                            <span th:text="${task.category}"></span>
+                                        </div>
+
+                                        <div th:if="${task.dueDate != null}" class="task-date done">
+                                            <i class="fa-regular fa-calendar"></i>
+                                            <span th:text="${task.formattedDueDate}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="task-actions">
+                                <a th:href="@{/tasks/delete/{id}(id=${task.id}, priority=${currentPriority}, category=${currentCategory}, source=${currentSource}, sort=${currentSort})}">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
         </div>
@@ -1057,11 +1268,11 @@
     }
 
     function closeAllEditInline() {
-        document.querySelectorAll(".inline-edit-box").forEach(function(edit) {
+        document.querySelectorAll(".inline-edit-box").forEach(function (edit) {
             edit.classList.remove("active");
         });
 
-        document.querySelectorAll(".task-row").forEach(function(view) {
+        document.querySelectorAll(".task-row").forEach(function (view) {
             view.style.display = "flex";
         });
     }
@@ -1102,7 +1313,7 @@
                 monthSelectorType: "dropdown",
                 prevArrow: "&#10094;",
                 nextArrow: "&#10095;",
-                onChange: function(selectedDates, dateStr) {
+                onChange: function (selectedDates, dateStr) {
                     updateSmartPill(el, formatDateForPill(dateStr));
                 }
             });
@@ -1291,10 +1502,10 @@
             });
         }
 
-        document.querySelectorAll(".inline-edit-box").forEach(function(edit) {
+        document.querySelectorAll(".inline-edit-box").forEach(function (edit) {
             var titleInput = edit.querySelector(".inline-edit-title");
             if (titleInput) {
-                titleInput.addEventListener("keydown", function(e) {
+                titleInput.addEventListener("keydown", function (e) {
                     if (e.key === "Enter" && !e.shiftKey) {
                         e.preventDefault();
 
@@ -1333,7 +1544,7 @@
                 monthSelectorType: "dropdown",
                 prevArrow: "&#10094;",
                 nextArrow: "&#10095;",
-                onChange: function(selectedDates, dateStr) {
+                onChange: function (selectedDates, dateStr) {
                     updateSmartPill(datePill, formatDateForPill(dateStr));
                 }
             });
@@ -1400,7 +1611,7 @@
     });
 
 
-    document.addEventListener("click", function(e) {
+    document.addEventListener("click", function (e) {
         var wrapper = document.querySelector(".sort-wrapper");
         var menu = document.getElementById("sortMenu");
 
@@ -1418,7 +1629,7 @@
         }
     }
 
-    document.addEventListener("click", function(e) {
+    document.addEventListener("click", function (e) {
         var wrapper = document.querySelector(".sort-wrapper");
         var menu = document.getElementById("sortMenu");
 
@@ -1426,6 +1637,37 @@
             menu.style.display = "none";
         }
     });
+
+    function toggleOverdueSection() {
+        const list = document.getElementById("overdueList");
+        const header = document.querySelector(".section-toggle");
+        const arrow = document.getElementById("overdueArrow");
+
+        if (!list || !header || !arrow) return;
+
+        if (list.style.display === "none") {
+            list.style.display = "block";
+            header.classList.add("open");
+        } else {
+            list.style.display = "none";
+            header.classList.remove("open");
+        }
+    }
+
+    function toggleCompletedSection() {
+        const list = document.getElementById("completedList");
+        const header = document.querySelector(".completed-toggle");
+
+        if (!list || !header) return;
+
+        if (list.style.display === "none") {
+            list.style.display = "block";
+            header.classList.add("open");
+        } else {
+            list.style.display = "none";
+            header.classList.remove("open");
+        }
+    }
 </script>
 
 </body>

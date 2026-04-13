@@ -104,6 +104,7 @@ public class Task {
         this.displayOrder = displayOrder;
     }
 
+
     public String getFormattedDueDate() {
         if (dueDate == null) {
             return "";
