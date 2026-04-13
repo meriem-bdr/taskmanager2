@@ -733,15 +733,17 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 700;
             cursor: pointer;
             color: #111;
-            margin-bottom: 12px;
+            margin-top: 0;
+            margin-bottom: 10px;
+            padding-top: 0;
         }
 
         .section-toggle i {
-            font-size: 14px;
+            font-size: 12px;
             transition: transform 0.2s ease;
         }
 
@@ -750,6 +752,12 @@
         }
         .completed-section {
             margin-top: 18px;
+        }
+        .overdue-section,
+        .completed-section {
+            border-top: 1px solid #e9e9e9;
+            margin-top: 14px;
+            padding-top: 12px;
         }
     </style>
 </head>
@@ -898,7 +906,7 @@
                 <p>No tasks yet</p>
             </div>
 
-            <div th:if="${!#lists.isEmpty(tasks)}" class="task-list-container" id="taskListContainer">
+            <div th:if="${!showOverdueFirst and !#lists.isEmpty(tasks)}" class="task-list-container" id="taskListContainer">
                 <div th:each="task : ${tasks}"
                      class="task-block"
                      th:attr="data-id=${task.id}"
@@ -1070,13 +1078,13 @@
             </div>
             <div th:if="${!#lists.isEmpty(overdueTasks)}" class="overdue-section">
 
-                <div class="section-toggle" onclick="toggleOverdueSection()">
+                <div th:class="${overdueOpen} ? 'section-toggle open' : 'section-toggle'" onclick="toggleOverdueSection()">
                     <i id="overdueArrow" class="fa-solid fa-chevron-right"></i>
                     <span>Overdue</span>
                     <span th:text="${overdueCount}"></span>
                 </div>
 
-                <div id="overdueList" style="display:none;">
+                <div id="overdueList" th:style="${overdueOpen} ? 'display:block;' : 'display:none;'">
                     <div th:each="task : ${overdueTasks}" class="task-block">
                         <div class="task-row">
 
@@ -1154,16 +1162,109 @@
                 </div>
 
             </div>
+            <div th:if="${showOverdueFirst and !#lists.isEmpty(tasks)}" class="task-list-container">
+                <div th:each="task : ${tasks}"
+                     class="task-block"
+                     th:attr="data-id=${task.id}"
+                     th:id="'taskBlock-second-' + ${task.id}">
+
+                    <div class="task-row" th:id="'taskView-second-' + ${task.id}">
+
+                        <div class="task-left">
+                <span class="drag-handle" title="Move task">
+                    <i class="fa-solid fa-grip-lines"></i>
+                </span>
+
+                            <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post" style="margin:0;">
+                                <input type="hidden" name="priority" th:value="${currentPriority}" />
+                                <input type="hidden" name="category" th:value="${currentCategory}" />
+                                <input type="hidden" name="source" th:value="${currentSource}" />
+                                <input type="hidden" name="sort" th:value="${currentSort}" />
+                                <input type="checkbox"
+                                       class="task-checkbox"
+                                       th:checked="${task.done}"
+                                       onchange="this.form.submit()" />
+                            </form>
+
+                            <div class="task-content">
+                                <div th:class="${task.done} ? 'task-title done' : 'task-title active'"
+                                     th:text="${task.title}">
+                                </div>
+
+                                <div th:if="${task.description != null and !#strings.isEmpty(task.description)}"
+                                     th:class="${task.done} ? 'task-desc done' : 'task-desc'">
+                        <span th:if="${task.description.length() > 90}">
+                            <span class="desc-short"
+                                  th:text="${task.description.substring(0,90)}"></span>...
+                            <span class="more-btn" onclick="toggleDesc(this)">More</span>
+                            <span class="desc-full"
+                                  th:text="${task.description}"></span>
+                        </span>
+
+                                    <span th:if="${task.description.length() <= 90}"
+                                          th:text="${task.description}">
+                        </span>
+                                </div>
+
+                                <div class="task-meta-row">
+                                    <div class="priority-label" th:if="${task.priority != null}">
+                            <span class="priority-dot"
+                                  th:style="${
+                                      task.priority == 'P1' ? 'background:red;' :
+                                      (task.priority == 'P2' ? 'background:#ff8800;' :
+                                      (task.priority == 'P3' ? 'background:#f4f128;' :
+                                      'background:gray;'))
+                                  }">
+                            </span>
+                                        <span th:text="${task.priority}"></span>
+                                    </div>
+
+                                    <div class="category-label" th:if="${task.category != null and !#strings.isEmpty(task.category)}">
+                            <span class="category-dot"
+                                  th:style="${
+                                      task.category == 'Work' ? 'background:#4a90e2;' :
+                                      (task.category == 'Study' ? 'background:#9b59b6;' :
+                                      (task.category == 'Personal' ? 'background:#ff6fa5;' :
+                                      (task.category == 'Shopping' ? 'background:#2ecc71;' :
+                                      'background:#cfcfcf;')))
+                                  }">
+                            </span>
+                                        <span th:text="${task.category}"></span>
+                                    </div>
+
+                                    <div th:if="${task.dueDate != null}"
+                                         th:class="${task.done} ? 'task-date done' : 'task-date'">
+                                        <i class="fa-regular fa-calendar"></i>
+                                        <span th:text="${task.formattedDueDate}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="task-actions">
+                            <button type="button"
+                                    th:style="${task.done} ? 'color:gray; pointer-events:none; cursor:not-allowed;' : 'color:black;'"
+                                    th:onclick="'toggleEditInline(' + ${task.id} + ')'"
+                                    style="border:none; background:transparent; cursor:pointer;">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+
+                            <a th:href="@{/tasks/delete/{id}(id=${task.id}, priority=${currentPriority}, category=${currentCategory}, source=${currentSource}, sort=${currentSort})}">
+                                <i class="fa-solid fa-xmark"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div th:if="${!#lists.isEmpty(completedTasks)}" class="completed-section">
 
-                <div class="section-toggle completed-toggle" onclick="toggleCompletedSection()">
+                <div th:class="${completedOpen} ? 'section-toggle completed-toggle open' : 'section-toggle completed-toggle'" onclick="toggleCompletedSection()">
                     <i id="completedArrow" class="fa-solid fa-chevron-right"></i>
                     <span>Completed</span>
                     <span th:text="${completedCount}"></span>
                 </div>
 
-                <div id="completedList" style="display:none;">
-                    <div th:each="task : ${completedTasks}" class="task-block">
+                <div id="completedList" th:style="${completedOpen} ? 'display:block;' : 'display:none;'">                    <div th:each="task : ${completedTasks}" class="task-block">
                         <div class="task-row">
 
                             <div class="task-left">

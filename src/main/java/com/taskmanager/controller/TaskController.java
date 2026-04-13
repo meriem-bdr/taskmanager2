@@ -2,18 +2,18 @@ package com.taskmanager.controller;
 
 import com.taskmanager.entity.Task;
 import com.taskmanager.service.TaskService;
+import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import jakarta.validation.Valid;
 
 @Controller
 public class TaskController {
@@ -21,6 +21,40 @@ public class TaskController {
 
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
+    }
+
+    private void prepareTasksPage(Model model, List<Task> sourceTasks, String sort) {
+        List<Task> overdueTasks = sourceTasks.stream()
+                .filter(task -> task.getDueDate() != null)
+                .filter(task -> task.getDueDate().isBefore(LocalDate.now()))
+                .filter(task -> !task.isDone())
+                .toList();
+
+        List<Task> completedTasks = sourceTasks.stream()
+                .filter(Task::isDone)
+                .toList();
+
+        List<Task> activeTasks = sourceTasks.stream()
+                .filter(task -> !task.isDone())
+                .filter(task -> !(task.getDueDate() != null
+                        && task.getDueDate().isBefore(LocalDate.now())))
+                .toList();
+
+        boolean overdueOpen = "overdue".equals(sort);
+        boolean completedOpen = false;
+        boolean showOverdueFirst = "overdue".equals(sort);
+
+        model.addAttribute("tasks", activeTasks);
+        model.addAttribute("overdueTasks", overdueTasks);
+        model.addAttribute("overdueCount", overdueTasks.size());
+        model.addAttribute("overdueOpen", overdueOpen);
+        model.addAttribute("showOverdueFirst", showOverdueFirst);
+
+        model.addAttribute("completedTasks", completedTasks);
+        model.addAttribute("completedCount", completedTasks.size());
+        model.addAttribute("completedOpen", completedOpen);
+
+        model.addAttribute("currentSort", sort);
     }
 
     @GetMapping("/tasks")
@@ -38,31 +72,13 @@ public class TaskController {
             tasks = taskService.getTasksAlphabetically();
         } else if ("dueDate".equals(sort)) {
             tasks = taskService.getTasksByNearestDueDate();
+        } else if ("overdue".equals(sort)) {
+            tasks = taskService.getTasksNewestFirst();
         } else {
             tasks = taskService.getTasksNewestFirst();
         }
 
-        List<Task> overdueTasks = tasks.stream()
-                .filter(task -> task.getDueDate() != null)
-                .filter(task -> task.getDueDate().isBefore(LocalDate.now()))
-                .filter(task -> !task.isDone())
-                .toList();
-
-        List<Task> completedTasks = tasks.stream()
-                .filter(Task::isDone)
-                .toList();
-
-        List<Task> activeTasks = tasks.stream()
-                .filter(task -> !task.isDone())
-                .filter(task -> !(task.getDueDate() != null
-                        && task.getDueDate().isBefore(LocalDate.now())))
-                .toList();
-
-        model.addAttribute("tasks", activeTasks);
-        model.addAttribute("overdueTasks", overdueTasks);
-        model.addAttribute("overdueCount", overdueTasks.size());
-        model.addAttribute("completedTasks", completedTasks);
-        model.addAttribute("completedCount", completedTasks.size());
+        prepareTasksPage(model, tasks, sort);
 
         model.addAttribute("task", new Task());
         model.addAttribute("showAddButton", true);
@@ -72,7 +88,7 @@ public class TaskController {
         model.addAttribute("currentCategory", null);
         model.addAttribute("pageTitle", "All Tasks");
         model.addAttribute("scrollPos", scrollPos);
-        model.addAttribute("currentSort", sort);
+        model.addAttribute("currentSource", "all");
 
         return "tasks";
     }
@@ -84,7 +100,9 @@ public class TaskController {
         Task task = new Task();
         task.setDueDate(LocalDate.now());
 
-        model.addAttribute("tasks", taskService.getTodayTasks());
+        List<Task> todayTasks = taskService.getTodayTasks();
+        prepareTasksPage(model, todayTasks, null);
+
         model.addAttribute("task", task);
         model.addAttribute("showAddButton", true);
         model.addAttribute("showBackToTasks", false);
@@ -97,6 +115,7 @@ public class TaskController {
 
         return "tasks";
     }
+
     @GetMapping("/priorities")
     public String showPrioritiesPage() {
         return "priorities";
@@ -106,7 +125,10 @@ public class TaskController {
     public String getTasksByPriority(@PathVariable String priority,
                                      @RequestParam(required = false) String scrollPos,
                                      Model model) {
-        model.addAttribute("tasks", taskService.getTasksByPriority(priority));
+
+        List<Task> priorityTasks = taskService.getTasksByPriority(priority);
+        prepareTasksPage(model, priorityTasks, null);
+
         model.addAttribute("task", new Task());
         model.addAttribute("showAddButton", false);
         model.addAttribute("showBackToTasks", true);
@@ -116,6 +138,7 @@ public class TaskController {
         model.addAttribute("pageTitle", "Priority - " + priority);
         model.addAttribute("scrollPos", scrollPos);
         model.addAttribute("currentSource", "priority");
+
         return "tasks";
     }
 
@@ -125,8 +148,8 @@ public class TaskController {
                               @RequestParam(required = false) String startDate,
                               @RequestParam(required = false) String targetDate,
                               @RequestParam(required = false) String sort,
-
                               Model model) {
+
         Task task = new Task();
 
         if (dueDate != null && !dueDate.isEmpty()) {
@@ -137,6 +160,7 @@ public class TaskController {
         model.addAttribute("source", source);
         model.addAttribute("startDate", startDate);
         model.addAttribute("targetDate", targetDate);
+        model.addAttribute("sort", sort);
 
         return "add-task";
     }
@@ -153,7 +177,7 @@ public class TaskController {
                            Model model) {
 
         if (result.hasErrors()) {
-            model.addAttribute("tasks", taskService.getAllTasks());
+            prepareTasksPage(model, taskService.getAllTasks(), null);
             model.addAttribute("task", task);
             model.addAttribute("showAddButton", true);
             model.addAttribute("showBackToTasks", false);
@@ -205,7 +229,8 @@ public class TaskController {
             return "redirect:/tasks?sort=" + sort;
         }
 
-        return "redirect:/tasks";    }
+        return "redirect:/tasks";
+    }
 
     @GetMapping("/tasks/delete/{id}")
     public String deleteTask(@PathVariable Long id,
@@ -248,7 +273,8 @@ public class TaskController {
             return "redirect:/tasks?sort=" + sort;
         }
 
-        return "redirect:/tasks";    }
+        return "redirect:/tasks";
+    }
 
     @GetMapping("/tasks/edit/{id}")
     public String showEditForm(@PathVariable Long id,
@@ -333,7 +359,8 @@ public class TaskController {
             return "redirect:/tasks?sort=" + sort;
         }
 
-        return "redirect:/tasks";    }
+        return "redirect:/tasks";
+    }
 
     @PostMapping("/tasks/toggle/{id}")
     public String toggleTaskDone(@PathVariable Long id,
@@ -378,6 +405,7 @@ public class TaskController {
 
         return "redirect:/tasks";
     }
+
     @GetMapping("/upcoming")
     public String showUpcoming(
             @RequestParam(value = "startDate", required = false)
@@ -413,6 +441,7 @@ public class TaskController {
         model.addAttribute("currentStartDate", startDate);
         model.addAttribute("today", today);
         model.addAttribute("task", new Task());
+
         return "upcoming";
     }
 
@@ -425,7 +454,10 @@ public class TaskController {
     public String getTasksByCategory(@PathVariable String category,
                                      @RequestParam(required = false) String scrollPos,
                                      Model model) {
-        model.addAttribute("tasks", taskService.getTasksByCategory(category));
+
+        List<Task> categoryTasks = taskService.getTasksByCategory(category);
+        prepareTasksPage(model, categoryTasks, null);
+
         model.addAttribute("task", new Task());
         model.addAttribute("showAddButton", false);
         model.addAttribute("showBackToTasks", true);
@@ -435,6 +467,7 @@ public class TaskController {
         model.addAttribute("pageTitle", "Category - " + category);
         model.addAttribute("scrollPos", scrollPos);
         model.addAttribute("currentSource", "category");
+
         return "tasks";
     }
 
@@ -443,5 +476,4 @@ public class TaskController {
     public void reorderTasks(@RequestBody List<Long> orderedIds) {
         taskService.reorderTasks(orderedIds);
     }
-
 }
