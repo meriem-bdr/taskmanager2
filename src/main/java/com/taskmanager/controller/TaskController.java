@@ -155,11 +155,43 @@ public class TaskController {
     @GetMapping("/tasks/priority/{priority}")
     public String getTasksByPriority(@PathVariable String priority,
                                      @RequestParam(required = false) String scrollPos,
+                                     @RequestParam(required = false) String sort,
                                      Model model) {
 
         List<Task> priorityTasks = taskService.getTasksByPriority(priority);
-        prepareTasksPage(model, priorityTasks, null);
 
+        if ("oldest".equals(sort)) {
+            priorityTasks = priorityTasks.stream()
+                    .sorted((t1, t2) -> t1.getId().compareTo(t2.getId()))
+                    .toList();
+        } else if ("priority".equals(sort)) {
+            priorityTasks = priorityTasks.stream()
+                    .sorted((t1, t2) -> {
+                        String p1 = t1.getPriority() != null ? t1.getPriority() : "P4";
+                        String p2 = t2.getPriority() != null ? t2.getPriority() : "P4";
+                        return p1.compareTo(p2);
+                    })
+                    .toList();
+        } else if ("az".equals(sort)) {
+            priorityTasks = priorityTasks.stream()
+                    .sorted((t1, t2) -> t1.getTitle().compareToIgnoreCase(t2.getTitle()))
+                    .toList();
+        } else if ("dueDate".equals(sort)) {
+            priorityTasks = priorityTasks.stream()
+                    .sorted((t1, t2) -> {
+                        if (t1.getDueDate() == null && t2.getDueDate() == null) return 0;
+                        if (t1.getDueDate() == null) return 1;
+                        if (t2.getDueDate() == null) return -1;
+                        return t1.getDueDate().compareTo(t2.getDueDate());
+                    })
+                    .toList();
+        } else {
+            priorityTasks = priorityTasks.stream()
+                    .sorted((t1, t2) -> t2.getId().compareTo(t1.getId()))
+                    .toList();
+        }
+
+        prepareTasksPage(model, priorityTasks, sort);
         model.addAttribute("task", new Task());
         model.addAttribute("showAddButton", false);
         model.addAttribute("showBackToTasks", true);
@@ -205,6 +237,8 @@ public class TaskController {
                            @RequestParam(required = false) String startDate,
                            @RequestParam(required = false) String targetDate,
                            @RequestParam(required = false) String sort,
+                           @RequestParam(required = false) String scrollPos,
+                           @RequestParam(required = false) String keyword,
                            Model model) {
 
         if (result.hasErrors()) {
@@ -229,10 +263,24 @@ public class TaskController {
         taskService.saveTask(task);
 
         if ("today".equals(source)) {
+            String redirect = "redirect:/today";
+            boolean hasParam = false;
+
             if (sort != null && !sort.isEmpty()) {
-                return "redirect:/today?sort=" + sort;
+                redirect += "?sort=" + sort;
+                hasParam = true;
             }
-            return "redirect:/today";
+
+            if (keyword != null && !keyword.isEmpty()) {
+                redirect += (hasParam ? "&" : "?") + "keyword=" + keyword;
+                hasParam = true;
+            }
+
+            if (scrollPos != null && !scrollPos.isEmpty()) {
+                redirect += (hasParam ? "&" : "?") + "scrollPos=" + scrollPos;
+            }
+
+            return redirect;
         }
 
         if ("upcoming".equals(source)) {
@@ -251,6 +299,12 @@ public class TaskController {
             return redirectUrl;
         }
 
+        if ("search".equals(source)) {
+            if (sort != null && !sort.isEmpty()) {
+                return "redirect:/tasks/search?keyword=" + keyword + "&sort=" + sort;
+            }
+            return "redirect:/tasks/search?keyword=" + keyword;
+        }
         if (priorityFilter != null && !priorityFilter.isEmpty()) {
             return "redirect:/tasks/priority/" + priorityFilter;
         }
@@ -259,11 +313,25 @@ public class TaskController {
             return "redirect:/tasks/category/" + currentCategory;
         }
 
+        String redirect = "redirect:/tasks";
+        boolean hasParam = false;
+
         if (sort != null && !sort.isEmpty()) {
-            return "redirect:/tasks?sort=" + sort;
+            redirect += "?sort=" + sort;
+            hasParam = true;
         }
 
-        return "redirect:/tasks";
+        if (keyword != null && !keyword.isEmpty()) {
+            redirect += (hasParam ? "&" : "?") + "keyword=" + keyword;
+            hasParam = true;
+        }
+
+        if (scrollPos != null && !scrollPos.isEmpty()) {
+            redirect += (hasParam ? "&" : "?") + "scrollPos=" + scrollPos;
+        }
+
+        return redirect;
+
     }
 
     @GetMapping("/tasks/delete/{id}")
@@ -273,16 +341,33 @@ public class TaskController {
                              @RequestParam(required = false) String source,
                              @RequestParam(required = false) String startDate,
                              @RequestParam(required = false) String targetDate,
-                             @RequestParam(required = false) String sort) {
+                             @RequestParam(required = false) String sort,
+                             @RequestParam(required = false) String scrollPos,
+                             @RequestParam(required = false) String keyword)
+                            {
 
         taskService.deleteTask(id);
 
-        if ("today".equals(source)) {
-            if (sort != null && !sort.isEmpty()) {
-                return "redirect:/today?sort=" + sort;
-            }
-            return "redirect:/today";
-        }
+                                if ("today".equals(source)) {
+                                    String redirect = "redirect:/today";
+                                    boolean hasParam = false;
+
+                                    if (sort != null && !sort.isEmpty()) {
+                                        redirect += "?sort=" + sort;
+                                        hasParam = true;
+                                    }
+
+                                    if (keyword != null && !keyword.isEmpty()) {
+                                        redirect += (hasParam ? "&" : "?") + "keyword=" + keyword;
+                                        hasParam = true;
+                                    }
+
+                                    if (scrollPos != null && !scrollPos.isEmpty()) {
+                                        redirect += (hasParam ? "&" : "?") + "scrollPos=" + scrollPos;
+                                    }
+
+                                    return redirect;
+                                }
 
         if ("upcoming".equals(source)) {
             String redirectUrl = "redirect:/upcoming";
@@ -297,7 +382,12 @@ public class TaskController {
 
             return redirectUrl;
         }
-
+        if ("search".equals(source)) {
+            if (sort != null && !sort.isEmpty()) {
+                return "redirect:/tasks/search?keyword=" + keyword + "&sort=" + sort;
+            }
+            return "redirect:/tasks/search?keyword=" + keyword;
+        }
         if (category != null && !category.isEmpty()) {
             return "redirect:/tasks/category/" + category;
         }
@@ -306,11 +396,26 @@ public class TaskController {
             return "redirect:/tasks/priority/" + priority;
         }
 
-        if (sort != null && !sort.isEmpty()) {
-            return "redirect:/tasks?sort=" + sort;
-        }
+                                String redirect = "redirect:/tasks";
+                                boolean hasParam = false;
 
-        return "redirect:/tasks";
+                                if (sort != null && !sort.isEmpty()) {
+                                    redirect += "?sort=" + sort;
+                                    hasParam = true;
+                                }
+
+                                if (keyword != null && !keyword.isEmpty()) {
+                                    redirect += (hasParam ? "&" : "?") + "keyword=" + keyword;
+                                    hasParam = true;
+                                }
+
+                                if (scrollPos != null && !scrollPos.isEmpty()) {
+                                    redirect += (hasParam ? "&" : "?") + "scrollPos=" + scrollPos;
+                                }
+
+                                return redirect;
+
+
     }
 
     @GetMapping("/tasks/edit/{id}")
@@ -347,7 +452,9 @@ public class TaskController {
                              @RequestParam(required = false) String source,
                              @RequestParam(required = false) String startDate,
                              @RequestParam(required = false) String targetDate,
-                             @RequestParam(required = false) String sort) {
+                             @RequestParam(required = false) String sort,
+                             @RequestParam(required = false) String scrollPos,
+                             @RequestParam(required = false) String keyword){
 
         Task existingTask = taskService.getTaskById(id);
 
@@ -365,10 +472,24 @@ public class TaskController {
         taskService.saveTask(existingTask);
 
         if ("today".equals(source)) {
+            String redirect = "redirect:/today";
+            boolean hasParam = false;
+
             if (sort != null && !sort.isEmpty()) {
-                return "redirect:/today?sort=" + sort;
+                redirect += "?sort=" + sort;
+                hasParam = true;
             }
-            return "redirect:/today";
+
+            if (keyword != null && !keyword.isEmpty()) {
+                redirect += (hasParam ? "&" : "?") + "keyword=" + keyword;
+                hasParam = true;
+            }
+
+            if (scrollPos != null && !scrollPos.isEmpty()) {
+                redirect += (hasParam ? "&" : "?") + "scrollPos=" + scrollPos;
+            }
+
+            return redirect;
         }
 
         if ("upcoming".equals(source)) {
@@ -387,19 +508,39 @@ public class TaskController {
             return redirectUrl;
         }
 
+        if ("search".equals(source)) {
+            if (sort != null && !sort.isEmpty()) {
+                return "redirect:/tasks/search?keyword=" + keyword + "&sort=" + sort;
+            }
+            return "redirect:/tasks/search?keyword=" + keyword;
+        }
         if (currentCategory != null && !currentCategory.isEmpty()) {
             return "redirect:/tasks/category/" + currentCategory;
         }
 
+
         if (priorityFilter != null && !priorityFilter.isEmpty()) {
             return "redirect:/tasks/priority/" + priorityFilter;
         }
+        String redirect = "redirect:/tasks";
+        boolean hasParam = false;
 
         if (sort != null && !sort.isEmpty()) {
-            return "redirect:/tasks?sort=" + sort;
+            redirect += "?sort=" + sort;
+            hasParam = true;
         }
 
-        return "redirect:/tasks";
+        if (keyword != null && !keyword.isEmpty()) {
+            redirect += (hasParam ? "&" : "?") + "keyword=" + keyword;
+            hasParam = true;
+        }
+
+        if (scrollPos != null && !scrollPos.isEmpty()) {
+            redirect += (hasParam ? "&" : "?") + "scrollPos=" + scrollPos;
+        }
+
+        return redirect;
+
     }
 
     @PostMapping("/tasks/toggle/{id}")
@@ -409,17 +550,39 @@ public class TaskController {
                                  @RequestParam(required = false) String source,
                                  @RequestParam(required = false) String startDate,
                                  @RequestParam(required = false) String targetDate,
-                                 @RequestParam(required = false) String sort) {
+                                 @RequestParam(required = false) String sort,
+                                 @RequestParam(required = false) String scrollPos,
+
+                                 @RequestParam(required = false) String keyword){
 
         taskService.toggleDone(id);
 
         if ("today".equals(source)) {
-            if (sort != null && !sort.isEmpty()) {
-                return "redirect:/today?sort=" + sort;
-            }
-            return "redirect:/today";
-        }
+            String redirect = "redirect:/today";
+            boolean hasParam = false;
 
+            if (sort != null && !sort.isEmpty()) {
+                redirect += "?sort=" + sort;
+                hasParam = true;
+            }
+
+            if (keyword != null && !keyword.isEmpty()) {
+                redirect += (hasParam ? "&" : "?") + "keyword=" + keyword;
+                hasParam = true;
+            }
+
+            if (scrollPos != null && !scrollPos.isEmpty()) {
+                redirect += (hasParam ? "&" : "?") + "scrollPos=" + scrollPos;
+            }
+
+            return redirect;
+        }
+        if ("search".equals(source)) {
+            if (sort != null && !sort.isEmpty()) {
+                return "redirect:/tasks/search?keyword=" + keyword + "&sort=" + sort;
+            }
+            return "redirect:/tasks/search?keyword=" + keyword;
+        }
         if (category != null && !category.isEmpty()) {
             return "redirect:/tasks/category/" + category;
         }
@@ -442,11 +605,24 @@ public class TaskController {
             return redirectUrl;
         }
 
+        String redirect = "redirect:/tasks";
+        boolean hasParam = false;
+
         if (sort != null && !sort.isEmpty()) {
-            return "redirect:/tasks?sort=" + sort;
+            redirect += "?sort=" + sort;
+            hasParam = true;
         }
 
-        return "redirect:/tasks";
+        if (keyword != null && !keyword.isEmpty()) {
+            redirect += (hasParam ? "&" : "?") + "keyword=" + keyword;
+            hasParam = true;
+        }
+
+        if (scrollPos != null && !scrollPos.isEmpty()) {
+            redirect += (hasParam ? "&" : "?") + "scrollPos=" + scrollPos;
+        }
+
+        return redirect;
     }
 
     @GetMapping("/upcoming")
@@ -496,10 +672,43 @@ public class TaskController {
     @GetMapping("/tasks/category/{category}")
     public String getTasksByCategory(@PathVariable String category,
                                      @RequestParam(required = false) String scrollPos,
+                                     @RequestParam(required = false) String sort,
                                      Model model) {
 
         List<Task> categoryTasks = taskService.getTasksByCategory(category);
-        prepareTasksPage(model, categoryTasks, null);
+
+        if ("oldest".equals(sort)) {
+            categoryTasks = categoryTasks.stream()
+                    .sorted((t1, t2) -> t1.getId().compareTo(t2.getId()))
+                    .toList();
+        } else if ("priority".equals(sort)) {
+            categoryTasks = categoryTasks.stream()
+                    .sorted((t1, t2) -> {
+                        String p1 = t1.getPriority() != null ? t1.getPriority() : "P4";
+                        String p2 = t2.getPriority() != null ? t2.getPriority() : "P4";
+                        return p1.compareTo(p2);
+                    })
+                    .toList();
+        } else if ("az".equals(sort)) {
+            categoryTasks = categoryTasks.stream()
+                    .sorted((t1, t2) -> t1.getTitle().compareToIgnoreCase(t2.getTitle()))
+                    .toList();
+        } else if ("dueDate".equals(sort)) {
+            categoryTasks = categoryTasks.stream()
+                    .sorted((t1, t2) -> {
+                        if (t1.getDueDate() == null && t2.getDueDate() == null) return 0;
+                        if (t1.getDueDate() == null) return 1;
+                        if (t2.getDueDate() == null) return -1;
+                        return t1.getDueDate().compareTo(t2.getDueDate());
+                    })
+                    .toList();
+        } else {
+            categoryTasks = categoryTasks.stream()
+                    .sorted((t1, t2) -> t2.getId().compareTo(t1.getId()))
+                    .toList();
+        }
+
+        prepareTasksPage(model, categoryTasks, sort);
 
         model.addAttribute("task", new Task());
         model.addAttribute("showAddButton", false);
@@ -519,24 +728,60 @@ public class TaskController {
     public void reorderTasks(@RequestBody List<Long> orderedIds) {
         taskService.reorderTasks(orderedIds);
     }
+
     @GetMapping("/search")
     @ResponseBody
     public List<Task> search(@RequestParam String keyword) {
         return taskService.searchTasks(keyword);
     }
+
     @GetMapping("/tasks/search")
-    public String searchTasks(@RequestParam String keyword, Model model) {
+    public String searchTasks(@RequestParam String keyword,
+                              @RequestParam(required = false) String sort,
+                              Model model) {
 
         List<Task> tasks = taskService.searchTasks(keyword);
 
-        model.addAttribute("tasks", tasks);
+        if ("oldest".equals(sort)) {
+            tasks = tasks.stream()
+                    .sorted((t1, t2) -> t1.getId().compareTo(t2.getId()))
+                    .toList();
+        } else if ("priority".equals(sort)) {
+            tasks = tasks.stream()
+                    .sorted((t1, t2) -> {
+                        String p1 = t1.getPriority() != null ? t1.getPriority() : "P4";
+                        String p2 = t2.getPriority() != null ? t2.getPriority() : "P4";
+                        return p1.compareTo(p2);
+                    })
+                    .toList();
+        } else if ("az".equals(sort)) {
+            tasks = tasks.stream()
+                    .sorted((t1, t2) -> t1.getTitle().compareToIgnoreCase(t2.getTitle()))
+                    .toList();
+        } else if ("dueDate".equals(sort)) {
+            tasks = tasks.stream()
+                    .sorted((t1, t2) -> {
+                        if (t1.getDueDate() == null && t2.getDueDate() == null) return 0;
+                        if (t1.getDueDate() == null) return 1;
+                        if (t2.getDueDate() == null) return -1;
+                        return t1.getDueDate().compareTo(t2.getDueDate());
+                    })
+                    .toList();
+        } else {
+            tasks = tasks.stream()
+                    .sorted((t1, t2) -> t2.getId().compareTo(t1.getId()))
+                    .toList();
+        }
+
+        prepareTasksPage(model, tasks, sort);
+
         model.addAttribute("task", new Task());
-        model.addAttribute("showAddButton", true);
+        model.addAttribute("showAddButton", false);
         model.addAttribute("showBackToTasks", true);
         model.addAttribute("backUrl", "/tasks");
         model.addAttribute("pageTitle", "Search results for: " + keyword);
-        model.addAttribute("currentSort", null);
-        model.addAttribute("showOverdueFirst", false);
+        model.addAttribute("currentSource", "search");
+        model.addAttribute("searchKeyword", keyword);
 
         return "tasks";
     }

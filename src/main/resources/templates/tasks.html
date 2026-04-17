@@ -900,12 +900,54 @@
                             <div class="sort-tooltip">Group and sort</div>
 
                             <div id="sortMenu" class="sort-menu">
-                                <a href="/tasks?sort=newest">Newest added</a>
-                                <a href="/tasks?sort=oldest">Oldest added</a>
-                                <a href="/tasks?sort=priority">Priority</a>
-                                <a href="/tasks?sort=az">A to Z</a>
-                                <a href="/tasks?sort=dueDate">Due date nearest</a>
-                                <a href="/tasks?sort=overdue">Overdue!</a>
+                                <!-- TODAY -->
+                                <a th:if="${currentSource == 'today'}" th:href="@{/today(sort='newest')}">Newest added</a>
+                                <a th:if="${currentSource == 'today'}" th:href="@{/today(sort='oldest')}">Oldest added</a>
+                                <a th:if="${currentSource == 'today'}" th:href="@{/today(sort='priority')}">Priority</a>
+                                <a th:if="${currentSource == 'today'}" th:href="@{/today(sort='az')}">A to Z</a>
+                                <a th:if="${currentSource == 'today'}" th:href="@{/today(sort='dueDate')}">Due date nearest</a>
+
+                                <!-- CATEGORY -->
+                                <a th:if="${currentSource == 'category'}"
+                                   th:href="@{/tasks/category/{category}(category=${currentCategory}, sort='newest')}">Newest added</a>
+                                <a th:if="${currentSource == 'category'}"
+                                   th:href="@{/tasks/category/{category}(category=${currentCategory}, sort='oldest')}">Oldest added</a>
+                                <a th:if="${currentSource == 'category'}"
+                                   th:href="@{/tasks/category/{category}(category=${currentCategory}, sort='priority')}">Priority</a>
+                                <a th:if="${currentSource == 'category'}"
+                                   th:href="@{/tasks/category/{category}(category=${currentCategory}, sort='az')}">A to Z</a>
+                                <a th:if="${currentSource == 'category'}"
+                                   th:href="@{/tasks/category/{category}(category=${currentCategory}, sort='dueDate')}">Due date nearest</a>
+
+                                <!-- PRIORITY -->
+                                <a th:if="${currentSource == 'priority'}"
+                                   th:href="@{/tasks/priority/{priority}(priority=${currentPriority}, sort='newest')}">Newest added</a>
+                                <a th:if="${currentSource == 'priority'}"
+                                   th:href="@{/tasks/priority/{priority}(priority=${currentPriority}, sort='oldest')}">Oldest added</a>
+
+                                <a th:if="${currentSource == 'priority'}"
+                                   th:href="@{/tasks/priority/{priority}(priority=${currentPriority}, sort='az')}">A to Z</a>
+                                <a th:if="${currentSource == 'priority'}"
+                                   th:href="@{/tasks/priority/{priority}(priority=${currentPriority}, sort='dueDate')}">Due date nearest</a>
+
+                                <!-- SEARCH -->
+                                <a th:if="${currentSource == 'search'}"
+                                   th:href="@{/tasks/search(keyword=${searchKeyword}, sort='newest')}">Newest added</a>
+                                <a th:if="${currentSource == 'search'}"
+                                   th:href="@{/tasks/search(keyword=${searchKeyword}, sort='oldest')}">Oldest added</a>
+                                <a th:if="${currentSource == 'search'}"
+                                   th:href="@{/tasks/search(keyword=${searchKeyword}, sort='priority')}">Priority</a>
+                                <a th:if="${currentSource == 'search'}"
+                                   th:href="@{/tasks/search(keyword=${searchKeyword}, sort='az')}">A to Z</a>
+                                <a th:if="${currentSource == 'search'}"
+                                   th:href="@{/tasks/search(keyword=${searchKeyword}, sort='dueDate')}">Due date nearest</a>
+
+                                <!-- ALL TASKS -->
+                                <a th:if="${currentSource == 'all' or currentSource == null}" th:href="@{/tasks(sort='newest')}">Newest added</a>
+                                <a th:if="${currentSource == 'all' or currentSource == null}" th:href="@{/tasks(sort='oldest')}">Oldest added</a>
+                                <a th:if="${currentSource == 'all' or currentSource == null}" th:href="@{/tasks(sort='priority')}">Priority</a>
+                                <a th:if="${currentSource == 'all' or currentSource == null}" th:href="@{/tasks(sort='az')}">A to Z</a>
+                                <a th:if="${currentSource == 'all' or currentSource == null}" th:href="@{/tasks(sort='dueDate')}">Due date nearest</a>
                             </div>
                         </div>
                     </div>
@@ -929,7 +971,8 @@
                 <input type="hidden" name="currentCategory" th:value="${currentCategory}">
                 <input type="hidden" name="source" th:value="${currentSource}">
                 <input type="hidden" name="sort" th:value="${currentSort}">
-
+                <input type="hidden" name="keyword" th:value="${searchKeyword}">
+                <input type="hidden" name="scrollPos" id="scrollPosInput" th:value="${scrollPos}">
                 <div class="quick-add-top">
                     <input type="text"
                            th:field="*{title}"
@@ -1007,7 +1050,8 @@
                                 <input type="hidden" name="category" th:value="${currentCategory}"/>
                                 <input type="hidden" name="source" th:value="${currentSource}"/>
                                 <input type="hidden" name="sort" th:value="${currentSort}" />
-
+                                <input type="hidden" name="keyword" th:value="${searchKeyword}">
+                                <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
                                 <input type="checkbox"
                                        class="task-checkbox"
                                        th:checked="${task.done}"
@@ -1085,14 +1129,15 @@
                             </button>
 
                             <a th:href="@{/tasks/delete/{id}(id=${task.id},
-                                priority=${currentPriority},
-                                category=${currentCategory},
-                                source=${currentSource},
-                                startDate=${currentStartDate},
-                                targetDate=${task.dueDate},
-                                sort=${currentSort})}">
+    priority=${currentPriority},
+    category=${currentCategory},
+    source=${currentSource},
+    startDate=${currentStartDate},
+    targetDate=${task.dueDate},
+    sort=${currentSort}, keyword=${searchKeyword}, scrollPos=${scrollPos})}">
+
                                 <i class="fa-solid fa-xmark"></i>
-                            </a>                                <i class="fa-solid fa-xmark"></i>
+
                             </a>
                         </div>
                     </div>
@@ -1103,6 +1148,7 @@
                             <input type="hidden" name="currentCategory" th:value="${currentCategory}">
                             <input type="hidden" name="source" th:value="${currentSource}">
                             <input type="hidden" name="sort" th:value="${currentSort}">
+                            <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
                             <div class="inline-edit-top">
                                 <input type="text"
                                        name="title"
@@ -1186,6 +1232,8 @@
                                     <input type="hidden" name="category" th:value="${currentCategory}" />
                                     <input type="hidden" name="source" th:value="${currentSource}" />
                                     <input type="hidden" name="sort" th:value="${currentSort}" />
+                                    <input type="hidden" name="keyword" th:value="${searchKeyword}">
+                                    <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
                                     <input type="checkbox"
                                            class="task-checkbox"
                                            th:checked="${task.done}"
@@ -1246,14 +1294,14 @@
 
                                 <a th:href="@{/tasks/delete/{id}(id=${task.id},
                                 priority=${currentPriority},
-                                category=${currentCategory},
-                                source=${currentSource},
-                                startDate=${currentStartDate},
-                                targetDate=${task.dueDate},
-                                sort=${currentSort})}">
+    category=${currentCategory},
+    source=${currentSource},
+    startDate=${currentStartDate},
+    targetDate=${task.dueDate},
+    sort=${currentSort}, keyword=${searchKeyword}, scrollPos=${scrollPos})}">
+
                                     <i class="fa-solid fa-xmark"></i>
-                                </a>
-                                <i class="fa-solid fa-xmark"></i>
+
                                 </a>
                             </div>
 
@@ -1281,7 +1329,8 @@
                                 <input type="hidden" name="source" th:value="${currentSource}" />
                                 <input type="hidden" name="sort" th:value="${currentSort}" />
                                 <input type="hidden" name="sort" th:value="${currentSort}" />
-
+                                <input type="hidden" name="keyword" th:value="${searchKeyword}">
+                                <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
                                 <input type="checkbox"
                                        class="task-checkbox"
                                        th:checked="${task.done}"
@@ -1352,14 +1401,15 @@
                             </button>
 
                             <a th:href="@{/tasks/delete/{id}(id=${task.id},
-                                priority=${currentPriority},
-                                category=${currentCategory},
-                                source=${currentSource},
-                                startDate=${currentStartDate},
-                                targetDate=${task.dueDate},
-                                sort=${currentSort})}">
+    priority=${currentPriority},
+    category=${currentCategory},
+    source=${currentSource},
+    startDate=${currentStartDate},
+    targetDate=${task.dueDate},
+    sort=${currentSort}, keyword=${searchKeyword}, scrollPos=${scrollPos})}">
+
                                 <i class="fa-solid fa-xmark"></i>
-                            </a>                                <i class="fa-solid fa-xmark"></i>
+
                             </a>
                         </div>
                     </div>
@@ -1383,7 +1433,8 @@
                                 <input type="hidden" name="source" th:value="${currentSource}" />
                                 <input type="hidden" name="sort" th:value="${currentSort}" />
                                 <input type="hidden" name="sort" th:value="${currentSort}" />
-
+                                <input type="hidden" name="keyword" th:value="${searchKeyword}">
+                                <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
                                 <input type="checkbox"
                                        class="task-checkbox"
                                        th:checked="${task.done}"
@@ -1434,15 +1485,15 @@
 
                         <div class="task-actions">
                             <a th:href="@{/tasks/delete/{id}(id=${task.id},
-                                priority=${currentPriority},
-                                category=${currentCategory},
-                                source=${currentSource},
-                                startDate=${currentStartDate},
-                                targetDate=${task.dueDate},
-                                sort=${currentSort})}">
+    priority=${currentPriority},
+    category=${currentCategory},
+    source=${currentSource},
+    startDate=${currentStartDate},
+    targetDate=${task.dueDate},
+    sort=${currentSort}, keyword=${searchKeyword}, scrollPos=${scrollPos})}">
+
                                 <i class="fa-solid fa-xmark"></i>
-                            </a>
-                            <i class="fa-solid fa-xmark"></i>
+
                             </a>
                         </div>
 
@@ -1942,6 +1993,39 @@
             header.classList.remove("open");
         }
     }
+    function updateAllScrollInputs() {
+        const value = window.scrollY || window.pageYOffset ||  0;
+
+        const mainInput = document.getElementById("scrollPosInput");
+        if (mainInput) {
+            mainInput.value = value;
+        }
+
+        document.querySelectorAll(".scroll-pos-input").forEach(input => {
+            input.value = value;
+        });
+
+        document.querySelectorAll('a[href*="/tasks/delete/"]').forEach(link => {
+            try {
+                const url = new URL(link.href, window.location.origin);
+                url.searchParams.set("scrollPos", value);
+                link.href = url.toString();
+            } catch (e) {}
+        });
+    }
+
+    window.addEventListener("scroll", updateAllScrollInputs);
+
+    document.addEventListener("DOMContentLoaded", function () {
+        updateAllScrollInputs();
+
+        const savedScroll = "[[${scrollPos}]]";
+        if (savedScroll && savedScroll !== "null" && savedScroll !== "") {
+            setTimeout(() => {
+                window.scrollTo(0, parseInt(savedScroll));
+            }, 50);
+        }
+    });
 </script>
 
 </body>
