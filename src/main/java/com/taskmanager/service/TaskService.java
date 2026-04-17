@@ -288,4 +288,7 @@ public class TaskService {
 
         return result;
     }
+    public List<Task> searchTasks(String keyword) {
+        return taskRepository.findByTitleContainingIgnoreCase(keyword);
+    }
 }
