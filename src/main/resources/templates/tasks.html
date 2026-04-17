@@ -818,13 +818,11 @@
                     <div class="sort-tooltip">Group and sort</div>
 
                     <div id="sortMenu" class="sort-menu">
-                        <a href="/tasks?sort=newest">Newest added</a>
-                        <a href="/tasks?sort=oldest">Oldest added</a>
-                        <a href="/tasks?sort=priority">Priority</a>
-                        <a href="/tasks?sort=az">A to Z</a>
-                        <a href="/tasks?sort=dueDate">Due date nearest</a>
-                        <a href="/tasks?sort=overdue">Overdue!</a>
-
+                        <a th:href="${currentSource == 'today'} ? @{/today(sort='newest')} : @{/tasks(sort='newest')}">Newest added</a>
+                        <a th:href="${currentSource == 'today'} ? @{/today(sort='oldest')} : @{/tasks(sort='oldest')}">Oldest added</a>
+                        <a th:href="${currentSource == 'today'} ? @{/today(sort='priority')} : @{/tasks(sort='priority')}">Priority</a>
+                        <a th:href="${currentSource == 'today'} ? @{/today(sort='az')} : @{/tasks(sort='az')}">A to Z</a>
+                        <a th:href="${currentSource == 'today'} ? @{/today(sort='dueDate')} : @{/tasks(sort='dueDate')}">Due date nearest</a>
                     </div>
                 </div>
             </div>
@@ -923,6 +921,8 @@
                                 <input type="hidden" name="priority" th:value="${currentPriority}"/>
                                 <input type="hidden" name="category" th:value="${currentCategory}"/>
                                 <input type="hidden" name="source" th:value="${currentSource}"/>
+                                <input type="hidden" name="sort" th:value="${currentSort}" />
+
                                 <input type="checkbox"
                                        class="task-checkbox"
                                        th:checked="${task.done}"
@@ -999,8 +999,15 @@
                                 <i class="fa-solid fa-pen"></i>
                             </button>
 
-                            <a th:href="@{/tasks/delete/{id}(id=${task.id}, priority=${currentPriority}, category=${currentCategory}, source=${currentSource}, sort=${currentSort})}">
+                            <a th:href="@{/tasks/delete/{id}(id=${task.id},
+                                priority=${currentPriority},
+                                category=${currentCategory},
+                                source=${currentSource},
+                                startDate=${currentStartDate},
+                                targetDate=${task.dueDate},
+                                sort=${currentSort})}">
                                 <i class="fa-solid fa-xmark"></i>
+                            </a>                                <i class="fa-solid fa-xmark"></i>
                             </a>
                         </div>
                     </div>
@@ -1152,8 +1159,16 @@
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
 
-                                <a th:href="@{/tasks/delete/{id}(id=${task.id}, priority=${currentPriority}, category=${currentCategory}, source=${currentSource}, sort=${currentSort})}">
+                                <a th:href="@{/tasks/delete/{id}(id=${task.id},
+                                priority=${currentPriority},
+                                category=${currentCategory},
+                                source=${currentSource},
+                                startDate=${currentStartDate},
+                                targetDate=${task.dueDate},
+                                sort=${currentSort})}">
                                     <i class="fa-solid fa-xmark"></i>
+                                </a>
+                                <i class="fa-solid fa-xmark"></i>
                                 </a>
                             </div>
 
@@ -1180,6 +1195,8 @@
                                 <input type="hidden" name="category" th:value="${currentCategory}" />
                                 <input type="hidden" name="source" th:value="${currentSource}" />
                                 <input type="hidden" name="sort" th:value="${currentSort}" />
+                                <input type="hidden" name="sort" th:value="${currentSort}" />
+
                                 <input type="checkbox"
                                        class="task-checkbox"
                                        th:checked="${task.done}"
@@ -1249,8 +1266,15 @@
                                 <i class="fa-solid fa-pen"></i>
                             </button>
 
-                            <a th:href="@{/tasks/delete/{id}(id=${task.id}, priority=${currentPriority}, category=${currentCategory}, source=${currentSource}, sort=${currentSort})}">
+                            <a th:href="@{/tasks/delete/{id}(id=${task.id},
+                                priority=${currentPriority},
+                                category=${currentCategory},
+                                source=${currentSource},
+                                startDate=${currentStartDate},
+                                targetDate=${task.dueDate},
+                                sort=${currentSort})}">
                                 <i class="fa-solid fa-xmark"></i>
+                            </a>                                <i class="fa-solid fa-xmark"></i>
                             </a>
                         </div>
                     </div>
@@ -1273,6 +1297,8 @@
                                     <input type="hidden" name="category" th:value="${currentCategory}" />
                                     <input type="hidden" name="source" th:value="${currentSource}" />
                                     <input type="hidden" name="sort" th:value="${currentSort}" />
+                                    <input type="hidden" name="sort" th:value="${currentSort}" />
+
                                     <input type="checkbox"
                                            class="task-checkbox"
                                            th:checked="${task.done}"
@@ -1322,8 +1348,16 @@
                             </div>
 
                             <div class="task-actions">
-                                <a th:href="@{/tasks/delete/{id}(id=${task.id}, priority=${currentPriority}, category=${currentCategory}, source=${currentSource}, sort=${currentSort})}">
+                                <a th:href="@{/tasks/delete/{id}(id=${task.id},
+                                priority=${currentPriority},
+                                category=${currentCategory},
+                                source=${currentSource},
+                                startDate=${currentStartDate},
+                                targetDate=${task.dueDate},
+                                sort=${currentSort})}">
                                     <i class="fa-solid fa-xmark"></i>
+                                </a>
+                                <i class="fa-solid fa-xmark"></i>
                                 </a>
                             </div>
 

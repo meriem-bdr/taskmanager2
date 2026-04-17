@@ -72,8 +72,6 @@ public class TaskController {
             tasks = taskService.getTasksAlphabetically();
         } else if ("dueDate".equals(sort)) {
             tasks = taskService.getTasksByNearestDueDate();
-        } else if ("overdue".equals(sort)) {
-            tasks = taskService.getTasksNewestFirst();
         } else {
             tasks = taskService.getTasksNewestFirst();
         }
@@ -95,13 +93,46 @@ public class TaskController {
 
     @GetMapping("/today")
     public String showTodayTasks(Model model,
-                                 @RequestParam(required = false) String scrollPos) {
+                                 @RequestParam(required = false) String scrollPos,
+                                 @RequestParam(required = false) String sort) {
 
         Task task = new Task();
         task.setDueDate(LocalDate.now());
 
-        List<Task> todayTasks = taskService.getTodayTasks();
-        prepareTasksPage(model, todayTasks, null);
+        List<Task> todayTasks;
+
+        if ("oldest".equals(sort)) {
+            todayTasks = taskService.getTodayTasks().stream()
+                    .sorted((t1, t2) -> t1.getId().compareTo(t2.getId()))
+                    .toList();
+        } else if ("priority".equals(sort)) {
+            todayTasks = taskService.getTodayTasks().stream()
+                    .sorted((t1, t2) -> {
+                        String p1 = t1.getPriority() != null ? t1.getPriority() : "P4";
+                        String p2 = t2.getPriority() != null ? t2.getPriority() : "P4";
+                        return p1.compareTo(p2);
+                    })
+                    .toList();
+        } else if ("az".equals(sort)) {
+            todayTasks = taskService.getTodayTasks().stream()
+                    .sorted((t1, t2) -> t1.getTitle().compareToIgnoreCase(t2.getTitle()))
+                    .toList();
+        } else if ("dueDate".equals(sort)) {
+            todayTasks = taskService.getTodayTasks().stream()
+                    .sorted((t1, t2) -> {
+                        if (t1.getDueDate() == null && t2.getDueDate() == null) return 0;
+                        if (t1.getDueDate() == null) return 1;
+                        if (t2.getDueDate() == null) return -1;
+                        return t1.getDueDate().compareTo(t2.getDueDate());
+                    })
+                    .toList();
+        } else {
+            todayTasks = taskService.getTodayTasks().stream()
+                    .sorted((t1, t2) -> t2.getId().compareTo(t1.getId()))
+                    .toList();
+        }
+
+        prepareTasksPage(model, todayTasks, sort);
 
         model.addAttribute("task", task);
         model.addAttribute("showAddButton", true);
@@ -198,6 +229,9 @@ public class TaskController {
         taskService.saveTask(task);
 
         if ("today".equals(source)) {
+            if (sort != null && !sort.isEmpty()) {
+                return "redirect:/today?sort=" + sort;
+            }
             return "redirect:/today";
         }
 
@@ -244,6 +278,9 @@ public class TaskController {
         taskService.deleteTask(id);
 
         if ("today".equals(source)) {
+            if (sort != null && !sort.isEmpty()) {
+                return "redirect:/today?sort=" + sort;
+            }
             return "redirect:/today";
         }
 
@@ -328,6 +365,9 @@ public class TaskController {
         taskService.saveTask(existingTask);
 
         if ("today".equals(source)) {
+            if (sort != null && !sort.isEmpty()) {
+                return "redirect:/today?sort=" + sort;
+            }
             return "redirect:/today";
         }
 
@@ -374,6 +414,9 @@ public class TaskController {
         taskService.toggleDone(id);
 
         if ("today".equals(source)) {
+            if (sort != null && !sort.isEmpty()) {
+                return "redirect:/today?sort=" + sort;
+            }
             return "redirect:/today";
         }
 
