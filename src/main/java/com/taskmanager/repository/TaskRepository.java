@@ -29,4 +29,5 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findAllByOrderByIdAsc();
     List<Task> findAllByOrderByTitleAsc();
     List<Task> findByDueDateIsNotNullOrderByDueDateAsc();
+    List<Task> findByTitleContainingIgnoreCase(String keyword);
 }
