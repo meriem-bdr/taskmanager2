@@ -644,7 +644,7 @@
         .sort-wrapper {
             position: relative;
             display: inline-block;
-            margin-bottom: 18px;
+            margin-bottom: 0;
         }
 
         .sort-btn {
@@ -658,6 +658,7 @@
             justify-content: center;
             cursor: pointer;
             transition: 0.2s;
+            flex-shrink: 0;
         }
 
         .sort-btn:hover {
@@ -759,6 +760,71 @@
             margin-top: 14px;
             padding-top: 12px;
         }
+        .search-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 5000;
+        }
+        .search-box {
+            background: #fff;
+            width: 700px;
+            max-width: 92%;
+            margin: 120px auto;
+            padding: 4px 5px;
+            height: 54px;
+            display: flex;
+            align-items: center;
+            border-radius: 14px;
+            border: 1px solid #e5e5e5;
+            transition: 0.2s ease;
+        }
+
+        .search-box:focus-within {
+            border-color: #cfcfcf;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+        }
+
+        #searchInput {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+        }
+        .actions-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .search-tooltip {
+            position: absolute;
+            top: 48px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #111;
+            color: white;
+            font-size: 12px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.2s;
+            z-index: 2000;
+        }
+        .search-wrapper:hover .search-tooltip {
+            opacity: 1;
+        }
     </style>
 </head>
 
@@ -776,6 +842,12 @@
          transform:translateX(-100%); transition:transform 0.3s ease; z-index:3000;">
 
         <h3 style="margin-top:45px;">Menu</h3>
+
+        <div style="margin-top:15px;">
+            <a href="#" onclick="openSearch(event)">
+                <i class="fa-solid fa-magnifying-glass"></i> Search
+            </a>
+        </div>
 
         <div style="margin-top:20px;">
             <a href="/today"><i class="fa-solid fa-calendar-day"></i> Today</a>
@@ -810,19 +882,34 @@
             <div class="title-sort-row">
                 <h1 th:text="${pageTitle != null ? pageTitle : (currentPriority != null ? 'Tasks - ' + currentPriority : 'All Tasks')}"></h1>
 
-                <div class="sort-wrapper">
-                    <button type="button" class="sort-btn" onclick="toggleSortMenu()">
-                        <i class="fa-solid fa-arrow-up-wide-short"></i>
-                    </button>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <div class="actions-right">
 
-                    <div class="sort-tooltip">Group and sort</div>
+                        <!-- 🔍 SEARCH BUTTON -->
+                        <div class="search-wrapper">
+                            <button class="sort-btn" onclick="openSearch(event)">
+                                <i class="fa fa-search"></i>
+                            </button>
 
-                    <div id="sortMenu" class="sort-menu">
-                        <a th:href="${currentSource == 'today'} ? @{/today(sort='newest')} : @{/tasks(sort='newest')}">Newest added</a>
-                        <a th:href="${currentSource == 'today'} ? @{/today(sort='oldest')} : @{/tasks(sort='oldest')}">Oldest added</a>
-                        <a th:href="${currentSource == 'today'} ? @{/today(sort='priority')} : @{/tasks(sort='priority')}">Priority</a>
-                        <a th:href="${currentSource == 'today'} ? @{/today(sort='az')} : @{/tasks(sort='az')}">A to Z</a>
-                        <a th:href="${currentSource == 'today'} ? @{/today(sort='dueDate')} : @{/tasks(sort='dueDate')}">Due date nearest</a>
+                            <div class="search-tooltip">Search</div>
+                        </div>
+                        <!-- SORT -->
+                        <div class="sort-wrapper">
+                            <button type="button" class="sort-btn" onclick="toggleSortMenu()">
+                                <i class="fa-solid fa-arrow-up-wide-short"></i>
+                            </button>
+
+                            <div class="sort-tooltip">Group and sort</div>
+
+                            <div id="sortMenu" class="sort-menu">
+                                <a href="/tasks?sort=newest">Newest added</a>
+                                <a href="/tasks?sort=oldest">Oldest added</a>
+                                <a href="/tasks?sort=priority">Priority</a>
+                                <a href="/tasks?sort=az">A to Z</a>
+                                <a href="/tasks?sort=dueDate">Due date nearest</a>
+                                <a href="/tasks?sort=overdue">Overdue!</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1289,32 +1376,32 @@
                 </div>
 
                 <div id="completedList" th:style="${completedOpen} ? 'display:block;' : 'display:none;'">                    <div th:each="task : ${completedTasks}" class="task-block">
-                        <div class="task-row">
+                    <div class="task-row">
 
-                            <div class="task-left">
-                                <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post" style="margin:0;">
-                                    <input type="hidden" name="priority" th:value="${currentPriority}" />
-                                    <input type="hidden" name="category" th:value="${currentCategory}" />
-                                    <input type="hidden" name="source" th:value="${currentSource}" />
-                                    <input type="hidden" name="sort" th:value="${currentSort}" />
-                                    <input type="hidden" name="sort" th:value="${currentSort}" />
+                        <div class="task-left">
+                            <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post" style="margin:0;">
+                                <input type="hidden" name="priority" th:value="${currentPriority}" />
+                                <input type="hidden" name="category" th:value="${currentCategory}" />
+                                <input type="hidden" name="source" th:value="${currentSource}" />
+                                <input type="hidden" name="sort" th:value="${currentSort}" />
+                                <input type="hidden" name="sort" th:value="${currentSort}" />
 
-                                    <input type="checkbox"
-                                           class="task-checkbox"
-                                           th:checked="${task.done}"
-                                           onchange="this.form.submit()" />
-                                </form>
+                                <input type="checkbox"
+                                       class="task-checkbox"
+                                       th:checked="${task.done}"
+                                       onchange="this.form.submit()" />
+                            </form>
 
-                                <div class="task-content">
-                                    <div class="task-title done" th:text="${task.title}"></div>
+                            <div class="task-content">
+                                <div class="task-title done" th:text="${task.title}"></div>
 
-                                    <div th:if="${task.description != null and !#strings.isEmpty(task.description)}"
-                                         class="task-desc done">
-                                        <span th:text="${task.description}"></span>
-                                    </div>
+                                <div th:if="${task.description != null and !#strings.isEmpty(task.description)}"
+                                     class="task-desc done">
+                                    <span th:text="${task.description}"></span>
+                                </div>
 
-                                    <div class="task-meta-row">
-                                        <div class="priority-label" th:if="${task.priority != null}">
+                                <div class="task-meta-row">
+                                    <div class="priority-label" th:if="${task.priority != null}">
                                 <span class="priority-dot"
                                       th:style="${
                                           task.priority == 'P1' ? 'background:red;' :
@@ -1323,10 +1410,10 @@
                                           'background:gray;'))
                                       }">
                                 </span>
-                                            <span th:text="${task.priority}"></span>
-                                        </div>
+                                        <span th:text="${task.priority}"></span>
+                                    </div>
 
-                                        <div class="category-label" th:if="${task.category != null and !#strings.isEmpty(task.category)}">
+                                    <div class="category-label" th:if="${task.category != null and !#strings.isEmpty(task.category)}">
                                 <span class="category-dot"
                                       th:style="${
                                           task.category == 'Work' ? 'background:#4a90e2;' :
@@ -1336,39 +1423,48 @@
                                           'background:#cfcfcf;')))
                                       }">
                                 </span>
-                                            <span th:text="${task.category}"></span>
-                                        </div>
+                                        <span th:text="${task.category}"></span>
+                                    </div>
 
-                                        <div th:if="${task.dueDate != null}" class="task-date done">
-                                            <i class="fa-regular fa-calendar"></i>
-                                            <span th:text="${task.formattedDueDate}"></span>
-                                        </div>
+                                    <div th:if="${task.dueDate != null}" class="task-date done">
+                                        <i class="fa-regular fa-calendar"></i>
+                                        <span th:text="${task.formattedDueDate}"></span>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="task-actions">
-                                <a th:href="@{/tasks/delete/{id}(id=${task.id},
+                        <div class="task-actions">
+                            <a th:href="@{/tasks/delete/{id}(id=${task.id},
                                 priority=${currentPriority},
                                 category=${currentCategory},
                                 source=${currentSource},
                                 startDate=${currentStartDate},
                                 targetDate=${task.dueDate},
                                 sort=${currentSort})}">
-                                    <i class="fa-solid fa-xmark"></i>
-                                </a>
                                 <i class="fa-solid fa-xmark"></i>
-                                </a>
-                            </div>
-
+                            </a>
+                            <i class="fa-solid fa-xmark"></i>
+                            </a>
                         </div>
+
                     </div>
+                </div>
                 </div>
 
             </div>
 
         </div>
     </div>
+</div>
+
+<div id="searchOverlay" class="search-overlay">
+
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search tasks..." class="form-control">
+        <div id="results"></div>
+    </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -1765,13 +1861,58 @@
     }
 
     document.addEventListener("click", function (e) {
+
+        // ========== SORT MENU ==========
         var wrapper = document.querySelector(".sort-wrapper");
         var menu = document.getElementById("sortMenu");
 
         if (wrapper && menu && !wrapper.contains(e.target)) {
             menu.style.display = "none";
         }
+        // ========== SEARCH OVERLAY ==========
+        var overlay = document.getElementById("searchOverlay");
+        var box = document.querySelector(".search-box");
+
+        if (overlay && overlay.style.display === "block") {
+            if (box && !box.contains(e.target)) {
+                overlay.style.display = "none";
+            }
+        }
+
     });
+
+    document.addEventListener("keydown", function (e) {
+
+        if (e.key === "Enter") {
+
+            const input = document.getElementById("searchInput");
+
+            if (input && document.activeElement === input) {
+                e.preventDefault();
+                doSearch();
+            }
+        }
+
+    });
+
+    function openSearch(e) {
+        if (e) e.stopPropagation(); // 🔥 يمنع click يوصل للdocument
+
+        document.getElementById("searchOverlay").style.display = "block";
+
+        setTimeout(() => {
+            document.getElementById("searchInput").focus();
+        }, 100);
+    }
+
+    function closeSearch() {
+        document.getElementById("searchOverlay").style.display = "none";
+    }
+    function doSearch() {
+        let keyword = document.getElementById("searchInput").value;
+
+        window.location.href = "/tasks/search?keyword=" + encodeURIComponent(keyword);
+    }
 
     function toggleOverdueSection() {
         const list = document.getElementById("overdueList");
