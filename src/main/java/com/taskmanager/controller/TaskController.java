@@ -519,4 +519,25 @@ public class TaskController {
     public void reorderTasks(@RequestBody List<Long> orderedIds) {
         taskService.reorderTasks(orderedIds);
     }
+    @GetMapping("/search")
+    @ResponseBody
+    public List<Task> search(@RequestParam String keyword) {
+        return taskService.searchTasks(keyword);
+    }
+    @GetMapping("/tasks/search")
+    public String searchTasks(@RequestParam String keyword, Model model) {
+
+        List<Task> tasks = taskService.searchTasks(keyword);
+
+        model.addAttribute("tasks", tasks);
+        model.addAttribute("task", new Task());
+        model.addAttribute("showAddButton", true);
+        model.addAttribute("showBackToTasks", true);
+        model.addAttribute("backUrl", "/tasks");
+        model.addAttribute("pageTitle", "Search results for: " + keyword);
+        model.addAttribute("currentSort", null);
+        model.addAttribute("showOverdueFirst", false);
+
+        return "tasks";
+    }
 }
