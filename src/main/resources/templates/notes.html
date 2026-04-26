@@ -1,1 +1,1003 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <title>Notes</title>
 
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: white;
+        }
+
+        .menu-global {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            font-size: 22px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 1100;
+            padding: 8px 10px;
+            border-radius: 8px;
+        }
+
+        .menu-global:hover {
+            background: #f5f5f5;
+        }
+
+        a {
+            color: black;
+        }
+
+        #sidebar {
+            transform: translateX(-100%);
+        }
+
+        #sidebar.open {
+            transform: translateX(0);
+        }
+
+        #sidebar a {
+            text-decoration: none;
+            color: black;
+        }
+
+        #sidebar a:hover {
+            text-decoration: underline;
+        }
+
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 2000;
+        }
+
+        #overlay.show {
+            display: block;
+        }
+
+        .page-content {
+            flex: 1;
+            padding: 0 30px 30px 70px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .main-content {
+            width: 100%;
+            max-width: 760px;
+            margin-top: 0 !important;
+        }
+
+        .title-sort-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 110px;
+            padding: 0 20px;
+        }
+
+        .title-sort-row h1 {
+            font-size: 33px;
+            font-weight: 700;
+            margin: 0 0 20px 0;
+            white-space: nowrap;
+        }
+
+        .actions-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-wrapper,
+        .sort-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 0;
+        }
+
+        .sort-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #e3e3e3;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+
+        .sort-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .sort-btn i {
+            font-size: 15px;
+            color: #222;
+        }
+
+        .search-tooltip,
+        .sort-tooltip {
+            position: absolute;
+            top: 48px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #111;
+            color: white;
+            font-size: 12px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.2s;
+            z-index: 2000;
+        }
+
+        .search-wrapper:hover .search-tooltip,
+        .sort-wrapper:hover .sort-tooltip {
+            opacity: 1;
+        }
+
+        .sort-menu {
+            display: none;
+            position: absolute;
+            top: 52px;
+            right: 0;
+            min-width: 190px;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            padding: 8px;
+            z-index: 2500;
+        }
+
+        .sort-menu.show,
+        #sortMenu.show {
+            display: block;
+        }
+
+        .sort-menu a {
+            display: block;
+            text-decoration: none;
+            color: #111;
+            font-size: 14px;
+            padding: 10px 12px;
+            border-radius: 10px;
+        }
+
+        .sort-menu a:hover {
+            background: #f5f5f5;
+        }
+
+        .back-arrow {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 25px;
+            width: 36px;
+            height: 36px;
+            color: black;
+            text-decoration: none;
+            border: none;
+            font-size: 18px;
+        }
+
+        .back-arrow:hover {
+            background: #f5f5f5;
+        }
+
+        .quick-add-box {
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            transition: all 0.25s ease;
+            background: #fff;
+        }
+
+        .quick-add-top {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 6px;
+        }
+
+        .quick-add-title {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            padding: 6px 4px;
+        }
+
+        .note-extra {
+            display: none;
+        }
+
+        .quick-add-box.expanded .note-extra {
+            display: block;
+        }
+
+        .divider {
+            height: 1px;
+            background: #eee;
+            margin: 6px 0;
+        }
+
+        .quick-add-description {
+            width: 100%;
+            border: none;
+            outline: none;
+            resize: vertical;
+            min-height: 60px;
+            font-size: 16px;
+            color: #444;
+            padding: 6px 4px;
+            box-sizing: border-box;
+        }
+
+        .hint-text {
+            font-size: 13px;
+            color: #aaa;
+            font-style: italic;
+        }
+
+        .note-card {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 16px;
+            padding: 14px 16px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: 0.2s;
+        }
+
+        .note-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        .note-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .note-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .drag-handle {
+            width: 16px;
+            color: #b8b8b8;
+            cursor: grab;
+            opacity: 0;
+            transition: opacity 0.15s ease, color 0.15s ease;
+            margin-top: 2px;
+            user-select: none;
+        }
+
+        .note-card:hover .drag-handle {
+            opacity: 1;
+        }
+
+        .drag-handle:hover {
+            color: #666;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .note-checkbox {
+            width: 17px;
+            height: 17px;
+            cursor: pointer;
+            margin-top: 2px;
+        }
+
+        .note-content {
+            flex: 1;
+        }
+
+        .note-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .note-body {
+            font-size: 14px;
+            color: #444;
+            line-height: 1.3;
+            white-space: pre-wrap;
+        }
+
+        .note-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .note-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .note-actions a {
+            color: black;
+            text-decoration: none;
+            font-size: 15px;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        .note-actions a:hover {
+            background: #f5f5f5;
+        }
+
+        .save-edit-btn {
+            border: none;
+            background: black;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .save-edit-btn:hover {
+            background: #222;
+        }
+
+        .completed-section {
+            border-top: 1px solid #e9e9e9;
+            margin-top: 14px;
+            padding-top: 12px;
+        }
+
+        .section-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .section-toggle i {
+            font-size: 12px;
+            transition: transform 0.2s ease;
+        }
+
+        .section-toggle.open i {
+            transform: rotate(90deg);
+        }
+
+        .completed-text {
+            color: gray !important;
+            text-decoration: line-through;
+        }
+
+        .empty-box {
+            margin-top: 50px;
+            text-align: center;
+            color: #777;
+        }
+
+        .empty-box i {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .note-card.drag-source-hidden {
+            opacity: 0;
+        }
+
+        .drag-placeholder {
+            border: 1px dashed #cfcfcf;
+            border-radius: 12px;
+            background: #fafafa;
+            margin: 4px 0;
+        }
+
+        .drag-floating {
+            position: fixed;
+            z-index: 9999;
+            pointer-events: none;
+            width: 760px;
+            max-width: calc(100vw - 120px);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+            border-radius: 16px;
+            background: white;
+            opacity: 0.96;
+        }
+
+        .search-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 5000;
+        }
+
+        .search-box {
+            background: white;
+            width: 700px;
+            max-width: 92%;
+            margin: 120px auto;
+            height: 54px;
+            padding: 4px 16px;
+            display: flex;
+            align-items: center;
+            border-radius: 14px;
+            border: 1px solid #e5e5e5;
+        }
+
+        .search-box input,
+        #notesSearchInput {
+            width: 100%;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+<button class="menu-global" onclick="toggleSidebar()">
+    <i class="fa-solid fa-bars"></i>
+</button>
+
+<div style="display:flex; min-height:100vh; position:relative;">
+    <div id="sidebar"
+         style="width:220px; background:#f5f5f5; min-height:100vh; padding:20px; box-sizing:border-box; position:fixed; top:0; left:0; transform:translateX(-100%); transition:transform 0.3s ease; z-index:3000;">
+        <h3 style="margin-top:45px;">Menu</h3>
+
+        <div style="margin-top:15px;">
+            <a href="/today"><i class="fa-solid fa-calendar-day"></i> Today </a>
+        </div>
+
+        <div style="margin-top:20px;">
+            <a href="/tasks"><i class="fa-solid fa-list"></i> All Tasks</a>
+        </div>
+
+        <div style="margin-top:15px;">
+            <a href="/priorities"><i class="fa-solid fa-filter"></i> Filter by priority</a>
+        </div>
+
+        <div style="margin-top:15px;">
+            <a href="/categories"><i class="fa-solid fa-layer-group"></i> Categories</a>
+        </div>
+
+        <div style="margin-top:15px;">
+            <a href="/upcoming"><i class="fa-solid fa-calendar"></i> Upcoming</a>
+        </div>
+
+        <div style="margin-top:15px;">
+            <a href="/notes"><i class="fa-solid fa-sticky-note"></i> Notes</a>
+        </div>
+
+        <div style="margin-top:15px;">
+            <a href="/purchases"><i class="fa-solid fa-cart-shopping"></i> Shopping</a>
+        </div>
+    </div>
+
+    <div id="overlay" onclick="toggleSidebar()"></div>
+
+    <div class="page-content">
+        <div class="main-content">
+
+            <div class="title-sort-row">
+                <div>
+                    <h1 th:text="${isSearch} ? 'Search results for: ' + ${keyword} : 'Notes'"></h1>
+
+                    <a th:if="${isSearch}" href="/notes" class="back-arrow">
+                        <i class="fa fa-arrow-left"></i>
+                    </a>
+                </div>
+
+                <div class="actions-right">
+                    <div class="search-wrapper">
+                        <button type="button" class="sort-btn" onclick="openNotesSearch(event)">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        <div class="search-tooltip">Search</div>
+                    </div>
+
+                    <div class="sort-wrapper">
+                        <button type="button" class="sort-btn" onclick="toggleSortMenu(event)">
+                            <i class="fa-solid fa-arrow-up-wide-short"></i>
+                        </button>
+
+                        <div class="sort-tooltip">Sort notes</div>
+
+                        <div id="sortMenu" class="sort-menu">
+                            <a th:href="${isSearch} ? @{/notes(keyword=${keyword}, sort='newest')} : @{/notes(sort='newest')}">
+                                Newest
+                            </a>
+                            <a th:href="${isSearch} ? @{/notes(keyword=${keyword}, sort='oldest')} : @{/notes(sort='oldest')}">
+                                Oldest
+                            </a>
+                            <a th:href="${isSearch} ? @{/notes(keyword=${keyword}, sort='az')} : @{/notes(sort='az')}">
+                                A to Z
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form th:if="${!isSearch}"
+                  th:action="@{/notes}"
+                  th:object="${note}"
+                  method="post"
+                  class="quick-add-box"
+                  id="noteBox">
+
+                <input type="hidden" th:field="*{id}">
+
+                <div class="quick-add-top">
+                    <input type="text"
+                           th:field="*{title}"
+                           th:placeholder="${editMode} ? 'Update note...' : 'Add a note...'"
+                           class="quick-add-title"
+                           id="noteTitle"
+                           autocomplete="off"
+                           required>
+                </div>
+
+                <div id="noteExtra" class="note-extra">
+                    <div class="divider"></div>
+
+                    <textarea th:field="*{content}"
+                              placeholder="Description..."
+                              class="quick-add-description"
+                              id="noteDescription"></textarea>
+
+                    <div class="hint-text">Press Enter in title to save</div>
+                </div>
+            </form>
+
+            <div th:each="n : ${notes}" class="note-card" th:data-id="${n.id}">
+                <div class="view-mode">
+                    <div class="note-row">
+                        <div class="note-left">
+                            <span class="drag-handle" title="Move note">
+                                <i class="fa-solid fa-grip-lines"></i>
+                            </span>
+
+                            <form th:action="@{/notes/toggle/{id}(id=${n.id})}" method="post" style="margin:0;">
+                                <input type="checkbox"
+                                       class="note-checkbox"
+                                       th:checked="${n.completed}"
+                                       onchange="this.form.submit()">
+                            </form>
+
+                            <div class="note-content">
+                                <div class="note-title" th:text="${n.title}"></div>
+                                <div class="note-body" th:text="${n.content}"></div>
+                            </div>
+                        </div>
+
+                        <div class="note-actions">
+                            <a href="#" onclick="editNote(this); return false;">
+                                <i class="fa-solid fa-pen"></i>
+                            </a>
+
+                            <a th:href="@{/notes/delete/{id}(id=${n.id})}">
+                                <i class="fa-solid fa-xmark"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="edit-mode" style="display:none;">
+                    <input type="text"
+                           class="quick-add-title edit-title"
+                           th:value="${n.title}"
+                           onkeydown="saveEditOnEnter(event, this)"
+                           required>
+
+                    <div class="divider"></div>
+
+                    <textarea class="quick-add-description edit-content"
+                              placeholder="Description..."
+                              th:text="${n.content}"></textarea>
+
+                    <div class="note-footer">
+                        <button type="button"
+                                class="save-edit-btn"
+                                th:attr="onclick=|saveEdit(this, ${n.id})|">
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${isSearch and #lists.isEmpty(notes)}" class="empty-box">
+                <i class="fa fa-search"></i>
+                <p>No notes found for "<span th:text="${keyword}"></span>"</p>
+            </div>
+
+            <div class="completed-section" th:if="${!isSearch and completedCount > 0}">
+                <div class="section-toggle" onclick="toggleCompletedNotes()">
+                    <i id="completedArrow" class="fa-solid fa-chevron-right"></i>
+                    <span>Completed</span>
+                    <span th:text="${completedCount}"></span>
+                </div>
+
+                <div id="completedNotesList" style="display:none;">
+                    <div th:each="n : ${completedNotes}" class="note-card completed-note">
+                        <div class="note-row">
+                            <div class="note-left">
+                                <span class="drag-handle">
+                                    <i class="fa-solid fa-grip-lines"></i>
+                                </span>
+
+                                <form th:action="@{/notes/toggle/{id}(id=${n.id})}" method="post" style="margin:0;">
+                                    <input type="checkbox"
+                                           class="note-checkbox"
+                                           checked
+                                           onchange="this.form.submit()">
+                                </form>
+
+                                <div class="note-content">
+                                    <div class="note-title completed-text" th:text="${n.title}"></div>
+                                    <div class="note-body completed-text" th:text="${n.content}"></div>
+                                </div>
+                            </div>
+
+                            <div class="note-actions">
+                                <a th:href="@{/notes/delete/{id}(id=${n.id})}">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="notesSearchOverlay" class="search-overlay">
+    <div class="search-box">
+        <input type="text"
+               id="notesSearchInput"
+               placeholder="Search notes...">
+    </div>
+</div>
+
+<script>
+    function toggleSidebar() {
+        var sidebar = document.getElementById("sidebar");
+        var overlay = document.getElementById("overlay");
+
+        if (sidebar.style.transform === "translateX(0%)") {
+            sidebar.style.transform = "translateX(-100%)";
+            overlay.style.display = "none";
+        } else {
+            sidebar.style.transform = "translateX(0%)";
+            overlay.style.display = "block";
+        }
+    }
+
+    document.addEventListener("click", function (event) {
+        const sortMenu = document.getElementById("sortMenu");
+        const sortWrapper = document.querySelector(".sort-wrapper");
+
+        if (sortMenu && sortWrapper && !sortWrapper.contains(event.target)) {
+            sortMenu.classList.remove("show");
+        }
+    });
+
+    function toggleSortMenu(event) {
+        event.stopPropagation();
+        document.getElementById("sortMenu").classList.toggle("show");
+    }
+
+    const noteBox = document.getElementById("noteBox");
+    const noteTitle = document.getElementById("noteTitle");
+
+    if (noteBox && noteTitle) {
+        noteTitle.addEventListener("focus", () => {
+            noteBox.classList.add("expanded");
+        });
+
+        document.addEventListener("click", function (e) {
+            if (!noteBox.contains(e.target) && noteTitle.value === "") {
+                noteBox.classList.remove("expanded");
+            }
+        });
+
+        noteTitle.addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                this.form.submit();
+            }
+        });
+    }
+
+    function editNote(el) {
+        const card = el.closest(".note-card");
+        card.querySelector(".view-mode").style.display = "none";
+
+        const edit = card.querySelector(".edit-mode");
+        edit.style.display = "block";
+
+        const input = edit.querySelector(".edit-title");
+        input.focus();
+    }
+
+    function cancelEdit(el) {
+        const card = el.closest(".note-card");
+        card.querySelector(".edit-mode").style.display = "none";
+        card.querySelector(".view-mode").style.display = "block";
+    }
+
+    function saveEdit(btn, id) {
+        const card = btn.closest(".note-card");
+        const title = card.querySelector(".edit-title").value;
+        const content = card.querySelector(".edit-content").value;
+
+        fetch(`/notes/update/${id}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}`
+        }).then(() => {
+            card.querySelector(".note-title").innerText = title;
+            card.querySelector(".note-body").innerText = content;
+            cancelEdit(btn);
+        });
+    }
+
+    function saveEditOnEnter(event, input) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            const card = input.closest(".note-card");
+            const saveBtn = card.querySelector(".save-edit-btn");
+            saveBtn.click();
+        }
+    }
+
+    document.addEventListener("click", function (event) {
+        const openedEdit = document.querySelector(".note-card .edit-mode[style*='block']");
+
+        if (openedEdit) {
+            const card = openedEdit.closest(".note-card");
+
+            if (!card.contains(event.target)) {
+                cancelEdit(openedEdit);
+            }
+        }
+    });
+
+    function toggleCompletedNotes() {
+        const list = document.getElementById("completedNotesList");
+        const arrow = document.getElementById("completedArrow");
+        const toggle = arrow.closest(".section-toggle");
+
+        if (list.style.display === "none") {
+            list.style.display = "block";
+            toggle.classList.add("open");
+        } else {
+            list.style.display = "none";
+            toggle.classList.remove("open");
+        }
+    }
+
+    let activeNoteDrag = null;
+    let noteAutoScrollInterval = null;
+
+    function initNoteDrag() {
+        document.querySelectorAll(".drag-handle").forEach(handle => {
+            handle.addEventListener("mousedown", startNoteDrag);
+        });
+    }
+
+    function startNoteDrag(e) {
+        e.preventDefault();
+
+        const note = e.currentTarget.closest(".note-card");
+        const container = document.querySelector(".main-content");
+
+        if (!note || !container || note.classList.contains("completed-note")) return;
+
+        const rect = note.getBoundingClientRect();
+
+        const placeholder = document.createElement("div");
+        placeholder.className = "drag-placeholder";
+        placeholder.style.height = rect.height + "px";
+
+        const floating = note.cloneNode(true);
+        floating.classList.add("drag-floating");
+        floating.style.width = rect.width + "px";
+        floating.style.left = rect.left + "px";
+        floating.style.top = rect.top + "px";
+
+        document.body.appendChild(floating);
+
+        note.classList.add("drag-source-hidden");
+        note.parentNode.insertBefore(placeholder, note.nextSibling);
+
+        activeNoteDrag = {
+            source: note,
+            floating: floating,
+            placeholder: placeholder,
+            container: container,
+            offsetY: e.clientY - rect.top
+        };
+
+        document.addEventListener("mousemove", onNoteDrag);
+        document.addEventListener("mouseup", stopNoteDrag);
+    }
+
+    function startNoteAutoScroll(y) {
+        stopNoteAutoScroll();
+
+        noteAutoScrollInterval = setInterval(() => {
+            if (y < 120) window.scrollBy(0, -10);
+            if (y > window.innerHeight - 120) window.scrollBy(0, 10);
+        }, 16);
+    }
+
+    function stopNoteAutoScroll() {
+        if (noteAutoScrollInterval) {
+            clearInterval(noteAutoScrollInterval);
+            noteAutoScrollInterval = null;
+        }
+    }
+
+    function onNoteDrag(e) {
+        if (!activeNoteDrag) return;
+
+        const floating = activeNoteDrag.floating;
+        const source = activeNoteDrag.source;
+        const placeholder = activeNoteDrag.placeholder;
+        const container = activeNoteDrag.container;
+
+        startNoteAutoScroll(e.clientY);
+
+        floating.style.top = (e.clientY - activeNoteDrag.offsetY) + "px";
+
+        const items = Array.from(container.querySelectorAll(".note-card"))
+            .filter(item => item !== source && !item.classList.contains("completed-note"));
+
+        for (let item of items) {
+            const rect = item.getBoundingClientRect();
+
+            if (e.clientY < rect.top + rect.height / 2) {
+                container.insertBefore(placeholder, item);
+                return;
+            }
+        }
+
+        const completedSection = document.querySelector(".completed-section");
+
+        if (completedSection) {
+            container.insertBefore(placeholder, completedSection);
+        } else {
+            container.appendChild(placeholder);
+        }
+    }
+
+    function stopNoteDrag() {
+        if (!activeNoteDrag) return;
+
+        stopNoteAutoScroll();
+
+        const source = activeNoteDrag.source;
+        const floating = activeNoteDrag.floating;
+        const placeholder = activeNoteDrag.placeholder;
+        const container = activeNoteDrag.container;
+
+        container.insertBefore(source, placeholder);
+        source.classList.remove("drag-source-hidden");
+
+        floating.remove();
+        placeholder.remove();
+
+        activeNoteDrag = null;
+
+        document.removeEventListener("mousemove", onNoteDrag);
+        document.removeEventListener("mouseup", stopNoteDrag);
+
+        saveNotesOrder();
+    }
+
+    function saveNotesOrder() {
+        const ids = [];
+
+        document.querySelectorAll(".main-content > .note-card").forEach(card => {
+            const id = card.getAttribute("data-id");
+            if (id) ids.push(Number(id));
+        });
+
+        fetch("/notes/reorder", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(ids)
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        initNoteDrag();
+    });
+
+    function openNotesSearch(e) {
+        if (e) e.stopPropagation();
+
+        const overlay = document.getElementById("notesSearchOverlay");
+        const input = document.getElementById("notesSearchInput");
+
+        overlay.style.display = "block";
+
+        setTimeout(() => {
+            input.focus();
+        }, 100);
+    }
+
+    function closeNotesSearch() {
+        document.getElementById("notesSearchOverlay").style.display = "none";
+    }
+
+    function doNotesSearch() {
+        const keyword = document.getElementById("notesSearchInput").value.trim();
+
+        if (keyword !== "") {
+            window.location.href = "/notes?keyword=" + encodeURIComponent(keyword);
+        }
+    }
+
+    document.getElementById("notesSearchOverlay").addEventListener("click", function (e) {
+        if (e.target === this) {
+            closeNotesSearch();
+        }
+    });
+
+    document.getElementById("notesSearchInput").addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            doNotesSearch();
+        }
+
+        if (e.key === "Escape") {
+            closeNotesSearch();
+        }
+    });
+</script>
+
+</body>
+</html>
