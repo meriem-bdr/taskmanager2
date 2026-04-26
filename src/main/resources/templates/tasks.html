@@ -826,6 +826,25 @@
         .search-wrapper:hover .search-tooltip {
             opacity: 1;
         }
+        .tasks-container {
+            position: relative;
+        }
+
+        .empty-search {
+            margin-top: 110px;
+            text-align: center;
+            color: #666;
+        }
+
+        .empty-search i {
+            font-size: 42px;
+            margin-bottom: 14px;
+            color: #999;
+        }
+
+        .empty-search p {
+            font-size: 15px;
+        }
     </style>
 </head>
 
@@ -1033,8 +1052,9 @@
                 </div>
             </form>
 
-            <div th:if="${#lists.isEmpty(tasks)}" class="empty-state">
-                <p>No tasks yet</p>
+            <div th:if="${#lists.isEmpty(tasks)}" class="empty-search">
+                <i class="fa fa-search"></i>
+                <p>No tasks found for "<span th:text="${searchKeyword}"></span>"</p>
             </div>
 
             <div th:if="${!showOverdueFirst and !#lists.isEmpty(tasks)}" class="task-list-container" id="taskListContainer">
@@ -1134,15 +1154,14 @@
                             </button>
 
                             <a th:href="@{/tasks/delete/{id}(id=${task.id},
-    priority=${currentPriority},
-    category=${currentCategory},
-    source=${currentSource},
-    startDate=${currentStartDate},
-    targetDate=${task.dueDate},
-    sort=${currentSort}, keyword=${searchKeyword}, scrollPos=${scrollPos})}">
+                                                priority=${currentPriority},
+                                                category=${currentCategory},
+                                                source=${currentSource},
+                                                startDate=${currentStartDate},
+                                                targetDate=${task.dueDate},
+                                                 sort=${currentSort}, keyword=${searchKeyword}, scrollPos=${scrollPos})}">
 
                                 <i class="fa-solid fa-xmark"></i>
-
                             </a>
                         </div>
                     </div>
@@ -1490,12 +1509,12 @@
 
                         <div class="task-actions">
                             <a th:href="@{/tasks/delete/{id}(id=${task.id},
-    priority=${currentPriority},
-    category=${currentCategory},
-    source=${currentSource},
-    startDate=${currentStartDate},
-    targetDate=${task.dueDate},
-    sort=${currentSort}, keyword=${searchKeyword}, scrollPos=${scrollPos})}">
+                                               priority=${currentPriority},
+                                               category=${currentCategory},
+                                               source=${currentSource},
+                                               startDate=${currentStartDate},
+                                               targetDate=${task.dueDate},
+                                                sort=${currentSort}, keyword=${searchKeyword}, scrollPos=${scrollPos})}">
 
                                 <i class="fa-solid fa-xmark"></i>
 
