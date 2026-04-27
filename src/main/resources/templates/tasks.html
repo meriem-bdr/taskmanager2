@@ -398,23 +398,21 @@
         .inline-edit-box.active { display: block; }
         .inline-edit-save-row { margin-top: 12px; display: flex; justify-content: flex-end; }
 
-        .small-save-btn {
-            border: none !important;
-            background: linear-gradient(135deg, var(--primary-500), var(--primary-700)) !important;
-            color: white !important;
-            border-radius: 14px;
-            padding: 10px 18px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 800;
-            box-shadow: 0 12px 24px rgba(12, 108, 233, 0.24);
-            transition: 0.18s ease;
-            width: auto;
-            height: auto;
-        }
+      .small-save-btn {
+    border: none !important;
+    background: #6366f1 !important;
+    color: white !important;
+    border-radius: 14px;
+    padding: 10px 18px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 800;
+    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.22);
+}
 
-        .small-save-btn:hover { background: linear-gradient(135deg, var(--primary-600), var(--primary-800)) !important; transform: translateY(-1px); }
-
+      .small-save-btn:hover {
+    background: #4f46e5 !important;
+}
         .flatpickr-calendar {
             border: 1px solid rgba(12, 108, 233, 0.12) !important;
             border-radius: 20px !important;
@@ -456,9 +454,18 @@
         .smart-pill:hover { background: linear-gradient(135deg, var(--primary-50), var(--secondary-100)); transform: translateY(-1px); }
         .smart-pill i { font-size: 14px; color: var(--primary-700); flex-shrink: 0; }
         .smart-pill .pill-text { display: none; font-size: 13px; color: var(--primary-800); white-space: nowrap; font-weight: 700; }
-        .smart-pill.active { width: auto; min-width: 38px; border-radius: 999px; justify-content: flex-start; padding: 0 13px; background: linear-gradient(135deg, var(--primary-500), var(--primary-700)); border-color: transparent; }
-        .smart-pill.active i,
-        .smart-pill.active .pill-text { color: white; }
+.smart-pill.active {
+    width: auto;
+    min-width: 38px;
+    border-radius: 999px;
+    justify-content: flex-start;
+    padding: 0 13px;
+    background: #eef2ff !important;
+    border: none !important;
+}        .smart-pill.active i,
+.smart-pill.active .pill-text {
+    color: #4f46e5 !important;
+}
         .smart-pill.active .pill-text { display: inline; }
         .smart-pill select,
         .smart-pill input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; border: none; }
@@ -677,8 +684,6 @@ body.tabs-mode .section-toggle {
     border-radius: 18px;
     overflow: hidden;
     box-shadow: 0 8px 22px rgba(12, 108, 233, 0.06);
-    position: sticky;
-    top: 24px;
 }
 
 .weekly-card h3 {
@@ -764,7 +769,93 @@ body.tabs-mode .section-toggle {
     }
 }
 
-    </style>
+
+        .today-summary-card {
+    margin-top: 18px;
+    background: #ffffff;
+    border: 1px solid #dbeafe;
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: 0 8px 22px rgba(12, 108, 233, 0.06);
+}
+
+.today-summary-card h3 {
+    margin: 0 0 12px;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 14px;
+    color: #374151;
+}
+
+.summary-row b {
+    font-weight: 800;
+}
+
+.summary-row.overdue {
+    color: #ef4444;
+}
+
+
+  .empty-state {
+    text-align: left;
+    margin-top: 20px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #64748b;
+}
+
+.empty-state p {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.empty-state small {
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+
+html,
+body {
+    height: auto;
+    overflow-y: auto;
+}
+
+.page-content {
+    overflow: visible;
+}
+
+.tasks-container {
+    height: auto;
+}
+
+
+.tasks-with-weekly {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 290px;
+    gap: 24px;
+    align-items: start;
+}
+
+.tasks-main-column {
+    min-width: 0;
+}
+
+.right-column {
+    position: sticky;
+    top: 120px;
+    align-self: start;
+}
+
+ </style>
 </head>
 
 <body>
@@ -844,34 +935,45 @@ body.tabs-mode .section-toggle {
 
                             <div id="sortMenu" class="sort-menu">
                                 <!-- TODAY -->
-                                <a th:if="${currentSource == 'today'}" th:href="@{/today(sort='newest')}">Newest added</a>
-                                <a th:if="${currentSource == 'today'}" th:href="@{/today(sort='oldest')}">Oldest added</a>
+                                <a th:if="${currentSource == 'today'}" th:href="@{/today(sort='newest')}">Newest
+                                    added</a>
+                                <a th:if="${currentSource == 'today'}" th:href="@{/today(sort='oldest')}">Oldest
+                                    added</a>
                                 <a th:if="${currentSource == 'today'}" th:href="@{/today(sort='priority')}">Priority</a>
                                 <a th:if="${currentSource == 'today'}" th:href="@{/today(sort='az')}">A to Z</a>
-                                <a th:if="${currentSource == 'today'}" th:href="@{/today(sort='dueDate')}">Due date nearest</a>
+                                <a th:if="${currentSource == 'today'}" th:href="@{/today(sort='dueDate')}">Due date
+                                    nearest</a>
 
                                 <!-- CATEGORY -->
                                 <a th:if="${currentSource == 'category'}"
-                                   th:href="@{/tasks/category/{category}(category=${currentCategory}, sort='newest')}">Newest added</a>
+                                   th:href="@{/tasks/category/{category}(category=${currentCategory}, sort='newest')}">Newest
+                                    added</a>
                                 <a th:if="${currentSource == 'category'}"
-                                   th:href="@{/tasks/category/{category}(category=${currentCategory}, sort='oldest')}">Oldest added</a>
+                                   th:href="@{/tasks/category/{category}(category=${currentCategory}, sort='oldest')}">Oldest
+                                    added</a>
                                 <a th:if="${currentSource == 'category'}"
                                    th:href="@{/tasks/category/{category}(category=${currentCategory}, sort='priority')}">Priority</a>
                                 <a th:if="${currentSource == 'category'}"
-                                   th:href="@{/tasks/category/{category}(category=${currentCategory}, sort='az')}">A to Z</a>
+                                   th:href="@{/tasks/category/{category}(category=${currentCategory}, sort='az')}">A to
+                                    Z</a>
                                 <a th:if="${currentSource == 'category'}"
-                                   th:href="@{/tasks/category/{category}(category=${currentCategory}, sort='dueDate')}">Due date nearest</a>
+                                   th:href="@{/tasks/category/{category}(category=${currentCategory}, sort='dueDate')}">Due
+                                    date nearest</a>
 
                                 <!-- PRIORITY -->
                                 <a th:if="${currentSource == 'priority'}"
-                                   th:href="@{/tasks/priority/{priority}(priority=${currentPriority}, sort='newest')}">Newest added</a>
+                                   th:href="@{/tasks/priority/{priority}(priority=${currentPriority}, sort='newest')}">Newest
+                                    added</a>
                                 <a th:if="${currentSource == 'priority'}"
-                                   th:href="@{/tasks/priority/{priority}(priority=${currentPriority}, sort='oldest')}">Oldest added</a>
+                                   th:href="@{/tasks/priority/{priority}(priority=${currentPriority}, sort='oldest')}">Oldest
+                                    added</a>
 
                                 <a th:if="${currentSource == 'priority'}"
-                                   th:href="@{/tasks/priority/{priority}(priority=${currentPriority}, sort='az')}">A to Z</a>
+                                   th:href="@{/tasks/priority/{priority}(priority=${currentPriority}, sort='az')}">A to
+                                    Z</a>
                                 <a th:if="${currentSource == 'priority'}"
-                                   th:href="@{/tasks/priority/{priority}(priority=${currentPriority}, sort='dueDate')}">Due date nearest</a>
+                                   th:href="@{/tasks/priority/{priority}(priority=${currentPriority}, sort='dueDate')}">Due
+                                    date nearest</a>
 
                                 <!-- SEARCH -->
                                 <a th:if="${currentSource == 'search'}"
@@ -883,14 +985,20 @@ body.tabs-mode .section-toggle {
                                 <a th:if="${currentSource == 'search'}"
                                    th:href="@{/tasks/search(keyword=${searchKeyword}, sort='az')}">A to Z</a>
                                 <a th:if="${currentSource == 'search'}"
-                                   th:href="@{/tasks/search(keyword=${searchKeyword}, sort='dueDate')}">Due date nearest</a>
+                                   th:href="@{/tasks/search(keyword=${searchKeyword}, sort='dueDate')}">Due date
+                                    nearest</a>
 
                                 <!-- ALL TASKS -->
-                                <a th:if="${currentSource == 'all' or currentSource == null}" th:href="@{/tasks(sort='newest')}">Newest added</a>
-                                <a th:if="${currentSource == 'all' or currentSource == null}" th:href="@{/tasks(sort='oldest')}">Oldest added</a>
-                                <a th:if="${currentSource == 'all' or currentSource == null}" th:href="@{/tasks(sort='priority')}">Priority</a>
-                                <a th:if="${currentSource == 'all' or currentSource == null}" th:href="@{/tasks(sort='az')}">A to Z</a>
-                                <a th:if="${currentSource == 'all' or currentSource == null}" th:href="@{/tasks(sort='dueDate')}">Due date nearest</a>
+                                <a th:if="${currentSource == 'all' or currentSource == null}"
+                                   th:href="@{/tasks(sort='newest')}">Newest added</a>
+                                <a th:if="${currentSource == 'all' or currentSource == null}"
+                                   th:href="@{/tasks(sort='oldest')}">Oldest added</a>
+                                <a th:if="${currentSource == 'all' or currentSource == null}"
+                                   th:href="@{/tasks(sort='priority')}">Priority</a>
+                                <a th:if="${currentSource == 'all' or currentSource == null}"
+                                   th:href="@{/tasks(sort='az')}">A to Z</a>
+                                <a th:if="${currentSource == 'all' or currentSource == null}"
+                                   th:href="@{/tasks(sort='dueDate')}">Due date nearest</a>
                             </div>
                         </div>
                     </div>
@@ -974,9 +1082,11 @@ body.tabs-mode .section-toggle {
                         Completed (<span th:text="${completedCount}"></span>)
                     </span>
 
-                    <span onclick="showTaskTab('overdue', this)">
-                        Overdue (<span th:text="${overdueCount}"></span>)
-                    </span>
+                    <span th:if="${!isTodayPage}"
+                          class="tab-link"
+                          onclick="showTaskTab('overdue', this)">
+    Overdue (<span th:text="${overdueCount}">0</span>)
+</span>
                 </div>
 
                 <a th:if="${showBackToTasks}" th:href="${backUrl}" class="back-btn">
@@ -987,12 +1097,21 @@ body.tabs-mode .section-toggle {
             <div class="tasks-with-weekly">
                 <div class="tasks-main-column">
 
-                    <div th:if="${#lists.isEmpty(tasks)}" class="empty-search">
+                    <div th:if="${searchKeyword != null and !#strings.isEmpty(searchKeyword) and #lists.isEmpty(tasks)}"
+                         class="empty-search">
                         <i class="fa fa-search"></i>
                         <p>No tasks found for "<span th:text="${searchKeyword}"></span>"</p>
                     </div>
+                    <div id="emptyMyTasksState"
+                         th:if="${(searchKeyword == null or #strings.isEmpty(searchKeyword)) and #lists.isEmpty(tasks)}"
+                         class="empty-state">
 
-                    <div th:if="${!showOverdueFirst and !#lists.isEmpty(tasks)}" class="task-list-container" id="taskListContainer">
+                        <p>Nothing to do for now 😌</p>
+                        <small>Add a new task to get started.</small>
+
+                    </div>
+                    <div th:if="${!showOverdueFirst and !#lists.isEmpty(tasks)}" class="task-list-container"
+                         id="taskListContainer">
                         <div th:each="task : ${tasks}"
                              class="task-block"
                              th:attr="data-id=${task.id}"
@@ -1004,20 +1123,18 @@ body.tabs-mode .section-toggle {
                             <span class="drag-handle" title="Move task">
                                 <i class="fa-solid fa-grip-lines"></i>
                             </span>
-
-                                    <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post" style="margin:0;">
+                                    <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post"
+                                          style="margin:0;">
                                         <input type="hidden" name="priority" th:value="${currentPriority}"/>
                                         <input type="hidden" name="category" th:value="${currentCategory}"/>
                                         <input type="hidden" name="source" th:value="${currentSource}"/>
-                                        <input type="hidden" name="sort" th:value="${currentSort}" />
+                                        <input type="hidden" name="sort" th:value="${currentSort}"/>
                                         <input type="hidden" name="keyword" th:value="${searchKeyword}">
-                                        <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
+
                                         <input type="checkbox"
                                                class="task-checkbox"
                                                th:checked="${task.done}"
                                                onchange="this.form.submit()"/>
-                                        <input type="hidden" name="sort" th:value="${currentSort}"/>
-
                                     </form>
 
                                     <div class="task-content">
@@ -1107,7 +1224,8 @@ body.tabs-mode .section-toggle {
                                     <input type="hidden" name="currentCategory" th:value="${currentCategory}">
                                     <input type="hidden" name="source" th:value="${currentSource}">
                                     <input type="hidden" name="sort" th:value="${currentSort}">
-                                    <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
+                                    <input type="hidden" name="scrollPos" class="scroll-pos-input"
+                                           th:value="${scrollPos}">
                                     <div class="inline-edit-top">
                                         <input type="text"
                                                name="title"
@@ -1132,10 +1250,14 @@ body.tabs-mode .section-toggle {
                                                 <span class="pill-text"></span>
                                                 <select name="priority">
                                                     <option value=""></option>
-                                                    <option value="P1" th:selected="${task.priority == 'P1'}">P1</option>
-                                                    <option value="P2" th:selected="${task.priority == 'P2'}">P2</option>
-                                                    <option value="P3" th:selected="${task.priority == 'P3'}">P3</option>
-                                                    <option value="P4" th:selected="${task.priority == 'P4'}">P4</option>
+                                                    <option value="P1" th:selected="${task.priority == 'P1'}">P1
+                                                    </option>
+                                                    <option value="P2" th:selected="${task.priority == 'P2'}">P2
+                                                    </option>
+                                                    <option value="P3" th:selected="${task.priority == 'P3'}">P3
+                                                    </option>
+                                                    <option value="P4" th:selected="${task.priority == 'P4'}">P4
+                                                    </option>
                                                 </select>
                                             </div>
 
@@ -1144,13 +1266,17 @@ body.tabs-mode .section-toggle {
                                                 <span class="pill-text"></span>
                                                 <select name="category">
                                                     <option value=""></option>
-                                                    <option value="Work" th:selected="${task.category == 'Work'}">Work</option>
-                                                    <option value="Study" th:selected="${task.category == 'Study'}">Study
+                                                    <option value="Work" th:selected="${task.category == 'Work'}">Work
                                                     </option>
-                                                    <option value="Personal" th:selected="${task.category == 'Personal'}">
+                                                    <option value="Study" th:selected="${task.category == 'Study'}">
+                                                        Study
+                                                    </option>
+                                                    <option value="Personal"
+                                                            th:selected="${task.category == 'Personal'}">
                                                         Personal
                                                     </option>
-                                                    <option value="Shopping" th:selected="${task.category == 'Shopping'}">
+                                                    <option value="Shopping"
+                                                            th:selected="${task.category == 'Shopping'}">
                                                         Shopping
                                                     </option>
                                                 </select>
@@ -1175,7 +1301,8 @@ body.tabs-mode .section-toggle {
                     </div>
                     <div th:if="${!#lists.isEmpty(overdueTasks)}" class="overdue-section" id="overdueTasksPanel">
 
-                        <div th:class="${overdueOpen} ? 'section-toggle open' : 'section-toggle'" onclick="toggleOverdueSection()">
+                        <div th:class="${overdueOpen} ? 'section-toggle open' : 'section-toggle'"
+                             onclick="toggleOverdueSection()">
                             <i id="overdueArrow" class="fa-solid fa-chevron-right"></i>
                             <span>Overdue</span>
                             <span th:text="${overdueCount}"></span>
@@ -1186,17 +1313,18 @@ body.tabs-mode .section-toggle {
                                 <div class="task-row" th:id="'taskView-overdue-' + ${task.id}">
 
                                     <div class="task-left">
-                                        <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post" style="margin:0;">
-                                            <input type="hidden" name="priority" th:value="${currentPriority}" />
-                                            <input type="hidden" name="category" th:value="${currentCategory}" />
-                                            <input type="hidden" name="source" th:value="${currentSource}" />
-                                            <input type="hidden" name="sort" th:value="${currentSort}" />
+                                        <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post"
+                                              style="margin:0;">
+                                            <input type="hidden" name="priority" th:value="${currentPriority}"/>
+                                            <input type="hidden" name="category" th:value="${currentCategory}"/>
+                                            <input type="hidden" name="source" th:value="${currentSource}"/>
+                                            <input type="hidden" name="sort" th:value="${currentSort}"/>
                                             <input type="hidden" name="keyword" th:value="${searchKeyword}">
-                                            <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
+
                                             <input type="checkbox"
                                                    class="task-checkbox"
                                                    th:checked="${task.done}"
-                                                   onchange="this.form.submit()" />
+                                                   onchange="this.form.submit()"/>
                                         </form>
 
                                         <div class="task-content">
@@ -1222,7 +1350,8 @@ body.tabs-mode .section-toggle {
                                                     <span th:text="${task.priority}"></span>
                                                 </div>
 
-                                                <div class="category-label" th:if="${task.category != null and !#strings.isEmpty(task.category)}">
+                                                <div class="category-label"
+                                                     th:if="${task.category != null and !#strings.isEmpty(task.category)}">
                                 <span class="category-dot"
                                       th:style="${
                                           task.category == 'Work' ? 'background:#4a90e2;' :
@@ -1237,7 +1366,8 @@ body.tabs-mode .section-toggle {
 
                                                 <div th:if="${task.dueDate != null}" class="task-date">
                                                     <i class="fa-regular fa-calendar overdue-icon"></i>
-                                                    <span th:text="${task.formattedDueDate}" class="overdue-date"></span>
+                                                    <span th:text="${task.formattedDueDate}"
+                                                          class="overdue-date"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -1265,7 +1395,6 @@ body.tabs-mode .section-toggle {
                                     </div>
 
 
-
                                 </div>
                                 <!-- Overdue inline edit form -->
                                 <div th:id="'taskEdit-overdue-' + ${task.id}" class="inline-edit-box">
@@ -1274,7 +1403,8 @@ body.tabs-mode .section-toggle {
                                         <input type="hidden" name="currentCategory" th:value="${currentCategory}">
                                         <input type="hidden" name="source" th:value="${currentSource}">
                                         <input type="hidden" name="sort" th:value="${currentSort}">
-                                        <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
+                                        <input type="hidden" name="scrollPos" class="scroll-pos-input"
+                                               th:value="${scrollPos}">
 
                                         <div class="inline-edit-top">
                                             <input type="text"
@@ -1300,10 +1430,14 @@ body.tabs-mode .section-toggle {
                                                     <span class="pill-text"></span>
                                                     <select name="priority">
                                                         <option value=""></option>
-                                                        <option value="P1" th:selected="${task.priority == 'P1'}">P1</option>
-                                                        <option value="P2" th:selected="${task.priority == 'P2'}">P2</option>
-                                                        <option value="P3" th:selected="${task.priority == 'P3'}">P3</option>
-                                                        <option value="P4" th:selected="${task.priority == 'P4'}">P4</option>
+                                                        <option value="P1" th:selected="${task.priority == 'P1'}">P1
+                                                        </option>
+                                                        <option value="P2" th:selected="${task.priority == 'P2'}">P2
+                                                        </option>
+                                                        <option value="P3" th:selected="${task.priority == 'P3'}">P3
+                                                        </option>
+                                                        <option value="P4" th:selected="${task.priority == 'P4'}">P4
+                                                        </option>
                                                     </select>
                                                 </div>
 
@@ -1312,10 +1446,18 @@ body.tabs-mode .section-toggle {
                                                     <span class="pill-text"></span>
                                                     <select name="category">
                                                         <option value=""></option>
-                                                        <option value="Work" th:selected="${task.category == 'Work'}">Work</option>
-                                                        <option value="Study" th:selected="${task.category == 'Study'}">Study</option>
-                                                        <option value="Personal" th:selected="${task.category == 'Personal'}">Personal</option>
-                                                        <option value="Shopping" th:selected="${task.category == 'Shopping'}">Shopping</option>
+                                                        <option value="Work" th:selected="${task.category == 'Work'}">
+                                                            Work
+                                                        </option>
+                                                        <option value="Study" th:selected="${task.category == 'Study'}">
+                                                            Study
+                                                        </option>
+                                                        <option value="Personal"
+                                                                th:selected="${task.category == 'Personal'}">Personal
+                                                        </option>
+                                                        <option value="Shopping"
+                                                                th:selected="${task.category == 'Shopping'}">Shopping
+                                                        </option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -1350,18 +1492,18 @@ body.tabs-mode .section-toggle {
                     <i class="fa-solid fa-grip-lines"></i>
                 </span>
 
-                                    <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post" style="margin:0;">
-                                        <input type="hidden" name="priority" th:value="${currentPriority}" />
-                                        <input type="hidden" name="category" th:value="${currentCategory}" />
-                                        <input type="hidden" name="source" th:value="${currentSource}" />
-                                        <input type="hidden" name="sort" th:value="${currentSort}" />
-                                        <input type="hidden" name="sort" th:value="${currentSort}" />
+                                    <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post"
+                                          style="margin:0;">
+                                        <input type="hidden" name="priority" th:value="${currentPriority}"/>
+                                        <input type="hidden" name="category" th:value="${currentCategory}"/>
+                                        <input type="hidden" name="source" th:value="${currentSource}"/>
+                                        <input type="hidden" name="sort" th:value="${currentSort}"/>
                                         <input type="hidden" name="keyword" th:value="${searchKeyword}">
-                                        <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
+
                                         <input type="checkbox"
                                                class="task-checkbox"
                                                th:checked="${task.done}"
-                                               onchange="this.form.submit()" />
+                                               onchange="this.form.submit()"/>
                                     </form>
 
                                     <div class="task-content">
@@ -1397,7 +1539,8 @@ body.tabs-mode .section-toggle {
                                                 <span th:text="${task.priority}"></span>
                                             </div>
 
-                                            <div class="category-label" th:if="${task.category != null and !#strings.isEmpty(task.category)}">
+                                            <div class="category-label"
+                                                 th:if="${task.category != null and !#strings.isEmpty(task.category)}">
                             <span class="category-dot"
                                   th:style="${
                                       task.category == 'Work' ? 'background:#4a90e2;' :
@@ -1444,40 +1587,42 @@ body.tabs-mode .section-toggle {
                     </div>
                     <div th:if="${!#lists.isEmpty(completedTasks)}" class="completed-section" id="completedTasksPanel">
 
-                        <div th:class="${completedOpen} ? 'section-toggle completed-toggle open' : 'section-toggle completed-toggle'" onclick="toggleCompletedSection()">
+                        <div th:class="${completedOpen} ? 'section-toggle completed-toggle open' : 'section-toggle completed-toggle'"
+                             onclick="toggleCompletedSection()">
                             <i id="completedArrow" class="fa-solid fa-chevron-right"></i>
                             <span>Completed</span>
                             <span th:text="${completedCount}"></span>
                         </div>
 
-                        <div id="completedList" th:style="${completedOpen} ? 'display:block;' : 'display:none;'">                    <div th:each="task : ${completedTasks}" class="task-block">
-                            <div class="task-row">
+                        <div id="completedList" th:style="${completedOpen} ? 'display:block;' : 'display:none;'">
+                            <div th:each="task : ${completedTasks}" class="task-block">
+                                <div class="task-row">
 
-                                <div class="task-left">
-                                    <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post" style="margin:0;">
-                                        <input type="hidden" name="priority" th:value="${currentPriority}" />
-                                        <input type="hidden" name="category" th:value="${currentCategory}" />
-                                        <input type="hidden" name="source" th:value="${currentSource}" />
-                                        <input type="hidden" name="sort" th:value="${currentSort}" />
-                                        <input type="hidden" name="sort" th:value="${currentSort}" />
-                                        <input type="hidden" name="keyword" th:value="${searchKeyword}">
-                                        <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
-                                        <input type="checkbox"
-                                               class="task-checkbox"
-                                               th:checked="${task.done}"
-                                               onchange="this.form.submit()" />
-                                    </form>
+                                    <div class="task-left">
+                                        <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post"
+                                              style="margin:0;">
+                                            <input type="hidden" name="priority" th:value="${currentPriority}"/>
+                                            <input type="hidden" name="category" th:value="${currentCategory}"/>
+                                            <input type="hidden" name="source" th:value="${currentSource}"/>
+                                            <input type="hidden" name="sort" th:value="${currentSort}"/>
+                                            <input type="hidden" name="keyword" th:value="${searchKeyword}">
 
-                                    <div class="task-content">
-                                        <div class="task-title done" th:text="${task.title}"></div>
+                                            <input type="checkbox"
+                                                   class="task-checkbox"
+                                                   th:checked="${task.done}"
+                                                   onchange="this.form.submit()"/>
+                                        </form>
 
-                                        <div th:if="${task.description != null and !#strings.isEmpty(task.description)}"
-                                             class="task-desc done">
-                                            <span th:text="${task.description}"></span>
-                                        </div>
+                                        <div class="task-content">
+                                            <div class="task-title done" th:text="${task.title}"></div>
 
-                                        <div class="task-meta-row">
-                                            <div class="priority-label" th:if="${task.priority != null}">
+                                            <div th:if="${task.description != null and !#strings.isEmpty(task.description)}"
+                                                 class="task-desc done">
+                                                <span th:text="${task.description}"></span>
+                                            </div>
+
+                                            <div class="task-meta-row">
+                                                <div class="priority-label" th:if="${task.priority != null}">
                                 <span class="priority-dot"
                                       th:style="${
                                           task.priority == 'P1' ? 'background:red;' :
@@ -1486,10 +1631,11 @@ body.tabs-mode .section-toggle {
                                           'background:gray;'))
                                       }">
                                 </span>
-                                                <span th:text="${task.priority}"></span>
-                                            </div>
+                                                    <span th:text="${task.priority}"></span>
+                                                </div>
 
-                                            <div class="category-label" th:if="${task.category != null and !#strings.isEmpty(task.category)}">
+                                                <div class="category-label"
+                                                     th:if="${task.category != null and !#strings.isEmpty(task.category)}">
                                 <span class="category-dot"
                                       th:style="${
                                           task.category == 'Work' ? 'background:#4a90e2;' :
@@ -1499,19 +1645,19 @@ body.tabs-mode .section-toggle {
                                           'background:#cfcfcf;')))
                                       }">
                                 </span>
-                                                <span th:text="${task.category}"></span>
-                                            </div>
+                                                    <span th:text="${task.category}"></span>
+                                                </div>
 
-                                            <div th:if="${task.dueDate != null}" class="task-date done">
-                                                <i class="fa-regular fa-calendar"></i>
-                                                <span th:text="${task.formattedDueDate}"></span>
+                                                <div th:if="${task.dueDate != null}" class="task-date done">
+                                                    <i class="fa-regular fa-calendar"></i>
+                                                    <span th:text="${task.formattedDueDate}"></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="task-actions">
-                                    <a th:href="@{/tasks/delete/{id}(id=${task.id},
+                                    <div class="task-actions">
+                                        <a th:href="@{/tasks/delete/{id}(id=${task.id},
                                                priority=${currentPriority},
                                                category=${currentCategory},
                                                source=${currentSource},
@@ -1519,632 +1665,663 @@ body.tabs-mode .section-toggle {
                                                targetDate=${task.dueDate},
                                                 sort=${currentSort}, keyword=${searchKeyword}, scrollPos=${scrollPos})}">
 
-                                        <i class="fa-solid fa-xmark"></i>
+                                            <i class="fa-solid fa-xmark"></i>
 
-                                    </a>
+                                        </a>
+                                    </div>
+
                                 </div>
-
                             </div>
-                        </div>
                         </div>
 
                     </div>
 
                 </div> <!-- /tasks-main-column -->
+                <div class="right-column">
+                    <aside class="weekly-card">
+                        <h3>Weekly Stats</h3>
 
-                <aside class="weekly-card">
-                    <h3>Weekly Stats</h3>
+                        <div class="weekly-chart-line"></div>
 
-                    <div class="weekly-chart-line"></div>
+                        <div class="weekly-bars">
+                            <div th:each="count, stat : ${weeklyStats}"
+                                 class="weekly-bar"
+                                 th:style="'height:' + (${count} * 22 + 20) + 'px'"
+                                 th:classappend="${stat.index == todayIndex} ? ' active' : ''">
+                            </div>
+                        </div>
 
-                    <div class="weekly-bars">
-                        <div th:each="count, stat : ${weeklyStats}"
-                             class="weekly-bar"
-                             th:style="'height:' + (${count} * 22 + 20) + 'px'"
-                             th:classappend="${stat.index == todayIndex} ? ' active' : ''">
+                        <div class="weekly-days">
+                            <span>Mon</span>
+                            <span>Tue</span>
+                            <span>Wed</span>
+                            <span>Thu</span>
+                            <span>Sat</span>
+                            <span>Sun</span>
+                        </div>
+                    </aside>
+                    <div class="today-summary-card">
+                        <h3>Today Summary</h3>
+
+                        <div class="summary-row">
+                            <span>✔ Completed</span>
+                            <b th:text="${todayCompleted}">0</b>
+                        </div>
+
+                        <div class="summary-row">
+                            <span>⏳ Remaining</span>
+                            <b th:text="${todayRemaining}">0</b>
+                        </div>
+
+                        <div class="summary-row overdue">
+                            <span>⚠ Overdue</span>
+                            <b th:text="${overdueCount}">0</b>
                         </div>
                     </div>
+                </div>
 
-                    <div class="weekly-days">
-                        <span>Mon</span>
-                        <span>Tue</span>
-                        <span>Wed</span>
-                        <span>Thu</span>
-                        <span>Sat</span>
-                        <span>Sun</span>
-                    </div>
-
-
-                    </div>
-                </aside>
             </div>
-
         </div>
     </div>
-</div>
 
-<div id="searchOverlay" class="search-overlay">
+    <div id="searchOverlay" class="search-overlay">
 
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Search tasks..." class="form-control">
-        <div id="results"></div>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search tasks..." class="form-control">
+            <div id="results"></div>
+        </div>
+
     </div>
 
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.getElementById("sidebar");
+            var overlay = document.getElementById("overlay");
 
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script>
-    function toggleSidebar() {
-        var sidebar = document.getElementById("sidebar");
-        var overlay = document.getElementById("overlay");
-
-        if (sidebar.style.transform === "translateX(0%)") {
-            sidebar.style.transform = "translateX(-100%)";
-            overlay.style.display = "none";
-        } else {
-            sidebar.style.transform = "translateX(0%)";
-            overlay.style.display = "block";
-        }
-    }
-
-    function toggleDesc(el) {
-        var parent = el.parentElement;
-        var shortText = parent.querySelector(".desc-short");
-        var fullText = parent.querySelector(".desc-full");
-
-        if (fullText.style.display === "inline") {
-            fullText.style.display = "none";
-            shortText.style.display = "inline";
-            el.innerText = "More";
-        } else {
-            fullText.style.display = "inline";
-            shortText.style.display = "none";
-            el.innerText = "Less";
-        }
-    }
-
-    function closeAllEditInline() {
-        document.querySelectorAll(".inline-edit-box").forEach(function (edit) {
-            edit.classList.remove("active");
-        });
-
-        document.querySelectorAll(".task-row").forEach(function (view) {
-            view.style.display = "flex";
-        });
-    }
-
-    function toggleEditInline(id) {
-        var view = document.getElementById("taskView-" + id);
-        var edit = document.getElementById("taskEdit-" + id);
-
-        if (!view || !edit) return;
-
-        var isOpen = edit.classList.contains("active");
-
-        closeAllEditInline();
-
-        if (!isOpen) {
-            view.style.display = "none";
-            edit.classList.add("active");
-
-            var titleInput = edit.querySelector(".inline-edit-title");
-            if (titleInput) {
-                setTimeout(function () {
-                    titleInput.focus();
-                    titleInput.select();
-                }, 50);
+            if (sidebar.style.transform === "translateX(0%)") {
+                sidebar.style.transform = "translateX(-100%)";
+                overlay.style.display = "none";
+            } else {
+                sidebar.style.transform = "translateX(0%)";
+                overlay.style.display = "block";
             }
         }
-    }
 
-    function openEditDate(el) {
-        var input = el.querySelector("input");
-        if (!input) return;
+        function toggleDesc(el) {
+            var parent = el.parentElement;
+            var shortText = parent.querySelector(".desc-short");
+            var fullText = parent.querySelector(".desc-full");
 
-        if (!input._flatpickr) {
-            flatpickr(input, {
-                dateFormat: "Y-m-d",
-                allowInput: false,
-                clickOpens: false,
-                monthSelectorType: "dropdown",
-                prevArrow: "&#10094;",
-                nextArrow: "&#10095;",
-                onChange: function (selectedDates, dateStr) {
-                    updateSmartPill(el, formatDateForPill(dateStr));
+            if (fullText.style.display === "inline") {
+                fullText.style.display = "none";
+                shortText.style.display = "inline";
+                el.innerText = "More";
+            } else {
+                fullText.style.display = "inline";
+                shortText.style.display = "none";
+                el.innerText = "Less";
+            }
+        }
+
+        function closeAllEditInline() {
+            document.querySelectorAll(".inline-edit-box").forEach(function (edit) {
+                edit.classList.remove("active");
+            });
+
+            document.querySelectorAll(".task-row").forEach(function (view) {
+                view.style.display = "flex";
+            });
+        }
+
+        function toggleEditInline(id) {
+            var view = document.getElementById("taskView-" + id);
+            var edit = document.getElementById("taskEdit-" + id);
+
+            if (!view || !edit) return;
+
+            var isOpen = edit.classList.contains("active");
+
+            closeAllEditInline();
+
+            if (!isOpen) {
+                view.style.display = "none";
+                edit.classList.add("active");
+
+                var titleInput = edit.querySelector(".inline-edit-title");
+                if (titleInput) {
+                    setTimeout(function () {
+                        titleInput.focus();
+                        titleInput.select();
+                    }, 50);
                 }
-            });
-        }
-
-        input._flatpickr.open();
-    }
-
-    function formatDateForPill(value) {
-        if (!value) return "";
-        const parts = value.split("-");
-        if (parts.length !== 3) return value;
-        return parts[2] + "/" + parts[1];
-    }
-
-    function updateSmartPill(pill, value) {
-        const text = pill.querySelector(".pill-text");
-        if (!text) return;
-
-        if (value && value.trim() !== "") {
-            text.textContent = value;
-            pill.classList.add("active");
-        } else {
-            text.textContent = "";
-            pill.classList.remove("active");
-        }
-    }
-
-    let activeDrag = null;
-    let autoScrollInterval = null;
-
-    function initAdvancedDrag() {
-        document.querySelectorAll(".drag-handle").forEach(handle => {
-            handle.addEventListener("mousedown", startDrag);
-        });
-    }
-
-    function startDrag(e) {
-        e.preventDefault();
-
-        const task = e.currentTarget.closest(".task-block");
-        const container = document.getElementById("taskListContainer");
-        if (!task || !container) return;
-
-        const rect = task.getBoundingClientRect();
-
-        const placeholder = document.createElement("div");
-        placeholder.className = "drag-placeholder";
-        placeholder.style.height = rect.height + "px";
-
-        const floating = task.cloneNode(true);
-        floating.classList.add("drag-floating");
-        floating.style.width = rect.width + "px";
-        floating.style.left = rect.left + "px";
-        floating.style.top = rect.top + "px";
-
-        document.body.appendChild(floating);
-
-        task.classList.add("drag-source-hidden");
-        task.parentNode.insertBefore(placeholder, task.nextSibling);
-
-        activeDrag = {
-            source: task,
-            floating: floating,
-            placeholder: placeholder,
-            container: container,
-            offsetY: e.clientY - rect.top
-        };
-
-        document.addEventListener("mousemove", onDrag);
-        document.addEventListener("mouseup", stopDrag);
-    }
-
-    function startAutoScroll(y) {
-        stopAutoScroll();
-
-        autoScrollInterval = setInterval(() => {
-            if (y < 120) window.scrollBy(0, -10);
-            if (y > window.innerHeight - 120) window.scrollBy(0, 10);
-        }, 16);
-    }
-
-    function stopAutoScroll() {
-        if (autoScrollInterval) {
-            clearInterval(autoScrollInterval);
-            autoScrollInterval = null;
-        }
-    }
-
-    function onDrag(e) {
-        if (!activeDrag) return;
-
-        const floating = activeDrag.floating;
-        const offsetY = activeDrag.offsetY;
-        const source = activeDrag.source;
-        const placeholder = activeDrag.placeholder;
-        const container = activeDrag.container;
-
-        startAutoScroll(e.clientY);
-        floating.style.top = (e.clientY - offsetY) + "px";
-
-        const items = Array.from(container.querySelectorAll(".task-block"))
-            .filter(item => item !== source);
-
-        for (let item of items) {
-            const rect = item.getBoundingClientRect();
-            if (e.clientY < rect.top + rect.height / 2) {
-                container.insertBefore(placeholder, item);
-                return;
             }
         }
 
-        container.appendChild(placeholder);
-    }
+        function openEditDate(el) {
+            var input = el.querySelector("input");
+            if (!input) return;
 
-    function stopDrag() {
-        if (!activeDrag) return;
-
-        stopAutoScroll();
-
-        const source = activeDrag.source;
-        const floating = activeDrag.floating;
-        const placeholder = activeDrag.placeholder;
-        const container = activeDrag.container;
-
-        container.insertBefore(source, placeholder);
-        source.classList.remove("drag-source-hidden");
-
-        floating.remove();
-        placeholder.remove();
-
-        activeDrag = null;
-
-        document.removeEventListener("mousemove", onDrag);
-        document.removeEventListener("mouseup", stopDrag);
-
-        saveOrder();
-    }
-
-    function saveOrder() {
-        const ids = [];
-
-        document.querySelectorAll(".task-block").forEach(el => {
-            const id = el.getAttribute("data-id");
-            if (id) {
-                ids.push(Number(id));
-            }
-        });
-
-        fetch("/tasks/reorder", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(ids)
-        });
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-        var quickAddBox = document.getElementById("quickAddBox");
-        var quickAddTitle = document.getElementById("quickAddTitle");
-        var quickAddDescription = document.getElementById("quickAddDescription");
-        var dateInput = document.getElementById("dueDatePicker");
-        var datePill = document.getElementById("datePill");
-
-        if (quickAddTitle && quickAddBox) {
-            quickAddTitle.addEventListener("focus", function () {
-                quickAddBox.classList.add("expanded");
-            });
-
-            quickAddTitle.addEventListener("keydown", function (e) {
-                if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-
-                    if (quickAddTitle.value.trim() === "") {
-                        quickAddTitle.reportValidity();
-                        return;
+            if (!input._flatpickr) {
+                flatpickr(input, {
+                    dateFormat: "Y-m-d",
+                    allowInput: false,
+                    clickOpens: false,
+                    monthSelectorType: "dropdown",
+                    prevArrow: "&#10094;",
+                    nextArrow: "&#10095;",
+                    onChange: function (selectedDates, dateStr) {
+                        updateSmartPill(el, formatDateForPill(dateStr));
                     }
+                });
+            }
 
-                    quickAddBox.requestSubmit();
+            input._flatpickr.open();
+        }
+
+        function formatDateForPill(value) {
+            if (!value) return "";
+            const parts = value.split("-");
+            if (parts.length !== 3) return value;
+            return parts[2] + "/" + parts[1];
+        }
+
+        function updateSmartPill(pill, value) {
+            const text = pill.querySelector(".pill-text");
+            if (!text) return;
+
+            if (value && value.trim() !== "") {
+                text.textContent = value;
+                pill.classList.add("active");
+            } else {
+                text.textContent = "";
+                pill.classList.remove("active");
+            }
+        }
+
+        let activeDrag = null;
+        let autoScrollInterval = null;
+
+        function initAdvancedDrag() {
+            document.querySelectorAll(".drag-handle").forEach(handle => {
+                handle.addEventListener("mousedown", startDrag);
+            });
+        }
+
+        function startDrag(e) {
+            e.preventDefault();
+
+            const task = e.currentTarget.closest(".task-block");
+            const container = document.getElementById("taskListContainer");
+            if (!task || !container) return;
+
+            const rect = task.getBoundingClientRect();
+
+            const placeholder = document.createElement("div");
+            placeholder.className = "drag-placeholder";
+            placeholder.style.height = rect.height + "px";
+
+            const floating = task.cloneNode(true);
+            floating.classList.add("drag-floating");
+            floating.style.width = rect.width + "px";
+            floating.style.left = rect.left + "px";
+            floating.style.top = rect.top + "px";
+
+            document.body.appendChild(floating);
+
+            task.classList.add("drag-source-hidden");
+            task.parentNode.insertBefore(placeholder, task.nextSibling);
+
+            activeDrag = {
+                source: task,
+                floating: floating,
+                placeholder: placeholder,
+                container: container,
+                offsetY: e.clientY - rect.top
+            };
+
+            document.addEventListener("mousemove", onDrag);
+            document.addEventListener("mouseup", stopDrag);
+        }
+
+        function startAutoScroll(y) {
+            stopAutoScroll();
+
+            autoScrollInterval = setInterval(() => {
+                if (y < 120) window.scrollBy(0, -10);
+                if (y > window.innerHeight - 120) window.scrollBy(0, 10);
+            }, 16);
+        }
+
+        function stopAutoScroll() {
+            if (autoScrollInterval) {
+                clearInterval(autoScrollInterval);
+                autoScrollInterval = null;
+            }
+        }
+
+        function onDrag(e) {
+            if (!activeDrag) return;
+
+            const floating = activeDrag.floating;
+            const offsetY = activeDrag.offsetY;
+            const source = activeDrag.source;
+            const placeholder = activeDrag.placeholder;
+            const container = activeDrag.container;
+
+            startAutoScroll(e.clientY);
+            floating.style.top = (e.clientY - offsetY) + "px";
+
+            const items = Array.from(container.querySelectorAll(".task-block"))
+                .filter(item => item !== source);
+
+            for (let item of items) {
+                const rect = item.getBoundingClientRect();
+                if (e.clientY < rect.top + rect.height / 2) {
+                    container.insertBefore(placeholder, item);
+                    return;
+                }
+            }
+
+            container.appendChild(placeholder);
+        }
+
+        function stopDrag() {
+            if (!activeDrag) return;
+
+            stopAutoScroll();
+
+            const source = activeDrag.source;
+            const floating = activeDrag.floating;
+            const placeholder = activeDrag.placeholder;
+            const container = activeDrag.container;
+
+            container.insertBefore(source, placeholder);
+            source.classList.remove("drag-source-hidden");
+
+            floating.remove();
+            placeholder.remove();
+
+            activeDrag = null;
+
+            document.removeEventListener("mousemove", onDrag);
+            document.removeEventListener("mouseup", stopDrag);
+
+            saveOrder();
+        }
+
+        function saveOrder() {
+            const ids = [];
+
+            document.querySelectorAll(".task-block").forEach(el => {
+                const id = el.getAttribute("data-id");
+                if (id) {
+                    ids.push(Number(id));
                 }
             });
-        }
 
-        if (quickAddDescription && quickAddBox) {
-            quickAddDescription.addEventListener("focus", function () {
-                quickAddBox.classList.add("expanded");
+            fetch("/tasks/reorder", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(ids)
             });
         }
 
-        document.querySelectorAll(".inline-edit-box").forEach(function (edit) {
-            var titleInput = edit.querySelector(".inline-edit-title");
-            if (titleInput) {
-                titleInput.addEventListener("keydown", function (e) {
+        document.addEventListener("DOMContentLoaded", function () {
+            var quickAddBox = document.getElementById("quickAddBox");
+            var quickAddTitle = document.getElementById("quickAddTitle");
+            var quickAddDescription = document.getElementById("quickAddDescription");
+            var dateInput = document.getElementById("dueDatePicker");
+            var datePill = document.getElementById("datePill");
+
+            if (quickAddTitle && quickAddBox) {
+                quickAddTitle.addEventListener("focus", function () {
+                    quickAddBox.classList.add("expanded");
+                });
+
+                quickAddTitle.addEventListener("keydown", function (e) {
                     if (e.key === "Enter" && !e.shiftKey) {
                         e.preventDefault();
 
-                        if (titleInput.value.trim() === "") {
-                            titleInput.reportValidity();
+                        if (quickAddTitle.value.trim() === "") {
+                            quickAddTitle.reportValidity();
                             return;
                         }
 
-                        var form = edit.querySelector("form");
-                        if (form) {
-                            form.requestSubmit();
-                        }
+                        quickAddBox.requestSubmit();
                     }
                 });
             }
-        });
 
-        document.addEventListener("click", function (e) {
-            if (quickAddBox && !quickAddBox.contains(e.target)) {
-                quickAddBox.classList.remove("expanded");
+            if (quickAddDescription && quickAddBox) {
+                quickAddDescription.addEventListener("focus", function () {
+                    quickAddBox.classList.add("expanded");
+                });
             }
 
-            var clickedEditButton = e.target.closest("[onclick*='toggleEditInline']");
-            var clickedEditBox = e.target.closest(".inline-edit-box");
+            document.querySelectorAll(".inline-edit-box").forEach(function (edit) {
+                var titleInput = edit.querySelector(".inline-edit-title");
+                if (titleInput) {
+                    titleInput.addEventListener("keydown", function (e) {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                            e.preventDefault();
 
-            if (!clickedEditButton && !clickedEditBox) {
-                closeAllEditInline();
-            }
-        });
+                            if (titleInput.value.trim() === "") {
+                                titleInput.reportValidity();
+                                return;
+                            }
 
-        if (dateInput) {
-            var fp = flatpickr(dateInput, {
-                dateFormat: "Y-m-d",
-                allowInput: false,
-                clickOpens: false,
-                monthSelectorType: "dropdown",
-                prevArrow: "&#10094;",
-                nextArrow: "&#10095;",
-                onChange: function (selectedDates, dateStr) {
-                    updateSmartPill(datePill, formatDateForPill(dateStr));
+                            var form = edit.querySelector("form");
+                            if (form) {
+                                form.requestSubmit();
+                            }
+                        }
+                    });
                 }
             });
 
-            if (datePill) {
-                datePill.addEventListener("click", function (e) {
+            document.addEventListener("click", function (e) {
+                if (quickAddBox && !quickAddBox.contains(e.target)) {
+                    quickAddBox.classList.remove("expanded");
+                }
+
+                var clickedEditButton = e.target.closest("[onclick*='toggleEditInline']");
+                var clickedEditBox = e.target.closest(".inline-edit-box");
+
+                if (!clickedEditButton && !clickedEditBox) {
+                    closeAllEditInline();
+                }
+            });
+
+            if (dateInput) {
+                var fp = flatpickr(dateInput, {
+                    dateFormat: "Y-m-d",
+                    allowInput: false,
+                    clickOpens: false,
+                    monthSelectorType: "dropdown",
+                    prevArrow: "&#10094;",
+                    nextArrow: "&#10095;",
+                    onChange: function (selectedDates, dateStr) {
+                        updateSmartPill(datePill, formatDateForPill(dateStr));
+                    }
+                });
+
+                if (datePill) {
+                    datePill.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        fp.open();
+                    });
+                }
+            }
+
+            const priorityPill = document.getElementById("priorityPill");
+            const prioritySelect = document.getElementById("prioritySelect");
+            const categoryPill = document.getElementById("categoryPill");
+            const categorySelect = document.getElementById("categorySelect");
+
+            if (dateInput && datePill) {
+                updateSmartPill(datePill, formatDateForPill(dateInput.value));
+            }
+
+            if (prioritySelect && priorityPill) {
+                updateSmartPill(priorityPill, prioritySelect.value);
+                prioritySelect.addEventListener("change", function () {
+                    updateSmartPill(priorityPill, this.value);
+                });
+            }
+
+            if (categorySelect && categoryPill) {
+                updateSmartPill(categoryPill, categorySelect.value);
+                categorySelect.addEventListener("change", function () {
+                    updateSmartPill(categoryPill, this.value);
+                });
+            }
+
+            document.querySelectorAll(".edit-date-pill").forEach(function (pill) {
+                const input = pill.querySelector("input");
+                if (input) {
+                    updateSmartPill(pill, formatDateForPill(input.value));
+                }
+            });
+
+            document.querySelectorAll(".edit-priority-pill").forEach(function (pill) {
+                const select = pill.querySelector("select");
+                if (select) {
+                    updateSmartPill(pill, select.value);
+                    select.addEventListener("change", function () {
+                        updateSmartPill(pill, this.value);
+                    });
+                }
+            });
+
+            document.querySelectorAll(".edit-category-pill").forEach(function (pill) {
+                const select = pill.querySelector("select");
+                if (select) {
+                    updateSmartPill(pill, select.value);
+                    select.addEventListener("change", function () {
+                        updateSmartPill(pill, this.value);
+                    });
+                }
+            });
+
+            initAdvancedDrag();
+        });
+
+
+        document.addEventListener("click", function (e) {
+            var wrapper = document.querySelector(".sort-wrapper");
+            var menu = document.getElementById("sortMenu");
+
+            if (wrapper && menu && !wrapper.contains(e.target)) {
+                menu.style.display = "none";
+            }
+        });
+
+        function toggleSortMenu() {
+            var menu = document.getElementById("sortMenu");
+            if (menu.style.display === "block") {
+                menu.style.display = "none";
+            } else {
+                menu.style.display = "block";
+            }
+        }
+
+        document.addEventListener("click", function (e) {
+
+            // ========== SORT MENU ==========
+            var wrapper = document.querySelector(".sort-wrapper");
+            var menu = document.getElementById("sortMenu");
+
+            if (wrapper && menu && !wrapper.contains(e.target)) {
+                menu.style.display = "none";
+            }
+            // ========== SEARCH OVERLAY ==========
+            var overlay = document.getElementById("searchOverlay");
+            var box = document.querySelector(".search-box");
+
+            if (overlay && overlay.style.display === "block") {
+                if (box && !box.contains(e.target)) {
+                    overlay.style.display = "none";
+                }
+            }
+
+        });
+
+        document.addEventListener("keydown", function (e) {
+
+            if (e.key === "Enter") {
+
+                const input = document.getElementById("searchInput");
+
+                if (input && document.activeElement === input) {
                     e.preventDefault();
-                    fp.open();
-                });
+                    doSearch();
+                }
             }
-        }
 
-        const priorityPill = document.getElementById("priorityPill");
-        const prioritySelect = document.getElementById("prioritySelect");
-        const categoryPill = document.getElementById("categoryPill");
-        const categorySelect = document.getElementById("categorySelect");
-
-        if (dateInput && datePill) {
-            updateSmartPill(datePill, formatDateForPill(dateInput.value));
-        }
-
-        if (prioritySelect && priorityPill) {
-            updateSmartPill(priorityPill, prioritySelect.value);
-            prioritySelect.addEventListener("change", function () {
-                updateSmartPill(priorityPill, this.value);
-            });
-        }
-
-        if (categorySelect && categoryPill) {
-            updateSmartPill(categoryPill, categorySelect.value);
-            categorySelect.addEventListener("change", function () {
-                updateSmartPill(categoryPill, this.value);
-            });
-        }
-
-        document.querySelectorAll(".edit-date-pill").forEach(function (pill) {
-            const input = pill.querySelector("input");
-            if (input) {
-                updateSmartPill(pill, formatDateForPill(input.value));
-            }
         });
 
-        document.querySelectorAll(".edit-priority-pill").forEach(function (pill) {
-            const select = pill.querySelector("select");
-            if (select) {
-                updateSmartPill(pill, select.value);
-                select.addEventListener("change", function () {
-                    updateSmartPill(pill, this.value);
-                });
-            }
-        });
+        function openSearch(e) {
+            if (e) e.stopPropagation(); // 🔥 يمنع click يوصل للdocument
 
-        document.querySelectorAll(".edit-category-pill").forEach(function (pill) {
-            const select = pill.querySelector("select");
-            if (select) {
-                updateSmartPill(pill, select.value);
-                select.addEventListener("change", function () {
-                    updateSmartPill(pill, this.value);
-                });
-            }
-        });
+            document.getElementById("searchOverlay").style.display = "block";
 
-        initAdvancedDrag();
-    });
-
-
-    document.addEventListener("click", function (e) {
-        var wrapper = document.querySelector(".sort-wrapper");
-        var menu = document.getElementById("sortMenu");
-
-        if (wrapper && menu && !wrapper.contains(e.target)) {
-            menu.style.display = "none";
-        }
-    });
-
-    function toggleSortMenu() {
-        var menu = document.getElementById("sortMenu");
-        if (menu.style.display === "block") {
-            menu.style.display = "none";
-        } else {
-            menu.style.display = "block";
-        }
-    }
-
-    document.addEventListener("click", function (e) {
-
-        // ========== SORT MENU ==========
-        var wrapper = document.querySelector(".sort-wrapper");
-        var menu = document.getElementById("sortMenu");
-
-        if (wrapper && menu && !wrapper.contains(e.target)) {
-            menu.style.display = "none";
-        }
-        // ========== SEARCH OVERLAY ==========
-        var overlay = document.getElementById("searchOverlay");
-        var box = document.querySelector(".search-box");
-
-        if (overlay && overlay.style.display === "block") {
-            if (box && !box.contains(e.target)) {
-                overlay.style.display = "none";
-            }
-        }
-
-    });
-
-    document.addEventListener("keydown", function (e) {
-
-        if (e.key === "Enter") {
-
-            const input = document.getElementById("searchInput");
-
-            if (input && document.activeElement === input) {
-                e.preventDefault();
-                doSearch();
-            }
-        }
-
-    });
-
-    function openSearch(e) {
-        if (e) e.stopPropagation(); // 🔥 يمنع click يوصل للdocument
-
-        document.getElementById("searchOverlay").style.display = "block";
-
-        setTimeout(() => {
-            document.getElementById("searchInput").focus();
-        }, 100);
-    }
-
-    function closeSearch() {
-        document.getElementById("searchOverlay").style.display = "none";
-    }
-    function doSearch() {
-        let keyword = document.getElementById("searchInput").value;
-
-        window.location.href = "/tasks/search?keyword=" + encodeURIComponent(keyword);
-    }
-
-    function toggleOverdueSection() {
-        const list = document.getElementById("overdueList");
-        const header = document.querySelector(".section-toggle");
-        const arrow = document.getElementById("overdueArrow");
-
-        if (!list || !header || !arrow) return;
-
-        if (list.style.display === "none") {
-            list.style.display = "block";
-            header.classList.add("open");
-        } else {
-            list.style.display = "none";
-            header.classList.remove("open");
-        }
-    }
-
-    function toggleCompletedSection() {
-        const list = document.getElementById("completedList");
-        const header = document.querySelector(".completed-toggle");
-
-        if (!list || !header) return;
-
-        if (list.style.display === "none") {
-            list.style.display = "block";
-            header.classList.add("open");
-        } else {
-            list.style.display = "none";
-            header.classList.remove("open");
-        }
-    }
-    function updateAllScrollInputs() {
-        const value = window.scrollY || window.pageYOffset ||  0;
-
-        const mainInput = document.getElementById("scrollPosInput");
-        if (mainInput) {
-            mainInput.value = value;
-        }
-
-        document.querySelectorAll(".scroll-pos-input").forEach(input => {
-            input.value = value;
-        });
-
-        document.querySelectorAll('a[href*="/tasks/delete/"]').forEach(link => {
-            try {
-                const url = new URL(link.href, window.location.origin);
-                url.searchParams.set("scrollPos", value);
-                link.href = url.toString();
-            } catch (e) {}
-        });
-    }
-
-    window.addEventListener("scroll", updateAllScrollInputs);
-
-    document.addEventListener("DOMContentLoaded", function () {
-        updateAllScrollInputs();
-
-        const savedScroll = "[[${scrollPos}]]";
-        if (savedScroll && savedScroll !== "null" && savedScroll !== "") {
             setTimeout(() => {
-                window.scrollTo(0, parseInt(savedScroll));
-            }, 50);
-        }
-    });
-
-
-    function showTaskTab(type, clickedTab) {
-        const allTasks = document.getElementById("taskListContainer");
-        const completedSection = document.getElementById("completedTasksPanel");
-        const overdueSection = document.getElementById("overdueTasksPanel");
-        const completedList = document.getElementById("completedList");
-        const overdueList = document.getElementById("overdueList");
-
-        document.body.classList.add("tabs-mode");
-
-        if (allTasks) allTasks.style.display = "none";
-        if (completedSection) completedSection.style.display = "none";
-        if (overdueSection) overdueSection.style.display = "none";
-
-        if (type === "all" && allTasks) {
-            allTasks.style.display = "block";
+                document.getElementById("searchInput").focus();
+            }, 100);
         }
 
-        if (type === "completed" && completedSection) {
-            completedSection.style.display = "block";
-            if (completedList) completedList.style.display = "block";
+        function closeSearch() {
+            document.getElementById("searchOverlay").style.display = "none";
+        }
+        function doSearch() {
+            let keyword = document.getElementById("searchInput").value;
+
+            window.location.href = "/tasks/search?keyword=" + encodeURIComponent(keyword);
         }
 
-        if (type === "overdue" && overdueSection) {
-            overdueSection.style.display = "block";
-            if (overdueList) overdueList.style.display = "block";
+        function toggleOverdueSection() {
+            const list = document.getElementById("overdueList");
+            const header = document.querySelector(".section-toggle");
+            const arrow = document.getElementById("overdueArrow");
+
+            if (!list || !header || !arrow) return;
+
+            if (list.style.display === "none") {
+                list.style.display = "block";
+                header.classList.add("open");
+            } else {
+                list.style.display = "none";
+                header.classList.remove("open");
+            }
         }
 
-        document.querySelectorAll(".tabs span").forEach(tab => tab.classList.remove("active"));
-        const tab = clickedTab ? clickedTab.closest("span") : document.querySelector(".tabs span");
-        if (tab) tab.classList.add("active");
-    }
+        function toggleCompletedSection() {
+            const list = document.getElementById("completedList");
+            const header = document.querySelector(".completed-toggle");
 
-    document.addEventListener("DOMContentLoaded", function () {
-        showTaskTab("all", document.querySelector(".tabs span.active"));
-    });
+            if (!list || !header) return;
 
+            if (list.style.display === "none") {
+                list.style.display = "block";
+                header.classList.add("open");
+            } else {
+                list.style.display = "none";
+                header.classList.remove("open");
+            }
+        }
+        function updateAllScrollInputs() {
+            const value = window.scrollY || window.pageYOffset ||  0;
 
-    function toggleEditInlineOverdue(id) {
-        var view = document.getElementById("taskView-overdue-" + id);
-        var edit = document.getElementById("taskEdit-overdue-" + id);
+            const mainInput = document.getElementById("scrollPosInput");
+            if (mainInput) {
+                mainInput.value = value;
+            }
 
-        if (!view || !edit) return;
+            document.querySelectorAll(".scroll-pos-input").forEach(input => {
+                input.value = value;
+            });
 
-        var isOpen = edit.classList.contains("active");
+            document.querySelectorAll('a[href*="/tasks/delete/"]').forEach(link => {
+                try {
+                    const url = new URL(link.href, window.location.origin);
+                    url.searchParams.set("scrollPos", value);
+                    link.href = url.toString();
+                } catch (e) {}
+            });
+        }
 
-        closeAllEditInline();
+        window.addEventListener("scroll", updateAllScrollInputs);
 
-        if (!isOpen) {
-            view.style.display = "none";
-            edit.classList.add("active");
+        document.addEventListener("DOMContentLoaded", function () {
+            updateAllScrollInputs();
 
-            var titleInput = edit.querySelector(".inline-edit-title");
-            if (titleInput) {
-                setTimeout(function () {
-                    titleInput.focus();
-                    titleInput.select();
+            const savedScroll = "[[${scrollPos}]]";
+            if (savedScroll && savedScroll !== "null" && savedScroll !== "") {
+                setTimeout(() => {
+                    window.scrollTo(0, parseInt(savedScroll));
                 }, 50);
             }
+        });
+
+
+        function showTaskTab(type, clickedTab) {
+            localStorage.setItem("activeTaskTab", type);
+            const allTasks = document.getElementById("taskListContainer");
+            const completedSection = document.getElementById("completedTasksPanel");
+            const overdueSection = document.getElementById("overdueTasksPanel");
+            const completedList = document.getElementById("completedList");
+            const overdueList = document.getElementById("overdueList");
+            const emptyMyTasksState = document.getElementById("emptyMyTasksState");
+
+            document.body.classList.add("tabs-mode");
+
+            if (allTasks) allTasks.style.display = "none";
+            if (completedSection) completedSection.style.display = "none";
+            if (overdueSection) overdueSection.style.display = "none";
+            if (emptyMyTasksState) emptyMyTasksState.style.display = "none";
+            if (type === "all") {
+    if (allTasks) allTasks.style.display = "block";
+    if (emptyMyTasksState) emptyMyTasksState.style.display = "block";
+}
+
+            if (type === "completed" && completedSection) {
+                completedSection.style.display = "block";
+                if (completedList) completedList.style.display = "block";
+            }
+
+            if (type === "overdue" && overdueSection) {
+                overdueSection.style.display = "block";
+                if (overdueList) overdueList.style.display = "block";
+            }
+
+            document.querySelectorAll(".tabs span").forEach(tab => tab.classList.remove("active"));
+            const tab = clickedTab ? clickedTab.closest("span") : document.querySelector(".tabs span");
+            if (tab) tab.classList.add("active");
         }
-    }
-</script>
+
+       document.addEventListener("DOMContentLoaded", function () {
+        const savedTab = localStorage.getItem("activeTaskTab") || "all";
+
+        const tabElement =
+            savedTab === "completed"
+                ? document.querySelector(".tabs span:nth-child(2)")
+                : savedTab === "overdue"
+                    ? document.querySelector(".tabs span:nth-child(3)")
+                    : document.querySelector(".tabs span:nth-child(1)");
+
+        showTaskTab(savedTab, tabElement);
+    });
+
+
+        function toggleEditInlineOverdue(id) {
+            var view = document.getElementById("taskView-overdue-" + id);
+            var edit = document.getElementById("taskEdit-overdue-" + id);
+
+            if (!view || !edit) return;
+
+            var isOpen = edit.classList.contains("active");
+
+            closeAllEditInline();
+
+            if (!isOpen) {
+                view.style.display = "none";
+                edit.classList.add("active");
+
+                var titleInput = edit.querySelector(".inline-edit-title");
+                if (titleInput) {
+                    setTimeout(function () {
+                        titleInput.focus();
+                        titleInput.select();
+                    }, 50);
+                }
+            }
+        }
+
+
+
+
+    </script>
 
 </body>
 </html>

@@ -72,7 +72,20 @@ public class TaskController {
 
         model.addAttribute("weeklyStats", weeklyStats);
         model.addAttribute("todayIndex", today.getDayOfWeek().getValue() - 1);
+        long todayCompleted = sourceTasks.stream()
+                .filter(Task::isDone)
+                .filter(task -> task.getDueDate() != null)
+                .filter(task -> task.getDueDate().equals(LocalDate.now()))
+                .count();
 
+        long todayRemaining = sourceTasks.stream()
+                .filter(task -> !task.isDone())
+                .filter(task -> task.getDueDate() != null)
+                .filter(task -> task.getDueDate().equals(LocalDate.now()))
+                .count();
+
+        model.addAttribute("todayCompleted", todayCompleted);
+        model.addAttribute("todayRemaining", todayRemaining);
         model.addAttribute("currentSort", sort);
     }
 
@@ -106,7 +119,7 @@ public class TaskController {
         model.addAttribute("pageTitle", "All Tasks");
         model.addAttribute("scrollPos", scrollPos);
         model.addAttribute("currentSource", "all");
-
+        model.addAttribute("isTodayPage", false);
         return "tasks";
     }
 
@@ -162,7 +175,7 @@ public class TaskController {
         model.addAttribute("pageTitle", "Today");
         model.addAttribute("scrollPos", scrollPos);
         model.addAttribute("currentSource", "today");
-
+        model.addAttribute("isTodayPage", true);
         return "tasks";
     }
 
@@ -571,37 +584,24 @@ public class TaskController {
                                  @RequestParam(required = false) String targetDate,
                                  @RequestParam(required = false) String sort,
                                  @RequestParam(required = false) String scrollPos,
-
-                                 @RequestParam(required = false) String keyword){
+                                 @RequestParam(required = false) String keyword) {
 
         taskService.toggleDone(id);
 
         if ("today".equals(source)) {
-            String redirect = "redirect:/today";
-            boolean hasParam = false;
-
             if (sort != null && !sort.isEmpty()) {
-                redirect += "?sort=" + sort;
-                hasParam = true;
+                return "redirect:/today?sort=" + sort;
             }
-
-            if (keyword != null && !keyword.isEmpty()) {
-                redirect += (hasParam ? "&" : "?") + "keyword=" + keyword;
-                hasParam = true;
-            }
-
-            if (scrollPos != null && !scrollPos.isEmpty()) {
-                redirect += (hasParam ? "&" : "?") + "scrollPos=" + scrollPos;
-            }
-
-            return redirect;
+            return "redirect:/today";
         }
+
         if ("search".equals(source)) {
             if (sort != null && !sort.isEmpty()) {
                 return "redirect:/tasks/search?keyword=" + keyword + "&sort=" + sort;
             }
             return "redirect:/tasks/search?keyword=" + keyword;
         }
+
         if (category != null && !category.isEmpty()) {
             return "redirect:/tasks/category/" + category;
         }
@@ -611,39 +611,23 @@ public class TaskController {
         }
 
         if ("upcoming".equals(source)) {
-            String redirectUrl = "redirect:/upcoming";
-
             if (startDate != null && !startDate.isEmpty()) {
-                redirectUrl += "?startDate=" + startDate;
+                return "redirect:/upcoming?startDate=" + startDate;
             }
-
-            if (targetDate != null && !targetDate.isEmpty()) {
-                redirectUrl += "#day-" + targetDate;
-            }
-
-            return redirectUrl;
+            return "redirect:/upcoming";
         }
-
-        String redirect = "redirect:/tasks";
-        boolean hasParam = false;
 
         if (sort != null && !sort.isEmpty()) {
-            redirect += "?sort=" + sort;
-            hasParam = true;
+            return "redirect:/tasks?sort=" + sort;
         }
 
-        if (keyword != null && !keyword.isEmpty()) {
-            redirect += (hasParam ? "&" : "?") + "keyword=" + keyword;
-            hasParam = true;
-        }
-
-        if (scrollPos != null && !scrollPos.isEmpty()) {
-            redirect += (hasParam ? "&" : "?") + "scrollPos=" + scrollPos;
-        }
-
-        return redirect;
+        return "redirect:/tasks";
     }
-
+    @GetMapping("/tasks/toggle/{id}")
+    public String toggleTaskDoneGet(@PathVariable Long id) {
+        taskService.toggleDone(id);
+        return "redirect:/tasks";
+    }
     @GetMapping("/upcoming")
     public String showUpcoming(
             @RequestParam(value = "startDate", required = false)
@@ -804,4 +788,5 @@ public class TaskController {
 
         return "tasks";
     }
+
 }
