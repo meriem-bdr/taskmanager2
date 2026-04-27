@@ -53,6 +53,25 @@ public class TaskController {
         model.addAttribute("completedTasks", completedTasks);
         model.addAttribute("completedCount", completedTasks.size());
         model.addAttribute("completedOpen", completedOpen);
+        LocalDate today = LocalDate.now();
+        LocalDate startOfWeek = today.minusDays(today.getDayOfWeek().getValue() - 1);
+
+        List<Integer> weeklyStats = new ArrayList<>();
+
+        for (int i = 0; i < 7; i++) {
+            LocalDate day = startOfWeek.plusDays(i);
+
+            int count = (int) sourceTasks.stream()
+                    .filter(Task::isDone)
+                    .filter(task -> task.getDueDate() != null)
+                    .filter(task -> task.getDueDate().isEqual(day))
+                    .count();
+
+            weeklyStats.add(count);
+        }
+
+        model.addAttribute("weeklyStats", weeklyStats);
+        model.addAttribute("todayIndex", today.getDayOfWeek().getValue() - 1);
 
         model.addAttribute("currentSort", sort);
     }

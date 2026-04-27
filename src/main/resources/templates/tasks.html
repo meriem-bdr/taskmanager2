@@ -6,98 +6,164 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body {
-            margin: 0;
-            overflow-x: hidden;
-            font-family: Arial, sans-serif;
-            background: white;
-            color: #111;
+        :root {
+            --primary-50: #e4ecf6;
+            --primary-100: #bad0ee;
+            --primary-200: #8ab4ea;
+            --primary-300: #5597ec;
+            --primary-400: #1b79f3;
+            --primary-500: #2563eb;
+            --primary-600: #1d4ed8;
+            --primary-700: #003e8f;
+            --primary-800: #00285c;
+            --primary-900: #001229;
+            --secondary-50: #ecf1f9;
+            --secondary-100: #d6e3f5;
+            --secondary-200: #bed5f4;
+            --secondary-300: #a3c7f5;
+            --secondary-500: #5a9ef6;
+            --accent-500: #8bbaf9;
+            --bg: #f5f7fb;
+            --surface: #ffffff;
+
+            --surface-solid: #ffffff;
+            --border: rgba(12, 108, 233, 0.16);
+            --text: #08213f;
+            --muted: #64748b;
+            --danger: #ef4444;
+            --soft-blue: #55b6e8;
+            --shadow-soft: 0 16px 42px rgba(0, 62, 143, 0.10);
+            --shadow-hover: 0 22px 55px rgba(12, 108, 233, 0.16);
         }
 
+        * { box-sizing: border-box; }
+
+      body {
+    margin: 0;
+    overflow-x: hidden;
+    font-family: Arial, sans-serif;
+     background: #f5f8ff;
+    color: var(--text);
+    min-height: 100vh;
+}
+
+.page-content {
+    background: #f5f8ff;
+}
+.task-block {
+    background: #ffffff;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.07);
+}
+
+.tasks-container {
+    background: transparent;
+}
+
+.task-block,
+.quick-add-box {
+    background: #ffffff;
+}
         .menu-global {
             position: fixed;
             top: 15px;
             left: 15px;
-            font-size: 22px;
-            background: none;
-            border: none;
+            font-size: 20px;
+            background: var(--surface-solid);
+            color: var(--primary-700);
+            border: 1px solid var(--border);
             cursor: pointer;
             z-index: 1500;
-            padding: 8px 10px;
-            border-radius: 8px;
+            padding: 9px 11px;
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(0, 62, 143, 0.10);
+            transition: 0.2s ease;
         }
 
-        .menu-global:hover {
-            background: #f5f5f5;
-        }
+        .menu-global:hover { background: var(--primary-50); transform: translateY(-1px); }
 
         .page-content {
             flex: 1;
-            padding: 30px;
-            padding-left: 70px;
+            padding: 34px;
+            padding-left: 78px;
             width: 100%;
             display: flex;
             justify-content: center;
             box-sizing: border-box;
         }
 
-        .tasks-container {
-            margin-top: 60px;
-            width: 100%;
-            max-width: 760px;
-        }
+        .tasks-container { width: 100%; max-width: 1180px; }
 
-        .top-links {
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
+      .title-sort-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+    padding: 18px 20px;
+    border-radius: 26px;
+
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+
+    position: relative;
+    z-index: 100;
+}
+
+        .title-sort-row h1 { margin: 0; font-size: 38px; letter-spacing: -1px; color: var(--primary-900); }
+
+        .top-links { margin-bottom: 18px; display: flex; align-items: center; gap: 14px; }
 
         .back-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             text-decoration: none;
-            color: black;
+            color: var(--primary-700);
+            background: var(--surface-solid);
+            border: 1px solid var(--border);
             transition: 0.2s;
         }
 
-        .back-btn:hover {
-            background: #f0f0f0;
-        }
+        .back-btn:hover { background: var(--primary-50); transform: translateX(-2px); }
 
         .quick-add-box,
         .inline-edit-box {
-            border: 1px solid #e5e5e5;
-            border-radius: 14px;
-            background: #fff;
-            padding: 12px 14px;
-            transition: box-shadow 0.2s ease, border-color 0.2s ease;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            background: var(--surface);
+            padding: 16px 18px;
+            transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(16px);
         }
 
-        .quick-add-box {
-            margin-bottom: 24px;
-            position: relative;
+        .quick-add-box { margin-bottom: 24px; position: relative; z-index: 1; overflow: hidden; }
+
+        .quick-add-box::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            pointer-events: none;
+            background: linear-gradient(135deg, rgba(12,108,233,0.10), transparent 45%);
         }
 
         .quick-add-box:focus-within,
         .inline-edit-box:focus-within {
-            border-color: #cfcfcf;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+            border-color: rgba(12, 108, 233, 0.48);
+            box-shadow: 0 18px 45px rgba(12, 108, 233, 0.18);
+            transform: translateY(-1px);
         }
 
         .quick-add-top,
-        .inline-edit-top {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .inline-edit-top { display: flex; align-items: center; gap: 12px; position: relative; z-index: 1; }
 
         .quick-add-title,
         .inline-edit-title {
@@ -105,96 +171,89 @@
             min-width: 0;
             border: none;
             outline: none;
-            font-size: 16px;
+            font-size: 17px;
             background: transparent;
-            color: #111;
-            padding: 6px 0;
+            color: var(--primary-900);
+            padding: 8px 0;
             font-family: Arial, sans-serif;
         }
 
         .quick-add-title::placeholder,
-        .inline-edit-title::placeholder {
-            color: #888;
-        }
+        .inline-edit-title::placeholder { color: #7d8ca4; }
 
         .quick-add-actions,
-        .inline-edit-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
+        .inline-edit-actions { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
 
         .quick-add-description-wrap,
         .inline-edit-description-wrap {
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid #f0f0f0;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(12, 108, 233, 0.12);
+            position: relative;
+            z-index: 1;
         }
 
-        .quick-add-description-wrap {
-            display: none;
-        }
-
-        .quick-add-box.expanded .quick-add-description-wrap {
-            display: block;
-        }
+        .quick-add-description-wrap { display: none; }
+        .quick-add-box.expanded .quick-add-description-wrap { display: block; }
 
         .quick-add-description,
         .inline-edit-description {
             width: 100%;
-            min-height: 44px;
+            min-height: 48px;
             resize: vertical;
             border: none;
             outline: none;
             background: transparent;
             font-size: 14px;
-            line-height: 1.5;
-            color: #444;
+            line-height: 1.6;
+            color: var(--muted);
             padding: 0;
-            box-sizing: border-box;
             font-family: Arial, sans-serif;
         }
 
         .quick-add-description::placeholder,
-        .inline-edit-description::placeholder {
-            color: #9a9a9a;
-        }
+        .inline-edit-description::placeholder { color: #9aa8ba; }
 
-        .hint-text {
-            margin-top: 8px;
-            font-size: 12px;
-            color: #8a8a8a;
-        }
-
-        .task-list-container {
-            position: relative;
-        }
+        .hint-text { margin-top: 8px; font-size: 12px; color: var(--primary-600); }
+        .task-list-container { position: relative; }
 
         .task-block {
-            padding: 18px 0;
-            border-bottom: 1px solid #e6e6e6;
+            padding: 18px 20px;
+            margin-bottom: 12px;
+            border: 1px solid #dbeafe;
+            border-left: 5px solid var(--soft-blue);
+            border-radius: 18px;
             position: relative;
-            transition: transform 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease;
-            background: white;
+            transition: transform 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+            background: #ffffff;
+            box-shadow: 0 8px 22px rgba(12, 108, 233, 0.06);
+            overflow: hidden;
         }
 
-        .task-block.drag-source-hidden {
-            opacity: 0;
+        .task-block:hover {
+            background: #ffffff;
+            transform: none;
+            border-color: #dbeafe;
+            box-shadow: 0 8px 22px rgba(12, 108, 233, 0.06);
         }
+
+.task-block:hover {
+    border-left: 5px solid var(--soft-blue) !important;
+}
+        .task-block.drag-source-hidden { opacity: 0; }
 
         .task-row {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
             gap: 18px;
             width: 100%;
         }
 
         .task-left {
             display: flex;
-            align-items: flex-start;
-            gap: 12px;
+            align-items: center;
+            gap: 14px;
             flex: 1;
             min-width: 0;
         }
@@ -203,648 +262,508 @@
             width: 16px;
             min-width: 16px;
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: center;
-            color: #b8b8b8;
+            color: var(--soft-blue);
             cursor: grab;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.15s ease, color 0.15s ease;
-            margin-top: 2px;
+            margin-top: 0;
             flex-shrink: 0;
             user-select: none;
         }
 
-        .task-block:hover .drag-handle {
-            opacity: 1;
-            pointer-events: auto;
-        }
+        .task-block:hover .drag-handle { opacity: 1; pointer-events: auto; }
+        .drag-handle:hover { color: var(--primary-600); }
+        .drag-handle:active { cursor: grabbing; }
 
-        .drag-handle:hover {
-            color: #666;
-        }
-
-        .drag-handle:active {
-            cursor: grabbing;
-        }
-
-        .task-content {
-            flex: 1;
-            min-width: 0;
-            max-width: 520px;
-        }
+        .task-content { flex: 1; min-width: 0; max-width: 560px; }
 
         .task-title {
             word-wrap: break-word;
             overflow-wrap: break-word;
             font-size: 16px;
-            line-height: 1.4;
+            line-height: 1.45;
+            font-weight: 600;
+            color: #0f172a;
         }
 
-        .task-title.done {
-            color: gray;
-        }
-
-        .task-title.active {
-            font-weight: bold;
-            color: #111;
-        }
+        .task-title.done { color: #94a3b8; text-decoration: line-through; }
+        .task-title.active { font-weight: 800; color: var(--primary-900); }
 
         .task-desc {
-            margin-top: 5px;
-            line-height: 1.5;
-            color: #444;
+            margin-top: 6px;
+            line-height: 1.55;
+            color: var(--muted);
             word-wrap: break-word;
             overflow-wrap: break-word;
             font-size: 14px;
         }
 
-        .task-desc.done {
-            color: gray;
-        }
+        .task-desc.done { color: #9aa8ba; }
 
-        .task-meta-row {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-top: 8px;
-            flex-wrap: wrap;
-        }
+        .task-meta-row { display: flex; align-items: center; gap: 10px; margin-top: 11px; flex-wrap: wrap; }
 
         .priority-label,
-        .category-label {
+        .category-label,
+        .task-date {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 7px;
             font-size: 13px;
+            color: #155e9f;
+            background: #eaf7ff;
+            border: 1px solid rgba(85, 182, 232, 0.25);
+            padding: 5px 10px;
+            border-radius: 999px;
         }
 
-        .priority-label {
-            color: #555;
-        }
-
-        .category-label {
-            color: #888;
-        }
+        .category-label { background: var(--secondary-50); color: var(--secondary-800); }
 
         .priority-dot,
         .category-dot {
-            width: 8px;
-            height: 8px;
+            width: 9px;
+            height: 9px;
             border-radius: 50%;
             display: inline-block;
+            box-shadow: 0 0 0 3px rgba(12, 108, 233, 0.10);
         }
 
-        .task-date {
-            font-size: 13px;
-            color: #555;
-        }
-
-        .task-date.done {
-            color: gray;
-        }
+        .task-date.done { color: #94a3b8; background: #f1f5f9; }
 
         .task-actions {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-shrink: 0;
-            align-items: flex-start;
+            align-items: center;
             white-space: nowrap;
-            padding-top: 2px;
+            padding-top: 0;
         }
 
         .task-actions a,
         .task-actions button {
             text-decoration: none;
             font-size: 15px;
-            color: black;
-            border: none;
-            background: transparent;
+            color: var(--primary-700) !important;
+            border: 1px solid rgba(12, 108, 233, 0.12) !important;
+            background: var(--primary-50) !important;
             cursor: pointer;
-            padding: 0;
+            padding: 8px !important;
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.18s ease;
         }
 
         .task-actions a:hover,
-        .task-actions button:hover {
-            opacity: 0.75;
-        }
+        .task-actions button:hover { color: white !important; background: var(--primary-600) !important; transform: translateY(-1px); }
 
         .desc-short,
-        .desc-full {
-            display: inline;
-        }
+        .desc-full { display: inline; }
+        .desc-full { display: none; }
 
-        .desc-full {
-            display: none;
-        }
-
-        .more-btn {
-            color: #666;
-            cursor: pointer;
-            font-size: 13px;
-            margin-left: 6px;
-            text-decoration: underline;
-        }
-
-        .more-btn:hover {
-            color: black;
-        }
+        .more-btn { color: var(--primary-600); cursor: pointer; font-size: 13px; margin-left: 6px; text-decoration: underline; font-weight: 700; }
+        .more-btn:hover { color: var(--primary-800); }
 
         .task-checkbox {
-            margin-top: 2px;
-            width: 17px;
-            height: 17px;
+            margin-top: 0;
+            width: 20px;
+            height: 20px;
             cursor: pointer;
             flex-shrink: 0;
+            accent-color: var(--soft-blue);
         }
 
-        #sidebar a {
-            text-decoration: none;
-            color: black;
-        }
-
-        #sidebar a:hover {
-            text-decoration: underline;
-        }
+        #sidebar { background: linear-gradient(180deg, var(--primary-900), var(--primary-700)) !important; box-shadow: 20px 0 60px rgba(0, 18, 41, 0.22); }
+        #sidebar h3 { color: white; }
+        #sidebar a { text-decoration: none; color: rgba(255, 255, 255, 0.88); display: block; padding: 10px 12px; border-radius: 12px; transition: 0.18s ease; }
+        #sidebar a:hover { text-decoration: none; background: rgba(255,255,255,0.12); color: white; }
 
         .empty-state {
-            color: #666;
+            color: var(--muted);
             font-size: 15px;
             margin-top: 10px;
+            padding: 18px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.70);
+            border: 1px dashed var(--border);
         }
 
-        .hidden-flatpickr-input {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-            width: 1px;
-            height: 1px;
-        }
-
-        .inline-edit-box {
-            display: none;
-            width: 100%;
-        }
-
-        .inline-edit-box.active {
-            display: block;
-        }
-
-        .inline-edit-save-row {
-            margin-top: 10px;
-            display: flex;
-            justify-content: flex-end;
-        }
+        .hidden-flatpickr-input { position: absolute; opacity: 0; pointer-events: none; width: 1px; height: 1px; }
+        .inline-edit-box { display: none; width: 100%; }
+        .inline-edit-box.active { display: block; }
+        .inline-edit-save-row { margin-top: 12px; display: flex; justify-content: flex-end; }
 
         .small-save-btn {
-            border: none;
-            background: black;
-            color: white;
-            border-radius: 8px;
-            padding: 8px 14px;
+            border: none !important;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-700)) !important;
+            color: white !important;
+            border-radius: 14px;
+            padding: 10px 18px;
             cursor: pointer;
             font-size: 13px;
+            font-weight: 800;
+            box-shadow: 0 12px 24px rgba(12, 108, 233, 0.24);
+            transition: 0.18s ease;
+            width: auto;
+            height: auto;
         }
 
+        .small-save-btn:hover { background: linear-gradient(135deg, var(--primary-600), var(--primary-800)) !important; transform: translateY(-1px); }
+
         .flatpickr-calendar {
-            border: none !important;
-            border-radius: 18px !important;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12) !important;
+            border: 1px solid rgba(12, 108, 233, 0.12) !important;
+            border-radius: 20px !important;
+            box-shadow: 0 20px 60px rgba(0, 62, 143, 0.18) !important;
             padding: 10px !important;
             width: 360px !important;
             max-width: 90vw !important;
             font-family: Arial, sans-serif !important;
         }
-
-        .flatpickr-current-month {
-            font-size: 16px !important;
-            padding-top: 4px !important;
-        }
-
+        .flatpickr-current-month { font-size: 16px !important; padding-top: 4px !important; color: var(--primary-900) !important; }
         .flatpickr-current-month .flatpickr-monthDropdown-months,
-        .flatpickr-current-month input.cur-year {
-            font-size: 16px !important;
-            font-weight: 600 !important;
-        }
-
-        span.flatpickr-weekday {
-            color: #555 !important;
-            font-size: 12px !important;
-            font-weight: 600 !important;
-        }
-
-        .flatpickr-day {
-            border-radius: 999px !important;
-            font-size: 14px !important;
-            height: 42px !important;
-            line-height: 42px !important;
-            max-width: 42px !important;
-        }
-
-        .flatpickr-day.today {
-            border: 1px solid #999 !important;
-        }
-
-        .flatpickr-day.selected {
-            background: #111 !important;
-            border-color: #111 !important;
-            color: #fff !important;
-        }
-
-        .flatpickr-day:hover {
-            background: #f2f2f2 !important;
-        }
-
+        .flatpickr-current-month input.cur-year { font-size: 16px !important; font-weight: 700 !important; }
+        span.flatpickr-weekday { color: var(--primary-700) !important; font-size: 12px !important; font-weight: 700 !important; }
+        .flatpickr-day { border-radius: 999px !important; font-size: 14px !important; height: 42px !important; line-height: 42px !important; max-width: 42px !important; }
+        .flatpickr-day.today { border: 1px solid var(--primary-400) !important; }
+        .flatpickr-day.selected { background: var(--primary-600) !important; border-color: var(--primary-600) !important; color: #fff !important; }
+        .flatpickr-day:hover { background: var(--primary-50) !important; }
         .flatpickr-prev-month,
-        .flatpickr-next-month {
-            top: 12px !important;
-        }
+        .flatpickr-next-month { top: 12px !important; }
 
         .smart-pill {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 1px solid #e1e1e1;
-            background: #fafafa;
+            width: 38px;
+            height: 38px;
+            border-radius: 999px;
+            border: 1px solid rgba(12, 108, 233, 0.15);
+            background: linear-gradient(135deg, #ffffff, var(--primary-50));
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 7px;
             padding: 0;
             cursor: pointer;
             position: relative;
             flex-shrink: 0;
             transition: all 0.2s ease;
             overflow: hidden;
+            box-shadow: 0 8px 18px rgba(0, 62, 143, 0.08);
         }
-
-        .smart-pill:hover {
-            background: #f2f2f2;
-        }
-
-        .smart-pill i {
-            font-size: 14px;
-            color: #555;
-            flex-shrink: 0;
-        }
-
-        .smart-pill .pill-text {
-            display: none;
-            font-size: 13px;
-            color: #444;
-            white-space: nowrap;
-        }
-
-        .smart-pill.active {
-            width: auto;
-            min-width: 36px;
-            border-radius: 999px;
-            justify-content: flex-start;
-            padding: 0 12px;
-        }
-
-        .smart-pill.active .pill-text {
-            display: inline;
-        }
-
+        .smart-pill:hover { background: linear-gradient(135deg, var(--primary-50), var(--secondary-100)); transform: translateY(-1px); }
+        .smart-pill i { font-size: 14px; color: var(--primary-700); flex-shrink: 0; }
+        .smart-pill .pill-text { display: none; font-size: 13px; color: var(--primary-800); white-space: nowrap; font-weight: 700; }
+        .smart-pill.active { width: auto; min-width: 38px; border-radius: 999px; justify-content: flex-start; padding: 0 13px; background: linear-gradient(135deg, var(--primary-500), var(--primary-700)); border-color: transparent; }
+        .smart-pill.active i,
+        .smart-pill.active .pill-text { color: white; }
+        .smart-pill.active .pill-text { display: inline; }
         .smart-pill select,
-        .smart-pill input {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-            border: none;
-        }
+        .smart-pill input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; border: none; }
 
-        .drag-placeholder {
-            border: 1px dashed #cfcfcf;
-            border-radius: 12px;
-            background: #fafafa;
-            margin: 4px 0;
-        }
+        .drag-placeholder { border: 1px dashed var(--primary-400); border-radius: 18px; background: rgba(228, 236, 246, 0.65); margin: 4px 0 14px; }
+        .drag-floating { position: fixed; z-index: 9999; pointer-events: none; width: 760px; max-width: calc(100vw - 120px); box-shadow: 0 24px 60px rgba(0, 62, 143, 0.22); border-radius: 22px; background: white; opacity: 0.96; transform: rotate(0.2deg); }
 
-        .drag-floating {
-            position: fixed;
-            z-index: 9999;
-            pointer-events: none;
-            width: 760px;
-            max-width: calc(100vw - 120px);
-            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
-            border-radius: 14px;
-            background: white;
-            opacity: 0.96;
-            transform: rotate(0.2deg);
-        }
-
-        @media (max-width: 720px) {
-            .quick-add-top,
-            .inline-edit-top {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .quick-add-actions,
-            .inline-edit-actions {
-                justify-content: flex-start;
-            }
-
-            .tasks-container {
-                max-width: 100%;
-            }
-
-            .flatpickr-calendar {
-                width: 95vw !important;
-            }
-        }
-
-        .sort-wrapper {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 18px;
-        }
-
+        .sort-wrapper { position: relative; display: inline-block; margin-bottom: 0; z-index: 300; }
         .sort-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 1px solid #e3e3e3;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .sort-btn:hover {
-            background: #f5f5f5;
-        }
-
-        .sort-btn i {
-            font-size: 15px;
-            color: #222;
-        }
-
-        .sort-tooltip {
-            position: absolute;
-            top: 48px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #111;
-            color: white;
-            font-size: 12px;
-            padding: 8px 12px;
-            border-radius: 10px;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: 0.2s;
-            z-index: 2000;
-        }
-
-        .sort-wrapper:hover .sort-tooltip {
-            opacity: 1;
-        }
-
-        .sort-menu {
-            display: none;
-            position: absolute;
-            top: 52px;
-            left: 0;
-            min-width: 190px;
-            background: white;
-            border: 1px solid #e5e5e5;
-            border-radius: 14px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            padding: 8px;
-            z-index: 2500;
-        }
-
-        .sort-menu a {
-            display: block;
-            text-decoration: none;
-            color: #111;
-            font-size: 14px;
-            padding: 10px 12px;
-            border-radius: 10px;
-        }
-
-        .sort-menu a:hover {
-            background: #f5f5f5;
-        }
-
-        .title-sort-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .sort-wrapper {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 0;
-        }
-
-        .sort-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 1px solid #e3e3e3;
-            background: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 18px;
+            border: 1px solid rgba(12, 108, 233, 0.16);
+            background: rgba(255,255,255,0.88);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: 0.2s;
             flex-shrink: 0;
+            box-shadow: 0 10px 24px rgba(0, 62, 143, 0.08);
+            backdrop-filter: blur(10px);
         }
+        .sort-btn:hover { background: linear-gradient(135deg, var(--primary-500), var(--primary-700)); transform: translateY(-2px); box-shadow: 0 14px 30px rgba(12, 108, 233, 0.24); }
+        .sort-btn i { font-size: 17px; color: var(--primary-800); }
+        .sort-btn:hover i { color: white; }
 
-        .sort-btn:hover {
-            background: #f5f5f5;
-        }
-
-        .sort-btn i {
-            font-size: 15px;
-            color: #222;
-        }
-
-        .sort-tooltip {
+        .sort-tooltip,
+        .search-tooltip {
             position: absolute;
-            top: 48px;
+            top: 58px;
             left: 50%;
             transform: translateX(-50%);
-            background: #111;
+            background: var(--primary-900);
             color: white;
             font-size: 12px;
             padding: 8px 12px;
-            border-radius: 10px;
+            border-radius: 12px;
             white-space: nowrap;
             opacity: 0;
             pointer-events: none;
             transition: 0.2s;
             z-index: 2000;
+            box-shadow: 0 10px 25px rgba(0,18,41,0.18);
         }
-
-        .sort-wrapper:hover .sort-tooltip {
-            opacity: 1;
-        }
+        .sort-wrapper:hover .sort-tooltip,
+        .search-wrapper:hover .search-tooltip { opacity: 1; }
 
         .sort-menu {
             display: none;
             position: absolute;
-            top: 52px;
+            top: 60px;
             right: 0;
-            min-width: 190px;
-            background: white;
-            border: 1px solid #e5e5e5;
-            border-radius: 14px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            left: auto;
+            min-width: 210px;
+            background: rgba(255,255,255,0.98);
+            border: 1px solid rgba(12, 108, 233, 0.12);
+            border-radius: 18px;
+            box-shadow: 0 18px 45px rgba(0, 62, 143, 0.16);
             padding: 8px;
-            z-index: 2500;
+            z-index: 6000;
+            backdrop-filter: blur(14px);
         }
+        .sort-menu a { display: block; text-decoration: none; color: var(--primary-900); font-size: 14px; padding: 11px 13px; border-radius: 12px; font-weight: 600; }
+        .sort-menu a:hover { background: var(--primary-50); color: var(--primary-700); }
+        .sort-tooltip { display: none; }
 
-        .sort-menu a {
-            display: block;
-            text-decoration: none;
-            color: #111;
-            font-size: 14px;
-            padding: 10px 12px;
-            border-radius: 10px;
-        }
-
-        .sort-menu a:hover {
-            background: #f5f5f5;
-        }
-
-        .overdue-date {
-            color: #ff4d4f;
-        }
-
-        .overdue-icon {
-            color: #ff4d4f !important;
-        }
-
-        .overdue-section {
-            margin-top: 20px;
-        }
-
+        .overdue-date { color: var(--danger); }
+        .overdue-icon { color: var(--danger) !important; }
+        .overdue-section,
+        .completed-section { border-top: 1px solid rgba(12, 108, 233, 0.12); margin-top: 18px; padding-top: 16px; }
         .section-toggle {
             display: flex;
             align-items: center;
             gap: 10px;
             font-size: 16px;
-            font-weight: 700;
+            font-weight: 800;
             cursor: pointer;
-            color: #111;
+            color: var(--primary-900);
             margin-top: 0;
-            margin-bottom: 10px;
-            padding-top: 0;
+            margin-bottom: 12px;
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.70);
+            border: 1px solid rgba(12,108,233,0.10);
         }
+        .section-toggle i { font-size: 12px; transition: transform 0.2s ease; color: var(--primary-600); }
+        .section-toggle.open i { transform: rotate(90deg); }
 
-        .section-toggle i {
-            font-size: 12px;
-            transition: transform 0.2s ease;
-        }
-
-        .section-toggle.open i {
-            transform: rotate(90deg);
-        }
-        .completed-section {
-            margin-top: 18px;
-        }
-        .overdue-section,
-        .completed-section {
-            border-top: 1px solid #e9e9e9;
-            margin-top: 14px;
-            padding-top: 12px;
-        }
-        .search-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 5000;
-        }
+        .search-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 18, 41, 0.55); backdrop-filter: blur(7px); z-index: 5000; }
         .search-box {
-            background: #fff;
-            width: 700px;
+            background: rgba(255,255,255,0.96);
+            width: 720px;
             max-width: 92%;
             margin: 120px auto;
-            padding: 4px 5px;
-            height: 54px;
+            padding: 8px 16px;
+            height: 64px;
             display: flex;
             align-items: center;
-            border-radius: 14px;
-            border: 1px solid #e5e5e5;
+            border-radius: 24px;
+            border: 1px solid rgba(12,108,233,0.18);
             transition: 0.2s ease;
+            box-shadow: 0 25px 70px rgba(0, 18, 41, 0.20);
+        }
+        .search-box:focus-within { border-color: var(--primary-500); box-shadow: 0 25px 70px rgba(12, 108, 233, 0.25); }
+        #searchInput { flex: 1; border: none; outline: none; background: transparent; font-size: 18px; color: var(--primary-900); font-family: Arial, sans-serif; }
+        #searchInput::placeholder { color: #7d8ca4; }
+        .actions-right { display: flex; align-items: center; gap: 10px; }
+        .search-wrapper { position: relative; display: inline-block; }
+
+        @media (max-width: 720px) {
+            .page-content { padding: 22px; padding-left: 62px; }
+            .title-sort-row { align-items: flex-start; gap: 14px; }
+            .title-sort-row h1 { font-size: 30px; }
+            .quick-add-top,
+            .inline-edit-top { flex-direction: column; align-items: stretch; }
+            .quick-add-actions,
+            .inline-edit-actions { justify-content: flex-start; }
+            .tasks-container { max-width: 100%; }
+            .flatpickr-calendar { width: 95vw !important; }
+            .task-row { gap: 12px; align-items: flex-start; }
+            .task-left { align-items: flex-start; }
+            .task-actions { gap: 6px; }
         }
 
-        .search-box:focus-within {
-            border-color: #cfcfcf;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
-        }
+        .tabs {
+    display: flex;
+    gap: 28px;
+    margin: 18px 0;
+    font-size: 16px;
+    font-weight: 500;
+}
 
-        #searchInput {
-            flex: 1;
-            border: none;
-            outline: none;
-            background: transparent;
-            font-size: 16px;
-            font-family: Arial, sans-serif;
-        }
-        .actions-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .search-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-        .search-tooltip {
-            position: absolute;
-            top: 48px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #111;
-            color: white;
-            font-size: 12px;
-            padding: 8px 12px;
-            border-radius: 10px;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: 0.2s;
-            z-index: 2000;
-        }
-        .search-wrapper:hover .search-tooltip {
-            opacity: 1;
-        }
-        .tasks-container {
-            position: relative;
-        }
+.tabs span {
+    cursor: pointer;
+    color: #6b7280;
+    position: relative;
+    padding-bottom: 6px;
+}
 
-        .empty-search {
-            margin-top: 110px;
-            text-align: center;
-            color: #666;
-        }
+.tabs span.active {
+    color: #3b82f6;
+    font-weight: 600;
+}
 
-        .empty-search i {
-            font-size: 42px;
-            margin-bottom: 14px;
-            color: #999;
-        }
+.tabs span.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background: #3b82f6;
+    border-radius: 2px;
+}
 
-        .empty-search p {
-            font-size: 15px;
-        }
+
+/* Tabs content behavior */
+body.tabs-mode .overdue-section,
+body.tabs-mode .completed-section {
+    border-top: none;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+body.tabs-mode .section-toggle {
+    display: none;
+}
+
+
+
+
+.task-actions a,
+.task-actions button {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    width: auto;
+    height: auto;
+    padding: 4px !important;
+    border-radius: 0;
+}
+
+.task-actions a:hover,
+.task-actions button:hover {
+    background: transparent !important;
+    color: var(--primary-700) !important;
+    transform: none !important;
+}
+.task-actions {
+    opacity: 0;
+    transition: 0.2s;
+}
+
+.task-block:hover .task-actions {
+    opacity: 1;
+}
+
+
+
+/* Weekly Stats side layout */
+.tasks-with-weekly {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 290px;
+    gap: 24px;
+    align-items: start;
+}
+
+.tasks-main-column {
+    min-width: 0;
+}
+
+.weekly-card {
+    background: #ffffff;
+    border: 1px solid #dbeafe;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 22px rgba(12, 108, 233, 0.06);
+    position: sticky;
+    top: 24px;
+}
+
+.weekly-card h3 {
+    margin: 0;
+    padding: 18px 20px;
+    background: #eaf7ff;
+    color: #0f172a;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.weekly-chart-line {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 24px 22px 0;
+}
+
+.weekly-bars {
+    height: 155px;
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+    padding: 20px 22px 10px;
+}
+
+.weekly-bar {
+    flex: 1;
+    background: #cfe8f7;
+    border-radius: 8px 8px 0 0;
+}
+
+.weekly-bar.active {
+    background: #55b6e8;
+}
+
+.weekly-days {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 18px 18px;
+    color: #777;
+    font-size: 13px;
+}
+
+.weekly-bottom {
+    display: flex;
+    gap: 12px;
+    padding: 0 18px 18px;
+}
+
+.weekly-mini {
+    flex: 1;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.weekly-mini span {
+    font-size: 13px;
+}
+
+.weekly-mini.overdue-mini {
+    background: #fff7ed;
+    border-color: #fed7aa;
+}
+
+.weekly-mini.overdue-mini b {
+    color: #e28a66;
+}
+
+@media (max-width: 1000px) {
+    .tasks-with-weekly {
+        grid-template-columns: 1fr;
+    }
+
+    .weekly-card {
+        position: static;
+    }
+}
+
     </style>
 </head>
 
@@ -977,13 +896,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="top-links">
-                <a th:if="${showBackToTasks}" th:href="${backUrl}" class="back-btn">
-                    <i class="fa-solid fa-arrow-left"></i>
-                </a>
-            </div>
-
             <form th:if="${showAddButton}"
                   th:action="@{/tasks}"
                   th:object="${task}"
@@ -1052,46 +964,69 @@
                 </div>
             </form>
 
-            <div th:if="${#lists.isEmpty(tasks)}" class="empty-search">
-                <i class="fa fa-search"></i>
-                <p>No tasks found for "<span th:text="${searchKeyword}"></span>"</p>
+            <div class="top-links">
+                <div class="tabs">
+                    <span class="active" onclick="showTaskTab('all', this)">
+                        My Tasks (<span th:text="${#lists.size(tasks)}"></span>)
+                    </span>
+
+                    <span onclick="showTaskTab('completed', this)">
+                        Completed (<span th:text="${completedCount}"></span>)
+                    </span>
+
+                    <span onclick="showTaskTab('overdue', this)">
+                        Overdue (<span th:text="${overdueCount}"></span>)
+                    </span>
+                </div>
+
+                <a th:if="${showBackToTasks}" th:href="${backUrl}" class="back-btn">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
             </div>
 
-            <div th:if="${!showOverdueFirst and !#lists.isEmpty(tasks)}" class="task-list-container" id="taskListContainer">
-                <div th:each="task : ${tasks}"
-                     class="task-block"
-                     th:attr="data-id=${task.id}"
-                     th:id="'taskBlock-' + ${task.id}">
+            <div class="tasks-with-weekly">
+                <div class="tasks-main-column">
 
-                    <div class="task-row" th:id="'taskView-' + ${task.id}">
+                    <div th:if="${#lists.isEmpty(tasks)}" class="empty-search">
+                        <i class="fa fa-search"></i>
+                        <p>No tasks found for "<span th:text="${searchKeyword}"></span>"</p>
+                    </div>
 
-                        <div class="task-left">
+                    <div th:if="${!showOverdueFirst and !#lists.isEmpty(tasks)}" class="task-list-container" id="taskListContainer">
+                        <div th:each="task : ${tasks}"
+                             class="task-block"
+                             th:attr="data-id=${task.id}"
+                             th:id="'taskBlock-' + ${task.id}">
+
+                            <div class="task-row" th:id="'taskView-' + ${task.id}">
+
+                                <div class="task-left">
                             <span class="drag-handle" title="Move task">
                                 <i class="fa-solid fa-grip-lines"></i>
                             </span>
 
-                            <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post" style="margin:0;">
-                                <input type="hidden" name="priority" th:value="${currentPriority}"/>
-                                <input type="hidden" name="category" th:value="${currentCategory}"/>
-                                <input type="hidden" name="source" th:value="${currentSource}"/>
-                                <input type="hidden" name="sort" th:value="${currentSort}" />
-                                <input type="hidden" name="keyword" th:value="${searchKeyword}">
-                                <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
-                                <input type="checkbox"
-                                       class="task-checkbox"
-                                       th:checked="${task.done}"
-                                       onchange="this.form.submit()"/>
-                                <input type="hidden" name="sort" th:value="${currentSort}"/>
+                                    <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post" style="margin:0;">
+                                        <input type="hidden" name="priority" th:value="${currentPriority}"/>
+                                        <input type="hidden" name="category" th:value="${currentCategory}"/>
+                                        <input type="hidden" name="source" th:value="${currentSource}"/>
+                                        <input type="hidden" name="sort" th:value="${currentSort}" />
+                                        <input type="hidden" name="keyword" th:value="${searchKeyword}">
+                                        <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
+                                        <input type="checkbox"
+                                               class="task-checkbox"
+                                               th:checked="${task.done}"
+                                               onchange="this.form.submit()"/>
+                                        <input type="hidden" name="sort" th:value="${currentSort}"/>
 
-                            </form>
+                                    </form>
 
-                            <div class="task-content">
-                                <div th:class="${task.done} ? 'task-title done' : 'task-title active'"
-                                     th:text="${task.title}">
-                                </div>
+                                    <div class="task-content">
+                                        <div th:class="${task.done} ? 'task-title done' : 'task-title active'"
+                                             th:text="${task.title}">
+                                        </div>
 
-                                <div th:if="${task.description != null and !#strings.isEmpty(task.description)}"
-                                     th:class="${task.done} ? 'task-desc done' : 'task-desc'">
+                                        <div th:if="${task.description != null and !#strings.isEmpty(task.description)}"
+                                             th:class="${task.done} ? 'task-desc done' : 'task-desc'">
                                     <span th:if="${task.description.length() > 90}">
                                         <span class="desc-short"
                                               th:text="${task.description.substring(0,90)}"></span>...
@@ -1100,13 +1035,13 @@
                                               th:text="${task.description}"></span>
                                     </span>
 
-                                    <span th:if="${task.description.length() <= 90}"
-                                          th:text="${task.description}">
+                                            <span th:if="${task.description.length() <= 90}"
+                                                  th:text="${task.description}">
                                     </span>
-                                </div>
+                                        </div>
 
-                                <div class="task-meta-row">
-                                    <div class="priority-label" th:if="${task.priority != null}">
+                                        <div class="task-meta-row">
+                                            <div class="priority-label" th:if="${task.priority != null}">
                                         <span class="priority-dot"
                                               th:style="${
                                                   task.priority == 'P1' ? 'background:red;' :
@@ -1115,11 +1050,11 @@
                                                   'background:gray;'))
                                               }">
                                         </span>
-                                        <span th:text="${task.priority}"></span>
-                                    </div>
+                                                <span th:text="${task.priority}"></span>
+                                            </div>
 
-                                    <div class="category-label"
-                                         th:if="${task.category != null and !#strings.isEmpty(task.category)}">
+                                            <div class="category-label"
+                                                 th:if="${task.category != null and !#strings.isEmpty(task.category)}">
                                         <span class="category-dot"
                                               th:style="${
                                                   task.category == 'Work' ? 'background:#4a90e2;' :
@@ -1129,31 +1064,31 @@
                                                   'background:#cfcfcf;')))
                                               }">
                                         </span>
-                                        <span th:text="${task.category}"></span>
-                                    </div>
+                                                <span th:text="${task.category}"></span>
+                                            </div>
 
-                                    <div th:if="${task.dueDate != null}"
-                                         th:class="${task.done} ? 'task-date done' : 'task-date'">
-                                        <i class="fa-regular fa-calendar"
-                                           th:classappend="${task.dueDate != null
+                                            <div th:if="${task.dueDate != null}"
+                                                 th:class="${task.done} ? 'task-date done' : 'task-date'">
+                                                <i class="fa-regular fa-calendar"
+                                                   th:classappend="${task.dueDate != null
                                            and task.dueDate.isBefore(T(java.time.LocalDate).now())
                                            and !task.done} ? ' overdue-icon'">
-                                        </i> <span th:text="${task.formattedDueDate}"
-                                                   th:classappend="${task.dueDate != null and task.dueDate.isBefore(T(java.time.LocalDate).now()) and !task.done} ? 'overdue-date'"></span>
+                                                </i> <span th:text="${task.formattedDueDate}"
+                                                           th:classappend="${task.dueDate != null and task.dueDate.isBefore(T(java.time.LocalDate).now()) and !task.done} ? 'overdue-date'"></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="task-actions">
-                            <button type="button"
-                                    th:style="${task.done} ? 'color:gray; pointer-events:none; cursor:not-allowed;' : 'color:black;'"
-                                    th:onclick="'toggleEditInline(' + ${task.id} + ')'"
-                                    style="border:none; background:transparent; cursor:pointer;">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
+                                <div class="task-actions">
+                                    <button type="button"
+                                            th:style="${task.done} ? 'color:gray; pointer-events:none; cursor:not-allowed;' : 'color:black;'"
+                                            th:onclick="'toggleEditInline(' + ${task.id} + ')'"
+                                            style="border:none; background:transparent; cursor:pointer;">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
 
-                            <a th:href="@{/tasks/delete/{id}(id=${task.id},
+                                    <a th:href="@{/tasks/delete/{id}(id=${task.id},
                                                 priority=${currentPriority},
                                                 category=${currentCategory},
                                                 source=${currentSource},
@@ -1161,121 +1096,121 @@
                                                 targetDate=${task.dueDate},
                                                  sort=${currentSort}, keyword=${searchKeyword}, scrollPos=${scrollPos})}">
 
-                                <i class="fa-solid fa-xmark"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div th:id="'taskEdit-' + ${task.id}" class="inline-edit-box">
-                        <form th:action="@{/tasks/update/{id}(id=${task.id})}" method="post">
-                            <input type="hidden" name="priorityFilter" th:value="${currentPriority}">
-                            <input type="hidden" name="currentCategory" th:value="${currentCategory}">
-                            <input type="hidden" name="source" th:value="${currentSource}">
-                            <input type="hidden" name="sort" th:value="${currentSort}">
-                            <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
-                            <div class="inline-edit-top">
-                                <input type="text"
-                                       name="title"
-                                       th:value="${task.title}"
-                                       class="inline-edit-title"
-                                       placeholder="Edit task..."
-                                       required>
-
-                                <div class="inline-edit-actions">
-                                    <div class="smart-pill edit-date-pill" onclick="openEditDate(this)">
-                                        <i class="fa-regular fa-calendar"></i>
-                                        <span class="pill-text"></span>
-                                        <input type="text"
-                                               name="dueDate"
-                                               th:value="${task.dueDate}"
-                                               class="hidden-flatpickr-input"
-                                               readonly>
-                                    </div>
-
-                                    <div class="smart-pill edit-priority-pill">
-                                        <i class="fa-solid fa-flag"></i>
-                                        <span class="pill-text"></span>
-                                        <select name="priority">
-                                            <option value=""></option>
-                                            <option value="P1" th:selected="${task.priority == 'P1'}">P1</option>
-                                            <option value="P2" th:selected="${task.priority == 'P2'}">P2</option>
-                                            <option value="P3" th:selected="${task.priority == 'P3'}">P3</option>
-                                            <option value="P4" th:selected="${task.priority == 'P4'}">P4</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="smart-pill edit-category-pill">
-                                        <i class="fa-solid fa-tag"></i>
-                                        <span class="pill-text"></span>
-                                        <select name="category">
-                                            <option value=""></option>
-                                            <option value="Work" th:selected="${task.category == 'Work'}">Work</option>
-                                            <option value="Study" th:selected="${task.category == 'Study'}">Study
-                                            </option>
-                                            <option value="Personal" th:selected="${task.category == 'Personal'}">
-                                                Personal
-                                            </option>
-                                            <option value="Shopping" th:selected="${task.category == 'Shopping'}">
-                                                Shopping
-                                            </option>
-                                        </select>
-                                    </div>
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </a>
                                 </div>
                             </div>
 
-                            <div class="inline-edit-description-wrap">
+                            <div th:id="'taskEdit-' + ${task.id}" class="inline-edit-box">
+                                <form th:action="@{/tasks/update/{id}(id=${task.id})}" method="post">
+                                    <input type="hidden" name="priorityFilter" th:value="${currentPriority}">
+                                    <input type="hidden" name="currentCategory" th:value="${currentCategory}">
+                                    <input type="hidden" name="source" th:value="${currentSource}">
+                                    <input type="hidden" name="sort" th:value="${currentSort}">
+                                    <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
+                                    <div class="inline-edit-top">
+                                        <input type="text"
+                                               name="title"
+                                               th:value="${task.title}"
+                                               class="inline-edit-title"
+                                               placeholder="Edit task..."
+                                               required>
+
+                                        <div class="inline-edit-actions">
+                                            <div class="smart-pill edit-date-pill" onclick="openEditDate(this)">
+                                                <i class="fa-regular fa-calendar"></i>
+                                                <span class="pill-text"></span>
+                                                <input type="text"
+                                                       name="dueDate"
+                                                       th:value="${task.dueDate}"
+                                                       class="hidden-flatpickr-input"
+                                                       readonly>
+                                            </div>
+
+                                            <div class="smart-pill edit-priority-pill">
+                                                <i class="fa-solid fa-flag"></i>
+                                                <span class="pill-text"></span>
+                                                <select name="priority">
+                                                    <option value=""></option>
+                                                    <option value="P1" th:selected="${task.priority == 'P1'}">P1</option>
+                                                    <option value="P2" th:selected="${task.priority == 'P2'}">P2</option>
+                                                    <option value="P3" th:selected="${task.priority == 'P3'}">P3</option>
+                                                    <option value="P4" th:selected="${task.priority == 'P4'}">P4</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="smart-pill edit-category-pill">
+                                                <i class="fa-solid fa-tag"></i>
+                                                <span class="pill-text"></span>
+                                                <select name="category">
+                                                    <option value=""></option>
+                                                    <option value="Work" th:selected="${task.category == 'Work'}">Work</option>
+                                                    <option value="Study" th:selected="${task.category == 'Study'}">Study
+                                                    </option>
+                                                    <option value="Personal" th:selected="${task.category == 'Personal'}">
+                                                        Personal
+                                                    </option>
+                                                    <option value="Shopping" th:selected="${task.category == 'Shopping'}">
+                                                        Shopping
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="inline-edit-description-wrap">
                                 <textarea name="description"
                                           class="inline-edit-description"
                                           placeholder="Description..."
                                           th:text="${task.description}"></textarea>
-                            </div>
+                                    </div>
 
-                            <div class="inline-edit-save-row">
-                                <button type="submit" class="small-save-btn">Save</button>
-                            </div>
-                        </form>
-                    </div>
-
-                </div>
-            </div>
-            <div th:if="${!#lists.isEmpty(overdueTasks)}" class="overdue-section">
-
-                <div th:class="${overdueOpen} ? 'section-toggle open' : 'section-toggle'" onclick="toggleOverdueSection()">
-                    <i id="overdueArrow" class="fa-solid fa-chevron-right"></i>
-                    <span>Overdue</span>
-                    <span th:text="${overdueCount}"></span>
-                </div>
-
-                <div id="overdueList" th:style="${overdueOpen} ? 'display:block;' : 'display:none;'">
-                    <div th:each="task : ${overdueTasks}" class="task-block">
-                        <div class="task-row">
-
-                            <div class="task-left">
-                                <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post" style="margin:0;">
-                                    <input type="hidden" name="priority" th:value="${currentPriority}" />
-                                    <input type="hidden" name="category" th:value="${currentCategory}" />
-                                    <input type="hidden" name="source" th:value="${currentSource}" />
-                                    <input type="hidden" name="sort" th:value="${currentSort}" />
-                                    <input type="hidden" name="keyword" th:value="${searchKeyword}">
-                                    <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
-                                    <input type="checkbox"
-                                           class="task-checkbox"
-                                           th:checked="${task.done}"
-                                           onchange="this.form.submit()" />
+                                    <div class="inline-edit-save-row">
+                                        <button type="submit" class="small-save-btn">Save</button>
+                                    </div>
                                 </form>
+                            </div>
 
-                                <div class="task-content">
-                                    <div th:class="${task.done} ? 'task-title done' : 'task-title active'"
-                                         th:text="${task.title}">
-                                    </div>
+                        </div>
+                    </div>
+                    <div th:if="${!#lists.isEmpty(overdueTasks)}" class="overdue-section" id="overdueTasksPanel">
 
-                                    <div th:if="${task.description != null and !#strings.isEmpty(task.description)}"
-                                         th:class="${task.done} ? 'task-desc done' : 'task-desc'">
-                                        <span th:text="${task.description}"></span>
-                                    </div>
+                        <div th:class="${overdueOpen} ? 'section-toggle open' : 'section-toggle'" onclick="toggleOverdueSection()">
+                            <i id="overdueArrow" class="fa-solid fa-chevron-right"></i>
+                            <span>Overdue</span>
+                            <span th:text="${overdueCount}"></span>
+                        </div>
 
-                                    <div class="task-meta-row">
-                                        <div class="priority-label" th:if="${task.priority != null}">
+                        <div id="overdueList" th:style="${overdueOpen} ? 'display:block;' : 'display:none;'">
+                            <div th:each="task : ${overdueTasks}" class="task-block">
+                                <div class="task-row" th:id="'taskView-overdue-' + ${task.id}">
+
+                                    <div class="task-left">
+                                        <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post" style="margin:0;">
+                                            <input type="hidden" name="priority" th:value="${currentPriority}" />
+                                            <input type="hidden" name="category" th:value="${currentCategory}" />
+                                            <input type="hidden" name="source" th:value="${currentSource}" />
+                                            <input type="hidden" name="sort" th:value="${currentSort}" />
+                                            <input type="hidden" name="keyword" th:value="${searchKeyword}">
+                                            <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
+                                            <input type="checkbox"
+                                                   class="task-checkbox"
+                                                   th:checked="${task.done}"
+                                                   onchange="this.form.submit()" />
+                                        </form>
+
+                                        <div class="task-content">
+                                            <div th:class="${task.done} ? 'task-title done' : 'task-title active'"
+                                                 th:text="${task.title}">
+                                            </div>
+
+                                            <div th:if="${task.description != null and !#strings.isEmpty(task.description)}"
+                                                 th:class="${task.done} ? 'task-desc done' : 'task-desc'">
+                                                <span th:text="${task.description}"></span>
+                                            </div>
+
+                                            <div class="task-meta-row">
+                                                <div class="priority-label" th:if="${task.priority != null}">
                                 <span class="priority-dot"
                                       th:style="${
                                           task.priority == 'P1' ? 'background:red;' :
@@ -1284,10 +1219,10 @@
                                           'background:gray;'))
                                       }">
                                 </span>
-                                            <span th:text="${task.priority}"></span>
-                                        </div>
+                                                    <span th:text="${task.priority}"></span>
+                                                </div>
 
-                                        <div class="category-label" th:if="${task.category != null and !#strings.isEmpty(task.category)}">
+                                                <div class="category-label" th:if="${task.category != null and !#strings.isEmpty(task.category)}">
                                 <span class="category-dot"
                                       th:style="${
                                           task.category == 'Work' ? 'background:#4a90e2;' :
@@ -1297,26 +1232,26 @@
                                           'background:#cfcfcf;')))
                                       }">
                                 </span>
-                                            <span th:text="${task.category}"></span>
-                                        </div>
+                                                    <span th:text="${task.category}"></span>
+                                                </div>
 
-                                        <div th:if="${task.dueDate != null}" class="task-date">
-                                            <i class="fa-regular fa-calendar overdue-icon"></i>
-                                            <span th:text="${task.formattedDueDate}" class="overdue-date"></span>
+                                                <div th:if="${task.dueDate != null}" class="task-date">
+                                                    <i class="fa-regular fa-calendar overdue-icon"></i>
+                                                    <span th:text="${task.formattedDueDate}" class="overdue-date"></span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
 
-                            <div class="task-actions">
-                                <button type="button"
-                                        th:style="${task.done} ? 'color:gray; pointer-events:none; cursor:not-allowed;' : 'color:black;'"
-                                        th:onclick="'toggleEditInline(' + ${task.id} + ')'"
-                                        style="border:none; background:transparent; cursor:pointer;">
-                                    <i class="fa-solid fa-pen"></i>
-                                </button>
+                                    <div class="task-actions">
+                                        <button type="button"
+                                                th:style="${task.done} ? 'color:gray; pointer-events:none; cursor:not-allowed;' : 'color:black;'"
+                                                th:onclick="'toggleEditInlineOverdue(' + ${task.id} + ')'"
+                                                style="border:none; background:transparent; cursor:pointer;">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </button>
 
-                                <a th:href="@{/tasks/delete/{id}(id=${task.id},
+                                        <a th:href="@{/tasks/delete/{id}(id=${task.id},
                                 priority=${currentPriority},
     category=${currentCategory},
     source=${currentSource},
@@ -1324,50 +1259,118 @@
     targetDate=${task.dueDate},
     sort=${currentSort}, keyword=${searchKeyword}, scrollPos=${scrollPos})}">
 
-                                    <i class="fa-solid fa-xmark"></i>
+                                            <i class="fa-solid fa-xmark"></i>
 
-                                </a>
+                                        </a>
+                                    </div>
+
+
+
+                                </div>
+                                <!-- Overdue inline edit form -->
+                                <div th:id="'taskEdit-overdue-' + ${task.id}" class="inline-edit-box">
+                                    <form th:action="@{/tasks/update/{id}(id=${task.id})}" method="post">
+                                        <input type="hidden" name="priorityFilter" th:value="${currentPriority}">
+                                        <input type="hidden" name="currentCategory" th:value="${currentCategory}">
+                                        <input type="hidden" name="source" th:value="${currentSource}">
+                                        <input type="hidden" name="sort" th:value="${currentSort}">
+                                        <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
+
+                                        <div class="inline-edit-top">
+                                            <input type="text"
+                                                   name="title"
+                                                   th:value="${task.title}"
+                                                   class="inline-edit-title"
+                                                   placeholder="Edit task..."
+                                                   required>
+
+                                            <div class="inline-edit-actions">
+                                                <div class="smart-pill edit-date-pill" onclick="openEditDate(this)">
+                                                    <i class="fa-regular fa-calendar"></i>
+                                                    <span class="pill-text"></span>
+                                                    <input type="text"
+                                                           name="dueDate"
+                                                           th:value="${task.dueDate}"
+                                                           class="hidden-flatpickr-input"
+                                                           readonly>
+                                                </div>
+
+                                                <div class="smart-pill edit-priority-pill">
+                                                    <i class="fa-solid fa-flag"></i>
+                                                    <span class="pill-text"></span>
+                                                    <select name="priority">
+                                                        <option value=""></option>
+                                                        <option value="P1" th:selected="${task.priority == 'P1'}">P1</option>
+                                                        <option value="P2" th:selected="${task.priority == 'P2'}">P2</option>
+                                                        <option value="P3" th:selected="${task.priority == 'P3'}">P3</option>
+                                                        <option value="P4" th:selected="${task.priority == 'P4'}">P4</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="smart-pill edit-category-pill">
+                                                    <i class="fa-solid fa-tag"></i>
+                                                    <span class="pill-text"></span>
+                                                    <select name="category">
+                                                        <option value=""></option>
+                                                        <option value="Work" th:selected="${task.category == 'Work'}">Work</option>
+                                                        <option value="Study" th:selected="${task.category == 'Study'}">Study</option>
+                                                        <option value="Personal" th:selected="${task.category == 'Personal'}">Personal</option>
+                                                        <option value="Shopping" th:selected="${task.category == 'Shopping'}">Shopping</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="inline-edit-description-wrap">
+                            <textarea name="description"
+                                      class="inline-edit-description"
+                                      placeholder="Description..."
+                                      th:text="${task.description}"></textarea>
+                                        </div>
+
+                                        <div class="inline-edit-save-row">
+                                            <button type="submit" class="small-save-btn">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
-
                         </div>
+
                     </div>
-                </div>
+                    <div th:if="${showOverdueFirst and !#lists.isEmpty(tasks)}" class="task-list-container">
+                        <div th:each="task : ${tasks}"
+                             class="task-block"
+                             th:attr="data-id=${task.id}"
+                             th:id="'taskBlock-second-' + ${task.id}">
 
-            </div>
-            <div th:if="${showOverdueFirst and !#lists.isEmpty(tasks)}" class="task-list-container">
-                <div th:each="task : ${tasks}"
-                     class="task-block"
-                     th:attr="data-id=${task.id}"
-                     th:id="'taskBlock-second-' + ${task.id}">
+                            <div class="task-row" th:id="'taskView-second-' + ${task.id}">
 
-                    <div class="task-row" th:id="'taskView-second-' + ${task.id}">
-
-                        <div class="task-left">
+                                <div class="task-left">
                 <span class="drag-handle" title="Move task">
                     <i class="fa-solid fa-grip-lines"></i>
                 </span>
 
-                            <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post" style="margin:0;">
-                                <input type="hidden" name="priority" th:value="${currentPriority}" />
-                                <input type="hidden" name="category" th:value="${currentCategory}" />
-                                <input type="hidden" name="source" th:value="${currentSource}" />
-                                <input type="hidden" name="sort" th:value="${currentSort}" />
-                                <input type="hidden" name="sort" th:value="${currentSort}" />
-                                <input type="hidden" name="keyword" th:value="${searchKeyword}">
-                                <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
-                                <input type="checkbox"
-                                       class="task-checkbox"
-                                       th:checked="${task.done}"
-                                       onchange="this.form.submit()" />
-                            </form>
+                                    <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post" style="margin:0;">
+                                        <input type="hidden" name="priority" th:value="${currentPriority}" />
+                                        <input type="hidden" name="category" th:value="${currentCategory}" />
+                                        <input type="hidden" name="source" th:value="${currentSource}" />
+                                        <input type="hidden" name="sort" th:value="${currentSort}" />
+                                        <input type="hidden" name="sort" th:value="${currentSort}" />
+                                        <input type="hidden" name="keyword" th:value="${searchKeyword}">
+                                        <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
+                                        <input type="checkbox"
+                                               class="task-checkbox"
+                                               th:checked="${task.done}"
+                                               onchange="this.form.submit()" />
+                                    </form>
 
-                            <div class="task-content">
-                                <div th:class="${task.done} ? 'task-title done' : 'task-title active'"
-                                     th:text="${task.title}">
-                                </div>
+                                    <div class="task-content">
+                                        <div th:class="${task.done} ? 'task-title done' : 'task-title active'"
+                                             th:text="${task.title}">
+                                        </div>
 
-                                <div th:if="${task.description != null and !#strings.isEmpty(task.description)}"
-                                     th:class="${task.done} ? 'task-desc done' : 'task-desc'">
+                                        <div th:if="${task.description != null and !#strings.isEmpty(task.description)}"
+                                             th:class="${task.done} ? 'task-desc done' : 'task-desc'">
                         <span th:if="${task.description.length() > 90}">
                             <span class="desc-short"
                                   th:text="${task.description.substring(0,90)}"></span>...
@@ -1376,13 +1379,13 @@
                                   th:text="${task.description}"></span>
                         </span>
 
-                                    <span th:if="${task.description.length() <= 90}"
-                                          th:text="${task.description}">
+                                            <span th:if="${task.description.length() <= 90}"
+                                                  th:text="${task.description}">
                         </span>
-                                </div>
+                                        </div>
 
-                                <div class="task-meta-row">
-                                    <div class="priority-label" th:if="${task.priority != null}">
+                                        <div class="task-meta-row">
+                                            <div class="priority-label" th:if="${task.priority != null}">
                             <span class="priority-dot"
                                   th:style="${
                                       task.priority == 'P1' ? 'background:red;' :
@@ -1391,10 +1394,10 @@
                                       'background:gray;'))
                                   }">
                             </span>
-                                        <span th:text="${task.priority}"></span>
-                                    </div>
+                                                <span th:text="${task.priority}"></span>
+                                            </div>
 
-                                    <div class="category-label" th:if="${task.category != null and !#strings.isEmpty(task.category)}">
+                                            <div class="category-label" th:if="${task.category != null and !#strings.isEmpty(task.category)}">
                             <span class="category-dot"
                                   th:style="${
                                       task.category == 'Work' ? 'background:#4a90e2;' :
@@ -1404,27 +1407,27 @@
                                       'background:#cfcfcf;')))
                                   }">
                             </span>
-                                        <span th:text="${task.category}"></span>
-                                    </div>
+                                                <span th:text="${task.category}"></span>
+                                            </div>
 
-                                    <div th:if="${task.dueDate != null}"
-                                         th:class="${task.done} ? 'task-date done' : 'task-date'">
-                                        <i class="fa-regular fa-calendar"></i>
-                                        <span th:text="${task.formattedDueDate}"></span>
+                                            <div th:if="${task.dueDate != null}"
+                                                 th:class="${task.done} ? 'task-date done' : 'task-date'">
+                                                <i class="fa-regular fa-calendar"></i>
+                                                <span th:text="${task.formattedDueDate}"></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="task-actions">
-                            <button type="button"
-                                    th:style="${task.done} ? 'color:gray; pointer-events:none; cursor:not-allowed;' : 'color:black;'"
-                                    th:onclick="'toggleEditInline(' + ${task.id} + ')'"
-                                    style="border:none; background:transparent; cursor:pointer;">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
+                                <div class="task-actions">
+                                    <button type="button"
+                                            th:style="${task.done} ? 'color:gray; pointer-events:none; cursor:not-allowed;' : 'color:black;'"
+                                            th:onclick="'toggleEditInline(' + ${task.id} + ')'"
+                                            style="border:none; background:transparent; cursor:pointer;">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
 
-                            <a th:href="@{/tasks/delete/{id}(id=${task.id},
+                                    <a th:href="@{/tasks/delete/{id}(id=${task.id},
     priority=${currentPriority},
     category=${currentCategory},
     source=${currentSource},
@@ -1432,49 +1435,49 @@
     targetDate=${task.dueDate},
     sort=${currentSort}, keyword=${searchKeyword}, scrollPos=${scrollPos})}">
 
-                                <i class="fa-solid fa-xmark"></i>
+                                        <i class="fa-solid fa-xmark"></i>
 
-                            </a>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div th:if="${!#lists.isEmpty(completedTasks)}" class="completed-section">
+                    <div th:if="${!#lists.isEmpty(completedTasks)}" class="completed-section" id="completedTasksPanel">
 
-                <div th:class="${completedOpen} ? 'section-toggle completed-toggle open' : 'section-toggle completed-toggle'" onclick="toggleCompletedSection()">
-                    <i id="completedArrow" class="fa-solid fa-chevron-right"></i>
-                    <span>Completed</span>
-                    <span th:text="${completedCount}"></span>
-                </div>
+                        <div th:class="${completedOpen} ? 'section-toggle completed-toggle open' : 'section-toggle completed-toggle'" onclick="toggleCompletedSection()">
+                            <i id="completedArrow" class="fa-solid fa-chevron-right"></i>
+                            <span>Completed</span>
+                            <span th:text="${completedCount}"></span>
+                        </div>
 
-                <div id="completedList" th:style="${completedOpen} ? 'display:block;' : 'display:none;'">                    <div th:each="task : ${completedTasks}" class="task-block">
-                    <div class="task-row">
+                        <div id="completedList" th:style="${completedOpen} ? 'display:block;' : 'display:none;'">                    <div th:each="task : ${completedTasks}" class="task-block">
+                            <div class="task-row">
 
-                        <div class="task-left">
-                            <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post" style="margin:0;">
-                                <input type="hidden" name="priority" th:value="${currentPriority}" />
-                                <input type="hidden" name="category" th:value="${currentCategory}" />
-                                <input type="hidden" name="source" th:value="${currentSource}" />
-                                <input type="hidden" name="sort" th:value="${currentSort}" />
-                                <input type="hidden" name="sort" th:value="${currentSort}" />
-                                <input type="hidden" name="keyword" th:value="${searchKeyword}">
-                                <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
-                                <input type="checkbox"
-                                       class="task-checkbox"
-                                       th:checked="${task.done}"
-                                       onchange="this.form.submit()" />
-                            </form>
+                                <div class="task-left">
+                                    <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post" style="margin:0;">
+                                        <input type="hidden" name="priority" th:value="${currentPriority}" />
+                                        <input type="hidden" name="category" th:value="${currentCategory}" />
+                                        <input type="hidden" name="source" th:value="${currentSource}" />
+                                        <input type="hidden" name="sort" th:value="${currentSort}" />
+                                        <input type="hidden" name="sort" th:value="${currentSort}" />
+                                        <input type="hidden" name="keyword" th:value="${searchKeyword}">
+                                        <input type="hidden" name="scrollPos" class="scroll-pos-input" th:value="${scrollPos}">
+                                        <input type="checkbox"
+                                               class="task-checkbox"
+                                               th:checked="${task.done}"
+                                               onchange="this.form.submit()" />
+                                    </form>
 
-                            <div class="task-content">
-                                <div class="task-title done" th:text="${task.title}"></div>
+                                    <div class="task-content">
+                                        <div class="task-title done" th:text="${task.title}"></div>
 
-                                <div th:if="${task.description != null and !#strings.isEmpty(task.description)}"
-                                     class="task-desc done">
-                                    <span th:text="${task.description}"></span>
-                                </div>
+                                        <div th:if="${task.description != null and !#strings.isEmpty(task.description)}"
+                                             class="task-desc done">
+                                            <span th:text="${task.description}"></span>
+                                        </div>
 
-                                <div class="task-meta-row">
-                                    <div class="priority-label" th:if="${task.priority != null}">
+                                        <div class="task-meta-row">
+                                            <div class="priority-label" th:if="${task.priority != null}">
                                 <span class="priority-dot"
                                       th:style="${
                                           task.priority == 'P1' ? 'background:red;' :
@@ -1483,10 +1486,10 @@
                                           'background:gray;'))
                                       }">
                                 </span>
-                                        <span th:text="${task.priority}"></span>
-                                    </div>
+                                                <span th:text="${task.priority}"></span>
+                                            </div>
 
-                                    <div class="category-label" th:if="${task.category != null and !#strings.isEmpty(task.category)}">
+                                            <div class="category-label" th:if="${task.category != null and !#strings.isEmpty(task.category)}">
                                 <span class="category-dot"
                                       th:style="${
                                           task.category == 'Work' ? 'background:#4a90e2;' :
@@ -1496,19 +1499,19 @@
                                           'background:#cfcfcf;')))
                                       }">
                                 </span>
-                                        <span th:text="${task.category}"></span>
-                                    </div>
+                                                <span th:text="${task.category}"></span>
+                                            </div>
 
-                                    <div th:if="${task.dueDate != null}" class="task-date done">
-                                        <i class="fa-regular fa-calendar"></i>
-                                        <span th:text="${task.formattedDueDate}"></span>
+                                            <div th:if="${task.dueDate != null}" class="task-date done">
+                                                <i class="fa-regular fa-calendar"></i>
+                                                <span th:text="${task.formattedDueDate}"></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="task-actions">
-                            <a th:href="@{/tasks/delete/{id}(id=${task.id},
+                                <div class="task-actions">
+                                    <a th:href="@{/tasks/delete/{id}(id=${task.id},
                                                priority=${currentPriority},
                                                category=${currentCategory},
                                                source=${currentSource},
@@ -1516,15 +1519,44 @@
                                                targetDate=${task.dueDate},
                                                 sort=${currentSort}, keyword=${searchKeyword}, scrollPos=${scrollPos})}">
 
-                                <i class="fa-solid fa-xmark"></i>
+                                        <i class="fa-solid fa-xmark"></i>
 
-                            </a>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
                         </div>
 
                     </div>
-                </div>
-                </div>
 
+                </div> <!-- /tasks-main-column -->
+
+                <aside class="weekly-card">
+                    <h3>Weekly Stats</h3>
+
+                    <div class="weekly-chart-line"></div>
+
+                    <div class="weekly-bars">
+                        <div th:each="count, stat : ${weeklyStats}"
+                             class="weekly-bar"
+                             th:style="'height:' + (${count} * 22 + 20) + 'px'"
+                             th:classappend="${stat.index == todayIndex} ? ' active' : ''">
+                        </div>
+                    </div>
+
+                    <div class="weekly-days">
+                        <span>Mon</span>
+                        <span>Tue</span>
+                        <span>Wed</span>
+                        <span>Thu</span>
+                        <span>Sat</span>
+                        <span>Sun</span>
+                    </div>
+
+
+                    </div>
+                </aside>
             </div>
 
         </div>
@@ -2050,6 +2082,68 @@
             }, 50);
         }
     });
+
+
+    function showTaskTab(type, clickedTab) {
+        const allTasks = document.getElementById("taskListContainer");
+        const completedSection = document.getElementById("completedTasksPanel");
+        const overdueSection = document.getElementById("overdueTasksPanel");
+        const completedList = document.getElementById("completedList");
+        const overdueList = document.getElementById("overdueList");
+
+        document.body.classList.add("tabs-mode");
+
+        if (allTasks) allTasks.style.display = "none";
+        if (completedSection) completedSection.style.display = "none";
+        if (overdueSection) overdueSection.style.display = "none";
+
+        if (type === "all" && allTasks) {
+            allTasks.style.display = "block";
+        }
+
+        if (type === "completed" && completedSection) {
+            completedSection.style.display = "block";
+            if (completedList) completedList.style.display = "block";
+        }
+
+        if (type === "overdue" && overdueSection) {
+            overdueSection.style.display = "block";
+            if (overdueList) overdueList.style.display = "block";
+        }
+
+        document.querySelectorAll(".tabs span").forEach(tab => tab.classList.remove("active"));
+        const tab = clickedTab ? clickedTab.closest("span") : document.querySelector(".tabs span");
+        if (tab) tab.classList.add("active");
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        showTaskTab("all", document.querySelector(".tabs span.active"));
+    });
+
+
+    function toggleEditInlineOverdue(id) {
+        var view = document.getElementById("taskView-overdue-" + id);
+        var edit = document.getElementById("taskEdit-overdue-" + id);
+
+        if (!view || !edit) return;
+
+        var isOpen = edit.classList.contains("active");
+
+        closeAllEditInline();
+
+        if (!isOpen) {
+            view.style.display = "none";
+            edit.classList.add("active");
+
+            var titleInput = edit.querySelector(".inline-edit-title");
+            if (titleInput) {
+                setTimeout(function () {
+                    titleInput.focus();
+                    titleInput.select();
+                }, 50);
+            }
+        }
+    }
 </script>
 
 </body>
