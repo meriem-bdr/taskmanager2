@@ -87,6 +87,14 @@ public class TaskController {
         model.addAttribute("todayCompleted", todayCompleted);
         model.addAttribute("todayRemaining", todayRemaining);
         model.addAttribute("currentSort", sort);
+
+        // Defaults to prevent NullPointerException in Thymeleaf
+        if (!model.containsAttribute("searchKeyword")) {
+            model.addAttribute("searchKeyword", null);
+        }
+        if (!model.containsAttribute("isTodayPage")) {
+            model.addAttribute("isTodayPage", false);
+        }
     }
 
     @GetMapping("/tasks")
@@ -376,30 +384,30 @@ public class TaskController {
                              @RequestParam(required = false) String sort,
                              @RequestParam(required = false) String scrollPos,
                              @RequestParam(required = false) String keyword)
-                            {
+    {
 
         taskService.deleteTask(id);
 
-                                if ("today".equals(source)) {
-                                    String redirect = "redirect:/today";
-                                    boolean hasParam = false;
+        if ("today".equals(source)) {
+            String redirect = "redirect:/today";
+            boolean hasParam = false;
 
-                                    if (sort != null && !sort.isEmpty()) {
-                                        redirect += "?sort=" + sort;
-                                        hasParam = true;
-                                    }
+            if (sort != null && !sort.isEmpty()) {
+                redirect += "?sort=" + sort;
+                hasParam = true;
+            }
 
-                                    if (keyword != null && !keyword.isEmpty()) {
-                                        redirect += (hasParam ? "&" : "?") + "keyword=" + keyword;
-                                        hasParam = true;
-                                    }
+            if (keyword != null && !keyword.isEmpty()) {
+                redirect += (hasParam ? "&" : "?") + "keyword=" + keyword;
+                hasParam = true;
+            }
 
-                                    if (scrollPos != null && !scrollPos.isEmpty()) {
-                                        redirect += (hasParam ? "&" : "?") + "scrollPos=" + scrollPos;
-                                    }
+            if (scrollPos != null && !scrollPos.isEmpty()) {
+                redirect += (hasParam ? "&" : "?") + "scrollPos=" + scrollPos;
+            }
 
-                                    return redirect;
-                                }
+            return redirect;
+        }
 
         if ("upcoming".equals(source)) {
             String redirectUrl = "redirect:/upcoming";
@@ -428,24 +436,24 @@ public class TaskController {
             return "redirect:/tasks/priority/" + priority;
         }
 
-                                String redirect = "redirect:/tasks";
-                                boolean hasParam = false;
+        String redirect = "redirect:/tasks";
+        boolean hasParam = false;
 
-                                if (sort != null && !sort.isEmpty()) {
-                                    redirect += "?sort=" + sort;
-                                    hasParam = true;
-                                }
+        if (sort != null && !sort.isEmpty()) {
+            redirect += "?sort=" + sort;
+            hasParam = true;
+        }
 
-                                if (keyword != null && !keyword.isEmpty()) {
-                                    redirect += (hasParam ? "&" : "?") + "keyword=" + keyword;
-                                    hasParam = true;
-                                }
+        if (keyword != null && !keyword.isEmpty()) {
+            redirect += (hasParam ? "&" : "?") + "keyword=" + keyword;
+            hasParam = true;
+        }
 
-                                if (scrollPos != null && !scrollPos.isEmpty()) {
-                                    redirect += (hasParam ? "&" : "?") + "scrollPos=" + scrollPos;
-                                }
+        if (scrollPos != null && !scrollPos.isEmpty()) {
+            redirect += (hasParam ? "&" : "?") + "scrollPos=" + scrollPos;
+        }
 
-                                return redirect;
+        return redirect;
 
 
     }
