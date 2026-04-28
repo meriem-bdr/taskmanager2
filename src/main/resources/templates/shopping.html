@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Shopping</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* ===== GLOBAL ===== */
+        body {
+            margin: 0;
+            background: white;
+            font-family: Georgia, serif;
+            color: #555;
+        }
+
+        .page {
+            max-width: 850px;
+            margin: 0 auto;
+            padding-bottom: 20px;
+        }
+
+        .title {
+            width: 520px;
+            margin: 0 auto 20px;
+            background: #2aa08d;
+            color: white;
+            text-align: center;
+            font-size: 38px;
+            font-weight: bold;
+            padding: 18px 40px;
+            border-radius: 10px 10px 80px 80px;
+        }
+
+        /* ===== MENU ===== */
+        .menu-global {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            font-size: 22px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 1100;
+            padding: 8px 10px;
+            border-radius: 8px;
+        }
+
+        .menu-global:hover {
+            background: #f5f5f5;
+        }
+
+        #sidebar a {
+            text-decoration: none;
+            color: black;
+        }
+
+        #sidebar a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== GRID ===== */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px 22px;
+            padding: 0 25px;
+        }
+
+        .category {
+            min-height: 170px;
+        }
+
+        .category-title {
+            position: relative;
+            overflow: hidden;
+            padding: 6px 10px;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-title::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -60%;
+            width: 35%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.6), transparent);
+        }
+
+        .category-title:hover::before {
+            animation: shine 0.8s;
+        }
+
+        @keyframes shine {
+            from { left: -60%; }
+            to { left: 120%; }
+        }
+
+        .category:nth-child(12n+1) .category-title { background: #f7b7cf; }
+        .category:nth-child(12n+2) .category-title { background: #f8c8c8; }
+        .category:nth-child(12n+3) .category-title { background: #f7df96; }
+        .category:nth-child(12n+4) .category-title { background: #bfe7c5; }
+        .category:nth-child(12n+5) .category-title { background: #bce3df; }
+        .category:nth-child(12n+6) .category-title { background: #b9d8f2; }
+        .category:nth-child(12n+7) .category-title { background: #c8c5f3; }
+        .category:nth-child(12n+8) .category-title { background: #f4aee2; }
+        .category:nth-child(12n+9) .category-title { background: #f5df9d; }
+        .category:nth-child(12n+10) .category-title { background: #c7e6bd; }
+        .category:nth-child(12n+11) .category-title { background: #f8bfd2; }
+        .category:nth-child(12n+12) .category-title { background: #f4c49c; }
+
+        .category:nth-child(12n+1) input { accent-color: #f7b7cf; }
+        .category:nth-child(12n+2) input { accent-color: #f8c8c8; }
+        .category:nth-child(12n+3) input { accent-color: #f7df96; }
+        .category:nth-child(12n+4) input { accent-color: #bfe7c5; }
+        .category:nth-child(12n+5) input { accent-color: #bce3df; }
+        .category:nth-child(12n+6) input { accent-color: #b9d8f2; }
+        .category:nth-child(12n+7) input { accent-color: #c8c5f3; }
+        .category:nth-child(12n+8) input { accent-color: #f4aee2; }
+        .category:nth-child(12n+9) input { accent-color: #f5df9d; }
+        .category:nth-child(12n+10) input { accent-color: #c7e6bd; }
+        .category:nth-child(12n+11) input { accent-color: #f8bfd2; }
+        .category:nth-child(12n+12) input { accent-color: #f4c49c; }
+
+        /* ===== LIST ===== */
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+            margin: 2px 0;
+        }
+
+        .item-name {
+            flex: 1;
+        }
+
+        .delete-icon,
+        .delete-category-icon {
+            cursor: pointer;
+            color: #999;
+            font-size: 14px;
+            margin-left: 8px;
+        }
+
+        .delete-icon:hover,
+        .delete-category-icon:hover {
+            color: red;
+        }
+
+        .add-item {
+            margin-top: 5px;
+            width: 90%;
+            border-bottom: 2px dotted #d8d8d8;
+            color: #999;
+            cursor: pointer;
+        }
+
+        .add-item span {
+            color: #7cbf2a;
+            font-size: 18px;
+        }
+
+        /* ===== MAIN BUTTONS ===== */
+        .add-category,
+        .bought-btn {
+            display: block;
+            margin: 25px auto 15px;
+            border: 2px solid #2aa08d;
+            background: white;
+            color: #2aa08d;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .add-category:hover,
+        .bought-btn:hover {
+            background: #31baad;
+            color: white;
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        .add-category:active,
+        .bought-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ===== MODALS ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.3);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            width: 320px;
+            text-align: center;
+        }
+
+        .modal-content h3,
+        #boughtModal h3 {
+            color: #e34aa5;
+        }
+
+        .input-box {
+            position: relative;
+            margin: 25px 0;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-bottom: 2px solid #aaa;
+            outline: none;
+        }
+
+        .input-box label {
+            position: absolute;
+            left: 5px;
+            top: 10px;
+            transition: 0.3s;
+            color: #888;
+        }
+
+        .input-box input:focus ~ label,
+        .input-box input:valid ~ label {
+            top: -10px;
+            font-size: 12px;
+            color: #e34aa5;
+        }
+
+        .modal-actions {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .modal-actions button {
+            position: relative;
+            overflow: hidden;
+            padding: 6px 15px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            background: #e34aa5;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .modal-actions button:hover {
+            transform: scale(1.05);
+        }
+
+        .modal-actions button:active {
+            transform: scale(0.95);
+        }
+
+        .modal-actions button::before {
+            content: "";
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.6), transparent);
+        }
+
+        .modal-actions button:hover::before {
+            animation: shineBtn 0.7s;
+        }
+
+        @keyframes shineBtn {
+            from { top: -100%; }
+            to { top: 120%; }
+        }
+
+        #boughtList li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 8px 0;
+            font-size: 18px;
+        }
+
+        .big-cart {
+            position: fixed;
+            bottom: 20px;
+            right: 25px;
+            font-size: 80px;
+            color: #2aa08d;
+            cursor: pointer;
+            transition: 0.3s;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .big-cart:hover {
+            transform: scale(1.1);
+        }
+
+        @media(max-width: 750px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .title {
+                width: 80%;
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<button class="menu-global" onclick="toggleSidebar()">
+    <i class="fa-solid fa-bars"></i>
+</button>
+
+<div id="sidebar"
+     style="width:220px; background:#f5f5f5; min-height:100vh; padding:20px; box-sizing:border-box; position:fixed; top:0; left:0; transform:translateX(-100%); transition:transform 0.3s ease; z-index:3000;">
+    <h3 style="margin-top:45px;">Menu</h3>
+
+    <div style="margin-top:15px;">
+        <a href="/today"><i class="fa-solid fa-calendar-day"></i> Today</a>
+    </div>
+
+    <div style="margin-top:20px;">
+        <a href="/tasks"><i class="fa-solid fa-list"></i> All Tasks</a>
+    </div>
+
+    <div style="margin-top:15px;">
+        <a href="/priorities"><i class="fa-solid fa-filter"></i> Filter by priority</a>
+    </div>
+
+    <div style="margin-top:15px;">
+        <a href="/categories"><i class="fa-solid fa-layer-group"></i> Categories</a>
+    </div>
+
+    <div style="margin-top:15px;">
+        <a href="/upcoming"><i class="fa-solid fa-calendar"></i> Upcoming</a>
+    </div>
+
+    <div style="margin-top:15px;">
+        <a href="/notes"><i class="fa-solid fa-sticky-note"></i> Notes</a>
+    </div>
+
+    <div style="margin-top:15px;">
+        <a href="/shopping"><i class="fa-solid fa-cart-shopping"></i> Shopping</a>
+    </div>
+</div>
+
+<div id="overlay" onclick="toggleSidebar()"
+     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.2); z-index:1500;">
+</div>
+
+<div id="categoryModal" class="modal">
+    <div class="modal-content">
+        <h3>Add Category</h3>
+
+        <div class="input-box">
+            <input type="text" id="categoryInput" required>
+            <label>Category name</label>
+        </div>
+
+        <div class="modal-actions">
+            <button onclick="confirmAddCategory()">OK</button>
+            <button onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div id="itemModal" class="modal">
+    <div class="modal-content">
+        <h3>Add Item</h3>
+
+        <div class="input-box">
+            <input type="text" id="itemInput" required>
+            <label>Item name</label>
+        </div>
+
+        <div class="modal-actions">
+            <button onclick="confirmAddItem()">OK</button>
+            <button onclick="closeItemModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <h3 id="deleteTitle">Delete?</h3>
+        <p id="deleteText">Do you really want to delete this?</p>
+
+        <div class="modal-actions">
+            <button onclick="confirmDelete()">Yes</button>
+            <button onclick="closeDeleteModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="title">Shopping List</div>
+    <div class="grid" id="categories"></div>
+
+    <button class="add-category" onclick="addCategory()">+ Add Category</button>
+
+    <button class="bought-btn" onclick="openBoughtModal()">
+        🛒 Purchased Items
+    </button>
+
+    <div id="boughtModal" class="modal">
+        <div class="modal-content">
+            <h3>Purchased Items</h3>
+            <ul id="boughtList"></ul>
+
+            <div class="modal-actions">
+                <button onclick="closeBoughtModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="big-cart">
+    <i class="fa-solid fa-cart-shopping"></i>
+</div>
+
+<script>
+    let currentCategoryId = null;
+    let deleteType = null;
+    let deleteId = null;
+    let reopenBoughtAfterDelete = false;
+
+    async function load() {
+        let res = await fetch("/shopping/categories");
+        let data = await res.json();
+
+        let container = document.getElementById("categories");
+        container.innerHTML = "";
+
+        let boughtContainer = document.getElementById("boughtList");
+        boughtContainer.innerHTML = "";
+
+        data.forEach(cat => {
+            let div = document.createElement("div");
+            div.className = "category";
+
+            div.innerHTML = `
+                    <h3 class="category-title">
+                        <span>${cat.name}</span>
+
+                        <span class="category-actions">
+                            <span onclick="deleteCategory(${cat.id})" class="delete-category-icon">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </span>
+                        </span>
+                    </h3>
+
+                    <ul>
+                        ${(cat.items || []).filter(i => !i.bought).map(i => `
+                            <li>
+                                <input type="checkbox" onclick="buyItem(${i.id})">
+                                <span class="item-name">${i.name}</span>
+
+                                <span onclick="deleteItem(${i.id}, false)" class="delete-icon">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </span>
+                            </li>
+                        `).join("")}
+                    </ul>
+
+                    <div class="add-item" onclick="addItem(${cat.id})">
+                        <span>+</span> add item
+                    </div>
+                `;
+
+            (cat.items || []).filter(i => i.bought).forEach(i => {
+                let li = document.createElement("li");
+
+                li.innerHTML = `
+                        <span>${i.name}</span>
+
+                        <span onclick="deleteItem(${i.id}, true)" class="delete-icon">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </span>
+                    `;
+
+                boughtContainer.appendChild(li);
+            });
+
+            container.appendChild(div);
+        });
+    }
+
+    function addCategory() {
+        document.getElementById("categoryInput").value = "";
+        document.getElementById("categoryModal").style.display = "flex";
+    }
+
+    async function confirmAddCategory() {
+        let input = document.getElementById("categoryInput");
+        let name = input.value;
+
+        if (!name || name.trim() === "") {
+            input.focus();
+            return;
+        }
+
+        await fetch("/shopping/category?name=" + encodeURIComponent(name));
+
+        input.value = "";
+        closeModal();
+        load();
+    }
+
+    function closeModal() {
+        document.getElementById("categoryModal").style.display = "none";
+    }
+
+    function addItem(categoryId) {
+        currentCategoryId = categoryId;
+        document.getElementById("itemInput").value = "";
+        document.getElementById("itemModal").style.display = "flex";
+    }
+
+    async function confirmAddItem() {
+        let input = document.getElementById("itemInput");
+        let name = input.value;
+
+        if (!name || name.trim() === "") {
+            input.focus();
+            return;
+        }
+
+        await fetch("/shopping/item?categoryId=" + currentCategoryId + "&name=" + encodeURIComponent(name));
+
+        input.value = "";
+        closeItemModal();
+        load();
+    }
+
+    function closeItemModal() {
+        document.getElementById("itemModal").style.display = "none";
+    }
+
+    async function buyItem(id) {
+        await fetch("/shopping/buy?itemId=" + id);
+        load();
+    }
+
+    function deleteItem(id, fromBought) {
+        deleteType = "item";
+        deleteId = id;
+        reopenBoughtAfterDelete = fromBought;
+
+        if (fromBought) {
+            document.getElementById("boughtModal").style.display = "none";
+        }
+
+        document.getElementById("deleteTitle").innerText = "Delete Item";
+        document.getElementById("deleteText").innerText = "Do you want to delete this item?";
+        document.getElementById("deleteModal").style.display = "flex";
+    }
+
+    function deleteCategory(id) {
+        deleteType = "category";
+        deleteId = id;
+        reopenBoughtAfterDelete = false;
+
+        document.getElementById("deleteTitle").innerText = "Delete Category";
+        document.getElementById("deleteText").innerText = "Do you want to delete this category?";
+        document.getElementById("deleteModal").style.display = "flex";
+    }
+
+    function closeDeleteModal() {
+        document.getElementById("deleteModal").style.display = "none";
+        deleteType = null;
+        deleteId = null;
+    }
+
+    async function confirmDelete() {
+        if (deleteType === "item") {
+            await fetch("/shopping/deleteItem?id=" + deleteId);
+        }
+
+        if (deleteType === "category") {
+            await fetch("/shopping/deleteCategory?id=" + deleteId);
+        }
+
+        closeDeleteModal();
+        await load();
+
+        if (reopenBoughtAfterDelete) {
+            document.getElementById("boughtModal").style.display = "flex";
+        }
+
+        reopenBoughtAfterDelete = false;
+    }
+
+    function openBoughtModal() {
+        document.getElementById("boughtModal").style.display = "flex";
+    }
+
+    function closeBoughtModal() {
+        document.getElementById("boughtModal").style.display = "none";
+    }
+
+    function toggleSidebar() {
+        var sidebar = document.getElementById("sidebar");
+        var overlay = document.getElementById("overlay");
+
+        if (sidebar.style.transform === "translateX(0%)") {
+            sidebar.style.transform = "translateX(-100%)";
+            overlay.style.display = "none";
+        } else {
+            sidebar.style.transform = "translateX(0%)";
+            overlay.style.display = "block";
+        }
+    }
+    document.getElementById("categoryInput").addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            confirmAddCategory();
+        }
+    });
+
+    document.getElementById("itemInput").addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            confirmAddItem();
+        }
+    });
+    document.getElementById("boughtModal").addEventListener("click", function(e) {
+        if (e.target === this) {
+            closeBoughtModal();
+        }
+    });
+    document.getElementById("categoryModal").addEventListener("click", function(e) {
+        if (e.target === this) {
+            closeModal();
+        }
+    });
+
+    document.getElementById("itemModal").addEventListener("click", function(e) {
+        if (e.target === this) {
+            closeItemModal();
+        }
+    });
+    function addCategory() {
+        document.getElementById("categoryInput").value = "";
+        document.getElementById("categoryModal").style.display = "flex";
+
+        document.getElementById("categoryInput").focus(); // 👈 هنا
+    }
+    function addItem(categoryId) {
+        currentCategoryId = categoryId;
+        document.getElementById("itemInput").value = "";
+        document.getElementById("itemModal").style.display = "flex";
+
+        document.getElementById("itemInput").focus(); // 👈 هنا
+    }
+
+    load();
+</script>
+</body>
