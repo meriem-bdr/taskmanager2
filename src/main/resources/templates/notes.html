@@ -9,21 +9,35 @@
     <style>
         :root {
             --primary-50: #e4ecf6;
+            --primary-100: #bad0ee;
+            --primary-200: #8ab4ea;
+            --primary-300: #5597ec;
+            --primary-400: #1b79f3;
+            --primary-500: #2563eb;
+            --primary-600: #1d4ed8;
             --primary-700: #003e8f;
+            --primary-800: #00285c;
             --primary-900: #001229;
+
+            --secondary-50: #ecf1f9;
+            --secondary-100: #d6e3f5;
+            --secondary-200: #bed5f4;
+            --secondary-300: #a3c7f5;
+            --secondary-500: #5a9ef6;
+
+            --bg: #f5f8ff;
+            --card: #ffffff;
             --surface-solid: #ffffff;
             --border: rgba(12, 108, 233, 0.16);
-
-            --bg: #f3f7ff;
-            --card: #ffffff;
-            --text: #07132b;
-            --muted: #708199;
+            --text: #08213f;
+            --muted: #64748b;
             --line: #dbeafe;
-            --blue: #0d5aa7;
-            --blue2: #5fc3ee;
-            --soft-blue: #eaf6ff;
+            --blue: #2563eb;
+            --blue2: #55b6e8;
+            --soft-blue: #eaf7ff;
             --danger: #ef4444;
-            --shadow: 0 18px 45px rgba(43, 93, 142, 0.10);
+            --shadow: 0 8px 22px rgba(12, 108, 233, 0.06);
+            --shadow-soft: 0 16px 42px rgba(0, 62, 143, 0.10);
         }
 
         * { box-sizing: border-box; }
@@ -31,28 +45,29 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background:
-                    radial-gradient(circle at top left, rgba(173, 216, 255, .22), transparent 35%),
-                    var(--bg);
+            background: var(--bg);
             color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
         a { color: inherit; text-decoration: none; }
 
         .menu-global {
             position: fixed;
-            top: 15px;
-            left: 15px;
+            top: 20px;
+            left: 20px;
+            width: 46px;
+            height: 46px;
             font-size: 20px;
-            background: var(--surface-solid);
-            color: var(--primary-700);
-            border: 1px solid var(--border);
+            background: #ffffff;
+            color: #2563eb;
+            border: 1px solid #dbeafe;
             cursor: pointer;
-            z-index: 1500;
-            padding: 9px 11px;
+            z-index: 2000;
+            padding: 0;
             border-radius: 14px;
-            box-shadow: 0 10px 25px rgba(0, 62, 143, 0.10);
-            transition: 0.2s ease;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
         }
 
         .menu-global:hover {
@@ -61,63 +76,77 @@
         }
 
         #overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.2);
-            z-index: 2000;
+            display: none !important;
         }
 
         #sidebar {
-            width: 220px;
-            background: linear-gradient(180deg, var(--primary-900), var(--primary-700)) !important;
+            width: 200px;
             min-height: 100vh;
-            padding: 20px;
+            padding: 90px 16px 20px;
             box-sizing: border-box;
             position: fixed;
             top: 0;
             left: 0;
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
-            z-index: 3000;
-            box-shadow: 20px 0 60px rgba(0, 18, 41, 0.22);
+            transform: translateX(-200px);
+            transition: transform 0.28s ease;
+            z-index: 1200;
+            background: #cbe2ff !important;
+            border-right: 1px solid rgba(0,0,0,0.05);
+            box-shadow: none;
         }
 
         #sidebar h3 {
-            color: white;
-            margin-top: 45px;
+            display: none;
+        }
+
+        .sidebar-label {
+            margin: 20px 10px 10px;
+            color: #475569;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         #sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             text-decoration: none;
-            color: rgba(255, 255, 255, 0.88);
-            display: block;
+            color: #1e293b;
+            font-size: 15px;
+            font-weight: 600;
             padding: 10px 12px;
-            border-radius: 12px;
-            transition: 0.18s ease;
+            border-radius: 14px;
+            margin-bottom: 6px;
+            transition: 0.2s ease;
+        }
+
+        #sidebar a i {
+            width: 20px;
+            text-align: center;
+            color: #2563eb;
         }
 
         #sidebar a:hover,
         #sidebar a.active {
-            text-decoration: none;
-            background: rgba(255, 255, 255, 0.12);
-            color: white;
+            background: rgba(255,255,255,0.7);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+            color: #2563eb;
         }
 
         .page {
             min-height: 100vh;
-            padding: 120px 42px 90px;
+            padding: 10px 34px 34px 78px;
+            transition: 0.3s ease;
         }
 
         .dashboard {
-            max-width: 1480px;
+            max-width: 1180px;
             margin: 0 auto;
             display: grid;
             grid-template-columns: minmax(0, 1fr);
-            gap: 34px;
+            gap: 24px;
             align-items: start;
         }
 
@@ -795,6 +824,117 @@
             .editor input.title-input,
             .image-editor input { font-size: 34px; }
         }
+
+
+        /* ===== NOTES PAGE MATCH TASKS STYLE ===== */
+        .top-row {
+            margin-bottom: 8px;
+            padding: 4px 0;
+        }
+
+        .title-block h1 {
+            font-size: 32px;
+            line-height: 1;
+            letter-spacing: -0.5px;
+            color: var(--primary-900);
+        }
+
+        .round-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 18px;
+            border: 1px solid rgba(12, 108, 233, 0.16);
+            background: rgba(255, 255, 255, 0.88);
+            color: var(--primary-800);
+            box-shadow: 0 10px 24px rgba(0, 62, 143, 0.08);
+            backdrop-filter: blur(10px);
+        }
+
+        .round-btn:hover,
+        .icon-btn:hover,
+        .mini-circle:hover,
+        .search-panel button:hover,
+        .add-menu button:hover,
+        .image-choice-menu button:hover {
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .add-strip,
+        .search-panel,
+        .empty-state,
+        .note-card,
+        .panel-card,
+        .editor-shell {
+            border-color: #dbeafe;
+            box-shadow: var(--shadow);
+        }
+
+        .note-card,
+        .editor-shell {
+            border-left-color: var(--blue2);
+        }
+
+        .tabs {
+            gap: 28px;
+            margin: 6px 0 18px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #6b7280;
+        }
+
+        .tab.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+
+        .chip {
+            background: #eaf7ff;
+            border-color: rgba(85, 182, 232, 0.25);
+            color: #155e9f;
+        }
+
+        .chip .dot,
+        .bar.active {
+            background: #55b6e8;
+        }
+
+        .bar {
+            background: #cfe8f7;
+        }
+
+        .panel-title {
+            background: #cbe2ff;
+            color: #0f172a;
+        }
+
+        .editor,
+        .image-editor,
+        .editor-top {
+            background: var(--bg);
+        }
+
+        body.sidebar-open #sidebar,
+        #sidebar[style*="translateX(0%)"] {
+            transform: translateX(0) !important;
+        }
+
+        body.sidebar-open .page,
+        body:has(#sidebar[style*="translateX(0%)"]) .page {
+            padding-left: 260px;
+        }
+
+        @media (max-width: 1000px) {
+            .page {
+                padding: 70px 12px 20px 12px !important;
+            }
+
+            body.sidebar-open .page,
+            body:has(#sidebar[style*="translateX(0%)"]) .page {
+                padding-left: 12px !important;
+            }
+        }
     </style>
 </head>
 
@@ -807,35 +947,39 @@
 </button>
 
 <div id="sidebar">
-    <h3 style="margin-top:45px;">Menu</h3>
+    <div class="sidebar-label">Menu</div>
 
-    <div style="margin-top:15px;">
-        <a href="/today"><i class="fa-solid fa-calendar-day"></i> Today</a>
-    </div>
+    <a href="/today">
+        <i class="fa-solid fa-calendar-day"></i>
+        Today
+    </a>
+    <a href="/tasks">
+        <i class="fa-solid fa-list"></i>
+        All Tasks
+    </a>
+    <a href="/upcoming">
+        <i class="fa-solid fa-calendar"></i>
+        Upcoming
+    </a>
 
-    <div style="margin-top:15px;">
-        <a href="/tasks"><i class="fa-solid fa-list"></i> All Tasks</a>
-    </div>
+    <div class="sidebar-label">Organize</div>
 
-    <div style="margin-top:15px;">
-        <a href="/priorities"><i class="fa-solid fa-filter"></i> Filter by priority</a>
-    </div>
-
-    <div style="margin-top:15px;">
-        <a href="/categories"><i class="fa-solid fa-layer-group"></i> Categories</a>
-    </div>
-
-    <div style="margin-top:15px;">
-        <a href="/upcoming"><i class="fa-solid fa-calendar"></i> Upcoming</a>
-    </div>
-
-    <div style="margin-top:15px;">
-        <a href="/notes"><i class="fa-solid fa-sticky-note"></i> Notes</a>
-    </div>
-
-    <div style="margin-top:15px;">
-        <a href="/shopping"><i class="fa-solid fa-cart-shopping"></i> Shopping</a>
-    </div>
+    <a href="/categories">
+        <i class="fa-solid fa-layer-group"></i>
+        Categories
+    </a>
+    <a href="/priorities">
+        <i class="fa-solid fa-filter"></i>
+        Priorities
+    </a>
+    <a href="/notes" class="active">
+        <i class="fa-solid fa-note-sticky"></i>
+        Notes
+    </a>
+    <a href="/shopping">
+        <i class="fa-solid fa-cart-shopping"></i>
+        Shopping
+    </a>
 </div>
 
 <main id="homePage" class="page">
@@ -1161,21 +1305,11 @@
     }
 
     function toggleSidebar() {
-        var sidebar = document.getElementById("sidebar");
-        var overlay = document.getElementById("overlay");
-
-        if (sidebar.style.transform === "translateX(0%)") {
-            sidebar.style.transform = "translateX(-100%)";
-            overlay.style.display = "none";
-        } else {
-            sidebar.style.transform = "translateX(0%)";
-            overlay.style.display = "block";
-        }
+        document.body.classList.toggle("sidebar-open");
     }
 
     function closeSidebar() {
-        document.getElementById("sidebar").style.transform = "translateX(-100%)";
-        document.getElementById("overlay").style.display = "none";
+        document.body.classList.remove("sidebar-open");
     }
 
     function positionMenuUnderAddButton(menu) {
@@ -1217,7 +1351,7 @@
 
     function hideHome() {
         document.getElementById("homePage").classList.add("hide");
-        document.querySelector(".menu-global").style.display = "none";
+        document.querySelector(".menu-global").style.visibility = "hidden";
         closeSidebar();
         closeAddMenu();
         window.scrollTo(0, 0);
@@ -1228,7 +1362,7 @@
         document.getElementById("homePage").classList.remove("hide");
         document.getElementById("textEditorPage").classList.remove("show");
         document.getElementById("imageEditorPage").classList.remove("show");
-        document.querySelector(".menu-global").style.display = "flex";
+        document.querySelector(".menu-global").style.visibility = "visible";
         editingIndex = null;
 
         document.addEventListener("click", function(e) {
@@ -1825,6 +1959,19 @@
             !addButton.contains(e.target)
         ) {
             imageChoiceMenu.classList.remove("show");
+        }
+    });
+    document.addEventListener("click", function (e) {
+        const sidebar = document.getElementById("sidebar");
+        const menuBtn = document.querySelector(".menu-global");
+
+        if (!sidebar || !menuBtn) return;
+
+        const isClickInsideSidebar = sidebar.contains(e.target);
+        const isClickOnMenuBtn = menuBtn.contains(e.target);
+
+        if (!isClickInsideSidebar && !isClickOnMenuBtn) {
+            document.body.classList.remove("sidebar-open");
         }
     });
 
