@@ -10,11 +10,11 @@
     <style>
         :root {
             --primary-50: #e4ecf6;
-            --primary-500: #2563eb;
+            --primary-500: #cbe2ff;
             --primary-600: #1d4ed8;
             --primary-700: #003e8f;
             --primary-800: #00285c;
-            --primary-900: #001229;
+            --primary-900: #cbe2ff;
 
             --bg: #f5f8ff;
             --surface: #ffffff;
@@ -82,6 +82,9 @@
             font-weight: 800;
             color: var(--primary-900);
         }
+        .left h3 {
+            color: #3769a8 !important;
+        }
 
         .right h3 {
             color: white;
@@ -139,7 +142,7 @@
             height: 50px;
             border-radius: 16px;
             background: #ffffff;
-            color: var(--primary-900);
+            color: #3769a8 !important;
             border: 1px solid var(--border);
             box-shadow: var(--shadow-card);
             font-weight: 800;
@@ -147,7 +150,7 @@
 
         .google-btn:hover {
             background: var(--primary-50);
-            color: var(--primary-900);
+            color: #3769a8 !important;
         }
 
         a {
@@ -181,6 +184,7 @@
             border-radius: 999px;
             padding: 12px 34px;
             font-weight: 800;
+            color: #3769a8 !important;
         }
 
         .error-text {
@@ -202,6 +206,23 @@
                 border-radius: 0;
             }
         }
+        .brand-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, var(--primary-500), var(--soft-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            margin: 0 auto 14px;
+            box-shadow: 0 14px 30px rgba(12, 108, 233, 0.24);
+        }
+
+        .login-header-center {
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -211,8 +232,14 @@
 
     <!-- LEFT -->
     <div class="left">
-        <h3>Login</h3>
-        <p class="subtitle">Welcome back to your tasks</p>
+        <div class="login-header-center">
+            <div class="brand-icon">
+                <i class="bi bi-box-arrow-in-right"></i>
+            </div>
+
+            <h3>Login</h3>
+            <p class="subtitle">Welcome back to your tasks</p>
+        </div>
 
         <p class="error-text" th:if="${error}" th:text="${error}"></p>
 
