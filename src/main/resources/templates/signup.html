@@ -10,10 +10,10 @@
     <style>
         :root {
             --primary-50: #e4ecf6;
-            --primary-500: #2563eb;
+            --primary-500: #cbe2ff;
             --primary-700: #003e8f;
             --primary-800: #00285c;
-            --primary-900: #001229;
+            --primary-900: #cbe2ff;
 
             --bg: #f5f8ff;
             --surface: #ffffff;
@@ -43,10 +43,8 @@
             justify-content: center;
             color: var(--text);
         }
-
         .container-box {
             width: 920px;
-            height: 540px;
             min-height: 540px;
             background: var(--surface);
             border-radius: 28px;
@@ -76,18 +74,29 @@
 
         .right {
             background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;   /* يبقا vertical كيما راه */
         }
-
+        .brand-icon,
+        .right h3,
+        .subtitle {
+            align-self: center;
+            text-align: center;
+        }
+        .right h3 {
+            color: #3769a8 !important;
+        }
         .brand-icon {
-            width: 54px;
-            height: 54px;
+            width: 64px;
+            height: 64px;
             border-radius: 18px;
             background: linear-gradient(135deg, var(--primary-500), var(--soft-blue));
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 25px;
+            font-size: 32px;
             margin-bottom: 14px;
             box-shadow: 0 14px 30px rgba(12, 108, 233, 0.24);
         }
@@ -141,7 +150,7 @@
             border: none;
             background: transparent;
             box-shadow: none;
-            color: var(--primary-900);
+            color: #001229;
             font-size: 15px;
         }
 
@@ -171,7 +180,7 @@
             height: 48px;
             border-radius: 16px;
             background: #ffffff;
-            color: var(--primary-900);
+            color: #3769a8 !important;
             border: 1px solid var(--border);
             box-shadow: var(--shadow-card);
             font-weight: 800;
@@ -179,14 +188,14 @@
 
         .google-btn:hover {
             background: var(--primary-50);
-            color: var(--primary-900);
+            color: #3769a8 !important;
         }
 
         .left .btn-light {
             border-radius: 999px;
             padding: 12px 34px;
             font-weight: 800;
-            color: var(--primary-800);
+            color: #3769a8 !important;
             border: none;
             box-shadow: 0 12px 30px rgba(0, 18, 41, 0.18);
         }
