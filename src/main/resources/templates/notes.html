@@ -1,704 +1,1165 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
+        :root {
+            --primary-50: #e4ecf6;
+            --primary-700: #003e8f;
+            --primary-900: #001229;
+            --surface-solid: #ffffff;
+            --border: rgba(12, 108, 233, 0.16);
+
+            --bg: #f3f7ff;
+            --card: #ffffff;
+            --text: #07132b;
+            --muted: #708199;
+            --line: #dbeafe;
+            --blue: #0d5aa7;
+            --blue2: #5fc3ee;
+            --soft-blue: #eaf6ff;
+            --danger: #ef4444;
+            --shadow: 0 18px 45px rgba(43, 93, 142, 0.10);
+        }
+
+        * { box-sizing: border-box; }
+
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: white;
+            background:
+                    radial-gradient(circle at top left, rgba(173, 216, 255, .22), transparent 35%),
+                    var(--bg);
+            color: var(--text);
         }
+
+        a { color: inherit; text-decoration: none; }
 
         .menu-global {
             position: fixed;
             top: 15px;
             left: 15px;
-            font-size: 22px;
-            background: none;
-            border: none;
+            font-size: 20px;
+            background: var(--surface-solid);
+            color: var(--primary-700);
+            border: 1px solid var(--border);
             cursor: pointer;
-            z-index: 1100;
-            padding: 8px 10px;
-            border-radius: 8px;
+            z-index: 1500;
+            padding: 9px 11px;
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(0, 62, 143, 0.10);
+            transition: 0.2s ease;
         }
 
         .menu-global:hover {
-            background: #f5f5f5;
-        }
-
-        a {
-            color: black;
-        }
-
-        #sidebar {
-            transform: translateX(-100%);
-        }
-
-        #sidebar.open {
-            transform: translateX(0);
-        }
-
-        #sidebar a {
-            text-decoration: none;
-            color: black;
-        }
-
-        #sidebar a:hover {
-            text-decoration: underline;
+            background: var(--primary-50);
+            transform: translateY(-1px);
         }
 
         #overlay {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            display: none;
+            background: rgba(0, 0, 0, 0.2);
             z-index: 2000;
         }
 
-        #overlay.show {
-            display: block;
-        }
-
-        .page-content {
-            flex: 1;
-            padding: 0 30px 30px 70px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
+        #sidebar {
+            width: 220px;
+            background: linear-gradient(180deg, var(--primary-900), var(--primary-700)) !important;
+            min-height: 100vh;
+            padding: 20px;
             box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 3000;
+            box-shadow: 20px 0 60px rgba(0, 18, 41, 0.22);
         }
 
-        .main-content {
-            width: 100%;
-            max-width: 760px;
-            margin-top: 0 !important;
+        #sidebar h3 {
+            color: white;
+            margin-top: 45px;
         }
 
-        .title-sort-row {
+        #sidebar a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.88);
+            display: block;
+            padding: 10px 12px;
+            border-radius: 12px;
+            transition: 0.18s ease;
+        }
+
+        #sidebar a:hover,
+        #sidebar a.active {
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+        }
+
+        .page {
+            min-height: 100vh;
+            padding: 120px 42px 90px;
+        }
+
+        .dashboard {
+            max-width: 1480px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 34px;
+            align-items: start;
+        }
+
+        .main-column {
+            min-width: 0;
+        }
+
+        .top-row {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-top: 110px;
-            padding: 0 20px;
+            gap: 18px;
+            margin-bottom: 24px;
         }
 
-        .title-sort-row h1 {
-            font-size: 33px;
-            font-weight: 700;
-            margin: 0 0 20px 0;
-            white-space: nowrap;
+        .title-block h1 {
+            margin: 0;
+            font-size: 40px;
+            letter-spacing: -1px;
+            font-weight: 800;
         }
 
-        .actions-right {
+        .title-block p {
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-size: 16px;
+        }
+
+        .top-actions {
             display: flex;
+            gap: 14px;
+        }
+
+        .round-btn {
+            width: 58px;
+            height: 58px;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: white;
+            color: var(--blue);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            font-size: 21px;
+            transition: 0.2s ease;
+        }
+
+        .round-btn:hover {
+            background: var(--blue);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .add-strip {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            padding: 12px;
+            min-height: 66px;
+            display: flex;
+            align-items: center;
+            box-shadow: var(--shadow);
+            margin-bottom: 18px;
+        }
+
+        .quick-add {
+            border: none;
+            outline: none;
+            flex: 1;
+            padding: 0 10px;
+            font-size: 18px;
+            color: var(--text);
+            background: transparent;
+        }
+
+        .quick-add::placeholder { color: #8ba0ba; }
+
+        .add-strip-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .mini-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid var(--line);
+            background: white;
+            color: var(--blue);
+            cursor: pointer;
+            font-size: 17px;
+            transition: 0.2s ease;
+        }
+
+        .mini-circle:hover {
+            background: var(--blue);
+            color: white;
+        }
+
+        .search-panel {
+            display: none;
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            padding: 12px;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow);
             align-items: center;
             gap: 10px;
         }
 
-        .search-wrapper,
-        .sort-wrapper {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 0;
-        }
-
-        .sort-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 1px solid #e3e3e3;
-            background: white;
+        .search-panel.show {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: 0.2s;
-            flex-shrink: 0;
         }
 
-        .sort-btn:hover {
-            background: #f5f5f5;
-        }
-
-        .sort-btn i {
-            font-size: 15px;
-            color: #222;
-        }
-
-        .search-tooltip,
-        .sort-tooltip {
-            position: absolute;
-            top: 48px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #111;
-            color: white;
-            font-size: 12px;
-            padding: 8px 12px;
-            border-radius: 10px;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: 0.2s;
-            z-index: 2000;
-        }
-
-        .search-wrapper:hover .search-tooltip,
-        .sort-wrapper:hover .sort-tooltip {
-            opacity: 1;
-        }
-
-        .sort-menu {
-            display: none;
-            position: absolute;
-            top: 52px;
-            right: 0;
-            min-width: 190px;
-            background: white;
-            border: 1px solid #e5e5e5;
-            border-radius: 14px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            padding: 8px;
-            z-index: 2500;
-        }
-
-        .sort-menu.show,
-        #sortMenu.show {
-            display: block;
-        }
-
-        .sort-menu a {
-            display: block;
-            text-decoration: none;
-            color: #111;
-            font-size: 14px;
-            padding: 10px 12px;
-            border-radius: 10px;
-        }
-
-        .sort-menu a:hover {
-            background: #f5f5f5;
-        }
-
-        .back-arrow {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 25px;
-            width: 36px;
-            height: 36px;
-            color: black;
-            text-decoration: none;
-            border: none;
+        .search-panel i {
+            color: var(--blue);
             font-size: 18px;
+            margin-left: 8px;
         }
 
-        .back-arrow:hover {
-            background: #f5f5f5;
+        .search-panel input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 17px;
+            color: var(--text);
+            background: transparent;
+            padding: 10px;
         }
 
-        .quick-add-box {
-            border: 1px solid #e5e5e5;
-            border-radius: 16px;
-            padding: 14px 16px;
-            margin-bottom: 20px;
-            transition: all 0.25s ease;
-            background: #fff;
-        }
-
-        .quick-add-top {
+        .search-panel button {
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: var(--soft-blue);
+            color: var(--blue);
+            cursor: pointer;
+            font-size: 16px;
             display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            gap: 6px;
+            align-items: center;
+            justify-content: center;
         }
 
-        .quick-add-title {
-            width: 100%;
+        .search-panel button:hover {
+            background: var(--blue);
+            color: white;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 30px;
+            margin: 14px 0 18px;
+            color: #48586e;
+        }
+
+        .tab {
             border: none;
-            outline: none;
-            font-size: 16px;
-            padding: 6px 4px;
+            background: transparent;
+            color: inherit;
+            cursor: pointer;
+            padding: 0 0 10px;
+            font-size: 15px;
+            border-bottom: 2px solid transparent;
         }
 
-        .note-extra {
-            display: none;
+        .tab.active {
+            color: #1f6ed4;
+            border-bottom-color: #1f6ed4;
+            font-weight: 700;
         }
 
-        .quick-add-box.expanded .note-extra {
-            display: block;
-        }
-
-        .divider {
-            height: 1px;
-            background: #eee;
-            margin: 6px 0;
-        }
-
-        .quick-add-description {
-            width: 100%;
-            border: none;
-            outline: none;
-            resize: vertical;
-            min-height: 60px;
-            font-size: 16px;
-            color: #444;
-            padding: 6px 4px;
-            box-sizing: border-box;
-        }
-
-        .hint-text {
-            font-size: 13px;
-            color: #aaa;
-            font-style: italic;
+        .notes-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 18px;
         }
 
         .note-card {
             background: white;
-            border: 1px solid #eee;
-            border-radius: 16px;
-            padding: 14px 16px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            transition: 0.2s;
-        }
-
-        .note-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-        }
-
-        .note-row {
+            border: 1px solid var(--line);
+            border-left: 5px solid var(--blue2);
+            border-radius: 18px;
+            padding: 18px 22px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 18px;
-        }
-
-        .note-left {
-            display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 12px;
-            flex: 1;
-        }
-
-        .drag-handle {
-            width: 16px;
-            color: #b8b8b8;
-            cursor: grab;
-            opacity: 0;
-            transition: opacity 0.15s ease, color 0.15s ease;
-            margin-top: 2px;
-            user-select: none;
-        }
-
-        .note-card:hover .drag-handle {
-            opacity: 1;
-        }
-
-        .drag-handle:hover {
-            color: #666;
-        }
-
-        .drag-handle:active {
-            cursor: grabbing;
+            box-shadow: var(--shadow);
+            min-height: 120px;
         }
 
         .note-checkbox {
-            width: 17px;
-            height: 17px;
-            cursor: pointer;
-            margin-top: 2px;
+            display: none;
         }
 
-        .note-content {
-            flex: 1;
+        .note-card.pinned .note-checkbox {
+            background: var(--blue);
+            border-color: var(--blue);
         }
 
-        .note-title {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 4px;
+        .note-card.pinned .note-checkbox::after {
+            content: "★";
+            font-size: 12px;
         }
 
         .note-body {
-            font-size: 14px;
-            color: #444;
-            line-height: 1.3;
-            white-space: pre-wrap;
+            min-width: 0;
         }
 
-        .note-footer {
+        .note-body h3 {
+            margin: 0 0 8px;
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .note-body p {
+            margin: 0 0 12px;
+            color: var(--muted);
+            white-space: pre-wrap;
+            line-height: 1.45;
+            max-height: 60px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .chips {
             display: flex;
-            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 10px;
+            background: var(--soft-blue);
+            border: 1px solid #cceeff;
+            border-radius: 999px;
+            color: #135b8d;
+            font-size: 13px;
+        }
+
+        .chip .dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: #28bde8;
+        }
+
+        .note-thumb-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 56px);
+            gap: 6px;
             margin-top: 10px;
         }
 
-        .note-actions {
+        .note-thumb-grid img {
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+        }
+
+        .image-note-preview {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 1px solid var(--line);
+            cursor: pointer;
+        }
+
+        .card-actions {
             display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: auto;
+        }
+
+        .card-actions button {
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            cursor: pointer;
+            background: #f3f9ff;
+            color: var(--blue);
+        }
+
+        .card-actions button.delete {
+            color: var(--danger);
+            background: #fff3f3;
+        }
+
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .panel-card {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .panel-title {
+            padding: 22px 26px;
+            background: linear-gradient(180deg, #cde5ff, #dcedff);
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .panel-body {
+            padding: 24px 26px;
+        }
+
+        .bar-chart {
+            height: 145px;
+            border-top: 1px solid var(--line);
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 12px;
+            padding-top: 18px;
+        }
+
+        .bar-item {
+            text-align: center;
+            color: #856b63;
+            font-size: 13px;
+        }
+
+        .bar {
+            width: 28px;
+            border-radius: 8px 8px 0 0;
+            background: #cfeafa;
+            margin: 0 auto 9px;
+            min-height: 18px;
+        }
+
+        .bar.active { background: #5fbfe9; }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 11px 0;
+            font-size: 16px;
+        }
+
+        .summary-row strong { color: var(--text); }
+        .summary-row.danger { color: #dc2626; }
+
+        .empty-state {
+            background: white;
+            border: 1px dashed #bcd7f1;
+            border-radius: 20px;
+            padding: 54px 24px;
+            text-align: center;
+            color: var(--muted);
+            box-shadow: var(--shadow);
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            color: var(--blue);
+            margin-bottom: 18px;
+        }
+
+        .add-menu,
+        .image-choice-menu {
+            position: fixed;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 2100;
+        }
+
+        .add-menu.show,
+        .image-choice-menu.show { display: flex; }
+
+        .add-menu button,
+        .image-choice-menu button {
+            border: 1px solid var(--line);
+            background: white;
+            color: var(--blue);
+            border-radius: 16px;
+            padding: 14px 18px;
+            min-width: 155px;
+            cursor: pointer;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 700;
+            box-shadow: var(--shadow);
+            transition: 0.2s ease;
+        }
+
+        .add-menu button:hover,
+        .image-choice-menu button:hover {
+            background: var(--blue);
+            color: white;
+        }
+
+        .editor,
+        .image-editor {
+            display: none;
+            min-height: 100vh;
+            background:
+                    radial-gradient(circle at top left, rgba(173, 216, 255, .22), transparent 35%),
+                    var(--bg);
+            padding: 210px 36px 44px;
+        }
+
+        .editor.show,
+        .image-editor.show { display: block; }
+
+        .editor-shell {
+            max-width: 960px;
+            margin: 0 auto;
+            background: white;
+            border: 1px solid var(--line);
+            border-top: 5px solid var(--blue2);
+            border-radius: 26px;
+            padding: 34px;
+            box-shadow: var(--shadow);
+        }
+
+        .editor-top {
+            position: fixed;
+            top: 76px;
+            left: 0;
+            right: 0;
+            height: 86px;
+            background:
+                    radial-gradient(circle at top left, rgba(173, 216, 255, .22), transparent 35%),
+                    var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 36px;
+            z-index: 3000;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .icon-btn {
+            border: 1px solid var(--line);
+            background: white;
+            width: 56px;
+            height: 56px;
+            border-radius: 18px;
+            cursor: pointer;
+            color: var(--blue);
+            font-size: 21px;
+            box-shadow: var(--shadow);
+            transition: 0.2s ease;
+        }
+
+        .icon-btn:hover {
+            background: var(--blue);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .editor-page-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text);
+            margin-left: 14px;
+        }
+
+        .editor-left {
+            display: flex;
+            align-items: center;
             gap: 12px;
         }
 
-        .note-actions a {
-            color: black;
-            text-decoration: none;
-            font-size: 15px;
-            width: 32px;
-            height: 32px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-        }
+        .editor-actions { display: flex; gap: 14px; }
 
-        .note-actions a:hover {
-            background: #f5f5f5;
-        }
-
-        .save-edit-btn {
+        .editor input.title-input,
+        .image-editor input {
+            width: 100%;
             border: none;
-            background: black;
-            color: white;
-            padding: 10px 18px;
-            border-radius: 10px;
-            font-size: 15px;
-            cursor: pointer;
+            outline: none;
+            font-size: 44px;
+            font-weight: 800;
+            margin-bottom: 26px;
+            color: var(--text);
+            background: transparent;
         }
 
-        .save-edit-btn:hover {
-            background: #222;
+        .editor textarea {
+            width: 100%;
+            min-height: 360px;
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 24px;
+            line-height: 1.65;
+            color: var(--text);
+            background: transparent;
         }
 
-        .completed-section {
-            border-top: 1px solid #e9e9e9;
-            margin-top: 14px;
-            padding-top: 12px;
-        }
-
-        .section-toggle {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-
-        .section-toggle i {
-            font-size: 12px;
-            transition: transform 0.2s ease;
-        }
-
-        .section-toggle.open i {
-            transform: rotate(90deg);
-        }
-
-        .completed-text {
-            color: gray !important;
-            text-decoration: line-through;
-        }
-
-        .empty-box {
-            margin-top: 50px;
-            text-align: center;
-            color: #777;
-        }
-
-        .empty-box i {
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-
-        .note-card.drag-source-hidden {
-            opacity: 0;
-        }
-
-        .drag-placeholder {
-            border: 1px dashed #cfcfcf;
-            border-radius: 12px;
-            background: #fafafa;
-            margin: 4px 0;
-        }
-
-        .drag-floating {
-            position: fixed;
-            z-index: 9999;
-            pointer-events: none;
-            width: 760px;
-            max-width: calc(100vw - 120px);
-            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
-            border-radius: 16px;
-            background: white;
-            opacity: 0.96;
-        }
-
-        .search-overlay {
+        .images-grid {
             display: none;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .image-item {
+            position: relative;
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 16px;
+            border: 1px solid var(--line);
+            background: #f9fafb;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            border: none;
+            background: rgba(0,0,0,.75);
+            color: white;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        #textPhotoInput,
+        #imagePhotoInput,
+        #imageCameraInput {
+            display: none;
+        }
+
+        .camera-modal,
+        .delete-modal {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 5000;
-        }
-
-        .search-box {
-            background: white;
-            width: 700px;
-            max-width: 92%;
-            margin: 120px auto;
-            height: 54px;
-            padding: 4px 16px;
-            display: flex;
+            background: rgba(0,0,0,.45);
+            display: none;
             align-items: center;
-            border-radius: 14px;
-            border: 1px solid #e5e5e5;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
         }
 
-        .search-box input,
-        #notesSearchInput {
+        .camera-box {
+            width: min(520px, 100%);
+            background: white;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .camera-box video {
             width: 100%;
-            border: none !important;
-            outline: none !important;
-            box-shadow: none !important;
-            background: transparent !important;
-            font-size: 16px;
+            max-height: 520px;
+            background: black;
+            display: block;
+            object-fit: cover;
+        }
+
+        .camera-actions,
+        .delete-actions {
+            display: flex;
+            gap: 10px;
+            padding: 14px;
+        }
+
+        .camera-actions button,
+        .delete-actions button {
+            flex: 1;
+            border: none;
+            border-radius: 14px;
+            padding: 13px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .capture-btn,
+        .danger {
+            background: var(--blue);
+            color: white;
+        }
+
+        .danger { background: var(--danger); }
+
+        .close-btn,
+        .cancel {
+            background: #f4f4f5;
+            color: var(--text);
+        }
+
+        .delete-box {
+            background: white;
+            width: 310px;
+            border-radius: 22px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .delete-box i {
+            background: rgba(13, 90, 167, 0.15);
+            color: #0d5aa7; /* blue */
+        }
+
+        .delete-actions .danger {
+            background: #0d5aa7; /* blue */
+            color: white;
+        }
+
+        .delete-actions .danger:hover {
+            background: #084a8c;
+        }
+
+        .delete-actions .cancel {
+            background: #e6f0fb;
+            color: #0d5aa7;
+        }
+
+        .delete-actions .cancel:hover {
+            background: #d2e6fb;
+        }
+
+        .hide { display: none; }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 28px;
+            transform: translateX(-50%);
+            background: var(--text);
+            color: white;
+            padding: 13px 18px;
+            border-radius: 999px;
+            display: none;
+            z-index: 5000;
+            font-size: 14px;
+        }
+
+        @media (max-width: 1000px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .side-panel {
+                display: none;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .page { padding: 105px 18px 110px; }
+            .top-row { align-items: flex-start; flex-direction: column; }
+            .title-block h1 { font-size: 34px; }
+            .add-strip { flex-direction: column; align-items: stretch; }
+            .add-strip-icons { justify-content: flex-end; }
+            .note-card { grid-template-columns: 1fr; }
+            .note-checkbox { display: none; }
+            .editor input.title-input,
+            .image-editor input { font-size: 34px; }
         }
     </style>
 </head>
 
 <body>
 
-<button class="menu-global" onclick="toggleSidebar()">
+<div id="overlay" onclick="toggleSidebar()"></div>
+
+<button class="menu-global" onclick="toggleSidebar()" aria-label="Open menu">
     <i class="fa-solid fa-bars"></i>
 </button>
 
-<div style="display:flex; min-height:100vh; position:relative;">
-    <div id="sidebar"
-         style="width:220px; background:#f5f5f5; min-height:100vh; padding:20px; box-sizing:border-box; position:fixed; top:0; left:0; transform:translateX(-100%); transition:transform 0.3s ease; z-index:3000;">
-        <h3 style="margin-top:45px;">Menu</h3>
+<div id="sidebar">
+    <h3 style="margin-top:45px;">Menu</h3>
 
-        <div style="margin-top:15px;">
-            <a href="/today"><i class="fa-solid fa-calendar-day"></i> Today </a>
+    <div style="margin-top:15px;">
+        <a href="/today"><i class="fa-solid fa-calendar-day"></i> Today</a>
+    </div>
+
+    <div style="margin-top:15px;">
+        <a href="/tasks"><i class="fa-solid fa-list"></i> All Tasks</a>
+    </div>
+
+    <div style="margin-top:15px;">
+        <a href="/priorities"><i class="fa-solid fa-filter"></i> Filter by priority</a>
+    </div>
+
+    <div style="margin-top:15px;">
+        <a href="/categories"><i class="fa-solid fa-layer-group"></i> Categories</a>
+    </div>
+
+    <div style="margin-top:15px;">
+        <a href="/upcoming"><i class="fa-solid fa-calendar"></i> Upcoming</a>
+    </div>
+
+    <div style="margin-top:15px;">
+        <a href="/notes"><i class="fa-solid fa-sticky-note"></i> Notes</a>
+    </div>
+
+    <div style="margin-top:15px;">
+        <a href="/shopping"><i class="fa-solid fa-cart-shopping"></i> Shopping</a>
+    </div>
+</div>
+
+<main id="homePage" class="page">
+    <section class="dashboard">
+        <div class="main-column">
+            <div class="top-row">
+                <div class="title-block">
+                    <h1>Notes</h1>
+                </div>
+
+                <div class="top-actions">
+                    <button class="round-btn" onclick="searchNotes()" title="Search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                    <button class="round-btn" onclick="toggleAddMenu()" title="Add">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+
+                </div>
+            </div>
+            <div id="searchPanel" class="search-panel">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input id="searchInput" type="text" placeholder="Search notes..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" oninput="renderNotes()">
+                <button onclick="clearSearch()" title="Clear search">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="tabs">
+                <button id="tabAll" class="tab active" onclick="setFilter('all')">All Notes (0)</button>
+                <button id="tabText" class="tab" onclick="setFilter('text')">Text (0)</button>
+                <button id="tabImages" class="tab" onclick="setFilter('image')">Images (0)</button>
+                <button id="tabPinned" class="tab" onclick="setFilter('pinned')">⭐ Pinned (0)</button>
+            </div>
+
+            <div id="emptyState" class="empty-state"></div>
+            <div id="notesList" class="notes-list"></div>
+        </div>
+    </section>
+
+    <div id="addMenu" class="add-menu">
+        <button onclick="chooseText()"><i class="fa-solid fa-pen"></i> Text</button>
+        <button onclick="openImageChoices()"><i class="fa-solid fa-image"></i> Image</button>
+    </div>
+
+    <div id="imageChoiceMenu" class="image-choice-menu">
+        <button onclick="chooseImageNote('photo')"><i class="fa-solid fa-photo-film"></i> Photo</button>
+        <button onclick="chooseImageNote('camera')"><i class="fa-solid fa-camera"></i> Camera</button>
+    </div>
+</main>
+
+<section id="textEditorPage" class="editor">
+    <div class="editor-top">
+        <div class="editor-left">
+            <button class="icon-btn" onclick="saveTextNoteAndBack()" aria-label="Back">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <span class="editor-page-title">Add Text Note</span>
         </div>
 
-        <div style="margin-top:20px;">
-            <a href="/tasks"><i class="fa-solid fa-list"></i> All Tasks</a>
-        </div>
-
-        <div style="margin-top:15px;">
-            <a href="/priorities"><i class="fa-solid fa-filter"></i> Filter by priority</a>
-        </div>
-
-        <div style="margin-top:15px;">
-            <a href="/categories"><i class="fa-solid fa-layer-group"></i> Categories</a>
-        </div>
-
-        <div style="margin-top:15px;">
-            <a href="/upcoming"><i class="fa-solid fa-calendar"></i> Upcoming</a>
-        </div>
-
-        <div style="margin-top:15px;">
-            <a href="/notes"><i class="fa-solid fa-sticky-note"></i> Notes</a>
-        </div>
-
-        <div style="margin-top:15px;">
-            <a href="/purchases"><i class="fa-solid fa-cart-shopping"></i> Shopping</a>
+        <div class="editor-actions">
+            <button class="icon-btn" onclick="document.getElementById('textPhotoInput').click()" title="Add photo">
+                <i class="fa-solid fa-image"></i>
+            </button>
+            <button class="icon-btn" onclick="toggleTextPin()" title="Pin note">
+                <i id="textPinIcon" class="fa-regular fa-star"></i>
+            </button>
+            <button class="icon-btn" onclick="saveTextNoteAndBack()" title="Save note">
+                <i class="fa-solid fa-check"></i>
+            </button>
         </div>
     </div>
 
-    <div id="overlay" onclick="toggleSidebar()"></div>
+    <div class="editor-shell">
+        <input id="textNoteTitle" class="title-input" type="text" placeholder="Note title" autocomplete="off">
+        <textarea id="textNoteText" placeholder="Start writing..."></textarea>
+        <input id="textPhotoInput" type="file" accept="image/*" multiple onchange="handleTextImage(event)">
+        <div id="textImagePreview" class="images-grid"></div>
+    </div>
+</section>
 
-    <div class="page-content">
-        <div class="main-content">
+<section id="imageEditorPage" class="image-editor">
+    <div class="editor-top">
+        <div class="editor-left">
+            <button class="icon-btn" onclick="saveImageNoteAndBack()" aria-label="Back">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <span class="editor-page-title">Add Image Note</span>
+        </div>
 
-            <div class="title-sort-row">
-                <div>
-                    <h1 th:text="${isSearch} ? 'Search results for: ' + ${keyword} : 'Notes'"></h1>
+        <div class="editor-actions">
+            <button class="icon-btn" onclick="pickImage('photo')" title="Add photo">
+                <i class="fa-solid fa-image"></i>
+            </button>
+            <button class="icon-btn" onclick="toggleImagePin()" title="Pin image">
+                <i id="imagePinIcon" class="fa-regular fa-star"></i>
+            </button>
+            <button class="icon-btn" onclick="saveImageNoteAndBack()" title="Save image">
+                <i class="fa-solid fa-check"></i>
+            </button>
+        </div>
+    </div>
 
-                    <a th:if="${isSearch}" href="/notes" class="back-arrow">
-                        <i class="fa fa-arrow-left"></i>
-                    </a>
-                </div>
+    <div class="editor-shell">
+        <input id="imageNoteTitle" type="text" placeholder="Image title" autocomplete="off">
+        <input id="imagePhotoInput" type="file" accept="image/*" multiple onchange="handleImageNoteFile(event)">
+        <input id="imageCameraInput" type="file" accept="image/*" capture="environment" onchange="handleImageNoteFile(event)">
+        <div id="imagePagePreview" class="images-grid"></div>
+    </div>
+</section>
 
-                <div class="actions-right">
-                    <div class="search-wrapper">
-                        <button type="button" class="sort-btn" onclick="openNotesSearch(event)">
-                            <i class="fa fa-search"></i>
-                        </button>
-                        <div class="search-tooltip">Search</div>
-                    </div>
-
-                    <div class="sort-wrapper">
-                        <button type="button" class="sort-btn" onclick="toggleSortMenu(event)">
-                            <i class="fa-solid fa-arrow-up-wide-short"></i>
-                        </button>
-
-                        <div class="sort-tooltip">Sort notes</div>
-
-                        <div id="sortMenu" class="sort-menu">
-                            <a th:href="${isSearch} ? @{/notes(keyword=${keyword}, sort='newest')} : @{/notes(sort='newest')}">
-                                Newest
-                            </a>
-                            <a th:href="${isSearch} ? @{/notes(keyword=${keyword}, sort='oldest')} : @{/notes(sort='oldest')}">
-                                Oldest
-                            </a>
-                            <a th:href="${isSearch} ? @{/notes(keyword=${keyword}, sort='az')} : @{/notes(sort='az')}">
-                                A to Z
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <form th:if="${!isSearch}"
-                  th:action="@{/notes}"
-                  th:object="${note}"
-                  method="post"
-                  class="quick-add-box"
-                  id="noteBox">
-
-                <input type="hidden" th:field="*{id}">
-
-                <div class="quick-add-top">
-                    <input type="text"
-                           th:field="*{title}"
-                           th:placeholder="${editMode} ? 'Update note...' : 'Add a note...'"
-                           class="quick-add-title"
-                           id="noteTitle"
-                           autocomplete="off"
-                           required>
-                </div>
-
-                <div id="noteExtra" class="note-extra">
-                    <div class="divider"></div>
-
-                    <textarea th:field="*{content}"
-                              placeholder="Description..."
-                              class="quick-add-description"
-                              id="noteDescription"></textarea>
-
-                    <div class="hint-text">Press Enter in title to save</div>
-                </div>
-            </form>
-
-            <div th:each="n : ${notes}" class="note-card" th:data-id="${n.id}">
-                <div class="view-mode">
-                    <div class="note-row">
-                        <div class="note-left">
-                            <span class="drag-handle" title="Move note">
-                                <i class="fa-solid fa-grip-lines"></i>
-                            </span>
-
-                            <form th:action="@{/notes/toggle/{id}(id=${n.id})}" method="post" style="margin:0;">
-                                <input type="checkbox"
-                                       class="note-checkbox"
-                                       th:checked="${n.completed}"
-                                       onchange="this.form.submit()">
-                            </form>
-
-                            <div class="note-content">
-                                <div class="note-title" th:text="${n.title}"></div>
-                                <div class="note-body" th:text="${n.content}"></div>
-                            </div>
-                        </div>
-
-                        <div class="note-actions">
-                            <a href="#" onclick="editNote(this); return false;">
-                                <i class="fa-solid fa-pen"></i>
-                            </a>
-
-                            <a th:href="@{/notes/delete/{id}(id=${n.id})}">
-                                <i class="fa-solid fa-xmark"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="edit-mode" style="display:none;">
-                    <input type="text"
-                           class="quick-add-title edit-title"
-                           th:value="${n.title}"
-                           onkeydown="saveEditOnEnter(event, this)"
-                           required>
-
-                    <div class="divider"></div>
-
-                    <textarea class="quick-add-description edit-content"
-                              placeholder="Description..."
-                              th:text="${n.content}"></textarea>
-
-                    <div class="note-footer">
-                        <button type="button"
-                                class="save-edit-btn"
-                                th:attr="onclick=|saveEdit(this, ${n.id})|">
-                            Save
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div th:if="${isSearch and #lists.isEmpty(notes)}" class="empty-box">
-                <i class="fa fa-search"></i>
-                <p>No notes found for "<span th:text="${keyword}"></span>"</p>
-            </div>
-
-            <div class="completed-section" th:if="${!isSearch and completedCount > 0}">
-                <div class="section-toggle" onclick="toggleCompletedNotes()">
-                    <i id="completedArrow" class="fa-solid fa-chevron-right"></i>
-                    <span>Completed</span>
-                    <span th:text="${completedCount}"></span>
-                </div>
-
-                <div id="completedNotesList" style="display:none;">
-                    <div th:each="n : ${completedNotes}" class="note-card completed-note">
-                        <div class="note-row">
-                            <div class="note-left">
-                                <span class="drag-handle">
-                                    <i class="fa-solid fa-grip-lines"></i>
-                                </span>
-
-                                <form th:action="@{/notes/toggle/{id}(id=${n.id})}" method="post" style="margin:0;">
-                                    <input type="checkbox"
-                                           class="note-checkbox"
-                                           checked
-                                           onchange="this.form.submit()">
-                                </form>
-
-                                <div class="note-content">
-                                    <div class="note-title completed-text" th:text="${n.title}"></div>
-                                    <div class="note-body completed-text" th:text="${n.content}"></div>
-                                </div>
-                            </div>
-
-                            <div class="note-actions">
-                                <a th:href="@{/notes/delete/{id}(id=${n.id})}">
-                                    <i class="fa-solid fa-xmark"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+<div id="cameraModal" class="camera-modal">
+    <div class="camera-box">
+        <video id="cameraVideo" autoplay playsinline></video>
+        <div class="camera-actions">
+            <button class="capture-btn" onclick="captureFromCamera()">
+                <i class="fa-solid fa-camera"></i> Capture
+            </button>
+            <button class="close-btn" onclick="closeCamera()">Cancel</button>
         </div>
     </div>
 </div>
 
-<div id="notesSearchOverlay" class="search-overlay">
-    <div class="search-box">
-        <input type="text"
-               id="notesSearchInput"
-               placeholder="Search notes...">
+<div id="deleteModal" class="delete-modal">
+    <div class="delete-box">
+        <i class="fa-solid fa-trash"></i>
+        <h3>Delete note?</h3>
+        <p>This note will be removed from your list.</p>
+        <div class="delete-actions">
+            <button class="danger" onclick="confirmDelete()">Delete</button>
+            <button class="cancel" onclick="closeDelete()">Cancel</button>
+        </div>
     </div>
 </div>
+
+<div id="toast" class="toast"></div>
 
 <script>
+    let notes = JSON.parse(localStorage.getItem("notes")) || [];
+    let editingIndex = null;
+    let deleteIndex = null;
+    let currentFilter = "all";
+
+    let textPinned = false;
+    let textImages = [];
+
+    let imagePinned = false;
+    let imageImages = [];
+    let cameraStream = null;
+
+    function saveStorage() {
+        localStorage.setItem("notes", JSON.stringify(notes));
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.style.display = "block";
+        setTimeout(() => toast.style.display = "none", 1400);
+    }
+
+    function searchNotes() {
+        const panel = document.getElementById("searchPanel");
+        const input = document.getElementById("searchInput");
+
+        panel.classList.toggle("show");
+
+        if (panel.classList.contains("show")) {
+            setTimeout(() => input.focus(), 80);
+        } else {
+            input.value = "";
+
+            document.addEventListener("click", function(e) {
+                const searchPanel = document.getElementById("searchPanel");
+                const searchInput = document.getElementById("searchInput");
+                const addMenu = document.getElementById("addMenu");
+                const imageChoiceMenu = document.getElementById("imageChoiceMenu");
+                const searchButton = document.querySelector('button[onclick="searchNotes()"]');
+                const addButton = document.querySelector('button[onclick="toggleAddMenu()"]');
+
+                if (
+                    searchPanel &&
+                    searchPanel.classList.contains("show") &&
+                    !searchPanel.contains(e.target) &&
+                    searchButton &&
+                    !searchButton.contains(e.target)
+                ) {
+                    searchPanel.classList.remove("show");
+                    searchInput.value = "";
+                    renderNotes();
+                }
+
+                if (
+                    addMenu &&
+                    addMenu.classList.contains("show") &&
+                    !addMenu.contains(e.target) &&
+                    addButton &&
+                    !addButton.contains(e.target)
+                ) {
+                    addMenu.classList.remove("show");
+                    imageChoiceMenu.classList.remove("show");
+                }
+
+                if (
+                    imageChoiceMenu &&
+                    imageChoiceMenu.classList.contains("show") &&
+                    !imageChoiceMenu.contains(e.target) &&
+                    !addMenu.contains(e.target) &&
+                    addButton &&
+                    !addButton.contains(e.target)
+                ) {
+                    imageChoiceMenu.classList.remove("show");
+                }
+            });
+
+            renderNotes();
+        }
+    }
+
+    function clearSearch() {
+        const input = document.getElementById("searchInput");
+        input.value = "";
+
+        document.addEventListener("click", function(e) {
+            const searchPanel = document.getElementById("searchPanel");
+            const searchInput = document.getElementById("searchInput");
+            const addMenu = document.getElementById("addMenu");
+            const imageChoiceMenu = document.getElementById("imageChoiceMenu");
+            const searchButton = document.querySelector('button[onclick="searchNotes()"]');
+            const addButton = document.querySelector('button[onclick="toggleAddMenu()"]');
+
+            if (
+                searchPanel &&
+                searchPanel.classList.contains("show") &&
+                !searchPanel.contains(e.target) &&
+                searchButton &&
+                !searchButton.contains(e.target)
+            ) {
+                searchPanel.classList.remove("show");
+                searchInput.value = "";
+                renderNotes();
+            }
+
+            if (
+                addMenu &&
+                addMenu.classList.contains("show") &&
+                !addMenu.contains(e.target) &&
+                addButton &&
+                !addButton.contains(e.target)
+            ) {
+                addMenu.classList.remove("show");
+                imageChoiceMenu.classList.remove("show");
+            }
+
+            if (
+                imageChoiceMenu &&
+                imageChoiceMenu.classList.contains("show") &&
+                !imageChoiceMenu.contains(e.target) &&
+                !addMenu.contains(e.target) &&
+                addButton &&
+                !addButton.contains(e.target)
+            ) {
+                imageChoiceMenu.classList.remove("show");
+            }
+        });
+
+        renderNotes();
+        input.focus();
+    }
+
+    function setFilter(filter) {
+        currentFilter = filter;
+        document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+        if (filter === "all") document.getElementById("tabAll").classList.add("active");
+        if (filter === "text") document.getElementById("tabText").classList.add("active");
+        if (filter === "image") document.getElementById("tabImages").classList.add("active");
+        if (filter === "pinned") document.getElementById("tabPinned").classList.add("active");
+
+        document.addEventListener("click", function(e) {
+            const searchPanel = document.getElementById("searchPanel");
+            const searchInput = document.getElementById("searchInput");
+            const addMenu = document.getElementById("addMenu");
+            const imageChoiceMenu = document.getElementById("imageChoiceMenu");
+            const searchButton = document.querySelector('button[onclick="searchNotes()"]');
+            const addButton = document.querySelector('button[onclick="toggleAddMenu()"]');
+
+            if (
+                searchPanel &&
+                searchPanel.classList.contains("show") &&
+                !searchPanel.contains(e.target) &&
+                searchButton &&
+                !searchButton.contains(e.target)
+            ) {
+                searchPanel.classList.remove("show");
+                searchInput.value = "";
+                renderNotes();
+            }
+
+            if (
+                addMenu &&
+                addMenu.classList.contains("show") &&
+                !addMenu.contains(e.target) &&
+                addButton &&
+                !addButton.contains(e.target)
+            ) {
+                addMenu.classList.remove("show");
+                imageChoiceMenu.classList.remove("show");
+            }
+
+            if (
+                imageChoiceMenu &&
+                imageChoiceMenu.classList.contains("show") &&
+                !imageChoiceMenu.contains(e.target) &&
+                !addMenu.contains(e.target) &&
+                addButton &&
+                !addButton.contains(e.target)
+            ) {
+                imageChoiceMenu.classList.remove("show");
+            }
+        });
+
+        renderNotes();
+    }
+
     function toggleSidebar() {
         var sidebar = document.getElementById("sidebar");
         var overlay = document.getElementById("overlay");
@@ -712,291 +1173,662 @@
         }
     }
 
-    document.addEventListener("click", function (event) {
-        const sortMenu = document.getElementById("sortMenu");
-        const sortWrapper = document.querySelector(".sort-wrapper");
-
-        if (sortMenu && sortWrapper && !sortWrapper.contains(event.target)) {
-            sortMenu.classList.remove("show");
-        }
-    });
-
-    function toggleSortMenu(event) {
-        event.stopPropagation();
-        document.getElementById("sortMenu").classList.toggle("show");
+    function closeSidebar() {
+        document.getElementById("sidebar").style.transform = "translateX(-100%)";
+        document.getElementById("overlay").style.display = "none";
     }
 
-    const noteBox = document.getElementById("noteBox");
-    const noteTitle = document.getElementById("noteTitle");
+    function positionMenuUnderAddButton(menu) {
+        const addButton = document.querySelector('button[onclick="toggleAddMenu()"]');
+        const rect = addButton.getBoundingClientRect();
 
-    if (noteBox && noteTitle) {
-        noteTitle.addEventListener("focus", () => {
-            noteBox.classList.add("expanded");
-        });
+        menu.style.top = (rect.bottom + 10) + "px";
+        menu.style.left = rect.left + "px";
+    }
 
-        document.addEventListener("click", function (e) {
-            if (!noteBox.contains(e.target) && noteTitle.value === "") {
-                noteBox.classList.remove("expanded");
+    function toggleAddMenu() {
+        const addMenu = document.getElementById("addMenu");
+        const imageChoiceMenu = document.getElementById("imageChoiceMenu");
+
+        imageChoiceMenu.classList.remove("show");
+
+        if (addMenu.classList.contains("show")) {
+            addMenu.classList.remove("show");
+            return;
+        }
+
+        positionMenuUnderAddButton(addMenu);
+        addMenu.classList.add("show");
+    }
+
+    function closeAddMenu() {
+        document.getElementById("addMenu").classList.remove("show");
+        document.getElementById("imageChoiceMenu").classList.remove("show");
+    }
+
+    function openImageChoices() {
+        const addMenu = document.getElementById("addMenu");
+        const imageChoiceMenu = document.getElementById("imageChoiceMenu");
+
+        addMenu.classList.remove("show");
+        positionMenuUnderAddButton(imageChoiceMenu);
+        imageChoiceMenu.classList.add("show");
+    }
+
+    function hideHome() {
+        document.getElementById("homePage").classList.add("hide");
+        document.querySelector(".menu-global").style.display = "none";
+        closeSidebar();
+        closeAddMenu();
+        window.scrollTo(0, 0);
+    }
+
+    function showHome() {
+        closeCamera();
+        document.getElementById("homePage").classList.remove("hide");
+        document.getElementById("textEditorPage").classList.remove("show");
+        document.getElementById("imageEditorPage").classList.remove("show");
+        document.querySelector(".menu-global").style.display = "flex";
+        editingIndex = null;
+
+        document.addEventListener("click", function(e) {
+            const searchPanel = document.getElementById("searchPanel");
+            const searchInput = document.getElementById("searchInput");
+            const addMenu = document.getElementById("addMenu");
+            const imageChoiceMenu = document.getElementById("imageChoiceMenu");
+            const searchButton = document.querySelector('button[onclick="searchNotes()"]');
+            const addButton = document.querySelector('button[onclick="toggleAddMenu()"]');
+
+            if (
+                searchPanel &&
+                searchPanel.classList.contains("show") &&
+                !searchPanel.contains(e.target) &&
+                searchButton &&
+                !searchButton.contains(e.target)
+            ) {
+                searchPanel.classList.remove("show");
+                searchInput.value = "";
+                renderNotes();
+            }
+
+            if (
+                addMenu &&
+                addMenu.classList.contains("show") &&
+                !addMenu.contains(e.target) &&
+                addButton &&
+                !addButton.contains(e.target)
+            ) {
+                addMenu.classList.remove("show");
+                imageChoiceMenu.classList.remove("show");
+            }
+
+            if (
+                imageChoiceMenu &&
+                imageChoiceMenu.classList.contains("show") &&
+                !imageChoiceMenu.contains(e.target) &&
+                !addMenu.contains(e.target) &&
+                addButton &&
+                !addButton.contains(e.target)
+            ) {
+                imageChoiceMenu.classList.remove("show");
             }
         });
 
-        noteTitle.addEventListener("keypress", function (e) {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                this.form.submit();
-            }
-        });
+        renderNotes();
     }
 
-    function editNote(el) {
-        const card = el.closest(".note-card");
-        card.querySelector(".view-mode").style.display = "none";
-
-        const edit = card.querySelector(".edit-mode");
-        edit.style.display = "block";
-
-        const input = edit.querySelector(".edit-title");
-        input.focus();
+    function chooseText() {
+        openTextEditor();
     }
 
-    function cancelEdit(el) {
-        const card = el.closest(".note-card");
-        card.querySelector(".edit-mode").style.display = "none";
-        card.querySelector(".view-mode").style.display = "block";
-    }
+    function openTextEditor(index = null) {
+        editingIndex = index;
+        hideHome();
 
-    function saveEdit(btn, id) {
-        const card = btn.closest(".note-card");
-        const title = card.querySelector(".edit-title").value;
-        const content = card.querySelector(".edit-content").value;
+        document.getElementById("textEditorPage").classList.add("show");
+        document.getElementById("imageEditorPage").classList.remove("show");
 
-        fetch(`/notes/update/${id}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: `title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}`
-        }).then(() => {
-            card.querySelector(".note-title").innerText = title;
-            card.querySelector(".note-body").innerText = content;
-            cancelEdit(btn);
-        });
-    }
-
-    function saveEditOnEnter(event, input) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            const card = input.closest(".note-card");
-            const saveBtn = card.querySelector(".save-edit-btn");
-            saveBtn.click();
-        }
-    }
-
-    document.addEventListener("click", function (event) {
-        const openedEdit = document.querySelector(".note-card .edit-mode[style*='block']");
-
-        if (openedEdit) {
-            const card = openedEdit.closest(".note-card");
-
-            if (!card.contains(event.target)) {
-                cancelEdit(openedEdit);
-            }
-        }
-    });
-
-    function toggleCompletedNotes() {
-        const list = document.getElementById("completedNotesList");
-        const arrow = document.getElementById("completedArrow");
-        const toggle = arrow.closest(".section-toggle");
-
-        if (list.style.display === "none") {
-            list.style.display = "block";
-            toggle.classList.add("open");
+        if (index !== null) {
+            document.getElementById("textNoteTitle").value = notes[index].title || "";
+            document.getElementById("textNoteText").value = notes[index].text || "";
+            textImages = notes[index].images || (notes[index].image ? [notes[index].image] : []);
+            textPinned = notes[index].pinned || false;
         } else {
-            list.style.display = "none";
-            toggle.classList.remove("open");
-        }
-    }
-
-    let activeNoteDrag = null;
-    let noteAutoScrollInterval = null;
-
-    function initNoteDrag() {
-        document.querySelectorAll(".drag-handle").forEach(handle => {
-            handle.addEventListener("mousedown", startNoteDrag);
-        });
-    }
-
-    function startNoteDrag(e) {
-        e.preventDefault();
-
-        const note = e.currentTarget.closest(".note-card");
-        const container = document.querySelector(".main-content");
-
-        if (!note || !container || note.classList.contains("completed-note")) return;
-
-        const rect = note.getBoundingClientRect();
-
-        const placeholder = document.createElement("div");
-        placeholder.className = "drag-placeholder";
-        placeholder.style.height = rect.height + "px";
-
-        const floating = note.cloneNode(true);
-        floating.classList.add("drag-floating");
-        floating.style.width = rect.width + "px";
-        floating.style.left = rect.left + "px";
-        floating.style.top = rect.top + "px";
-
-        document.body.appendChild(floating);
-
-        note.classList.add("drag-source-hidden");
-        note.parentNode.insertBefore(placeholder, note.nextSibling);
-
-        activeNoteDrag = {
-            source: note,
-            floating: floating,
-            placeholder: placeholder,
-            container: container,
-            offsetY: e.clientY - rect.top
-        };
-
-        document.addEventListener("mousemove", onNoteDrag);
-        document.addEventListener("mouseup", stopNoteDrag);
-    }
-
-    function startNoteAutoScroll(y) {
-        stopNoteAutoScroll();
-
-        noteAutoScrollInterval = setInterval(() => {
-            if (y < 120) window.scrollBy(0, -10);
-            if (y > window.innerHeight - 120) window.scrollBy(0, 10);
-        }, 16);
-    }
-
-    function stopNoteAutoScroll() {
-        if (noteAutoScrollInterval) {
-            clearInterval(noteAutoScrollInterval);
-            noteAutoScrollInterval = null;
-        }
-    }
-
-    function onNoteDrag(e) {
-        if (!activeNoteDrag) return;
-
-        const floating = activeNoteDrag.floating;
-        const source = activeNoteDrag.source;
-        const placeholder = activeNoteDrag.placeholder;
-        const container = activeNoteDrag.container;
-
-        startNoteAutoScroll(e.clientY);
-
-        floating.style.top = (e.clientY - activeNoteDrag.offsetY) + "px";
-
-        const items = Array.from(container.querySelectorAll(".note-card"))
-            .filter(item => item !== source && !item.classList.contains("completed-note"));
-
-        for (let item of items) {
-            const rect = item.getBoundingClientRect();
-
-            if (e.clientY < rect.top + rect.height / 2) {
-                container.insertBefore(placeholder, item);
-                return;
-            }
+            document.getElementById("textNoteTitle").value = "";
+            document.getElementById("textNoteText").value = "";
+            document.getElementById("textPhotoInput").value = "";
+            textImages = [];
+            textPinned = false;
         }
 
-        const completedSection = document.querySelector(".completed-section");
+        updateTextPinIcon();
+        updateTextImagePreview();
+        setTimeout(() => document.getElementById("textNoteTitle").focus(), 80);
+    }
 
-        if (completedSection) {
-            container.insertBefore(placeholder, completedSection);
+    function chooseImageNote(source) {
+        openImageEditor(null, source);
+    }
+
+    function openImageEditor(index = null, source = null) {
+        editingIndex = index;
+        hideHome();
+
+        document.getElementById("imageEditorPage").classList.add("show");
+        document.getElementById("textEditorPage").classList.remove("show");
+
+        if (index !== null) {
+            document.getElementById("imageNoteTitle").value = notes[index].title || "";
+            imageImages = notes[index].images || (notes[index].image ? [notes[index].image] : []);
+            imagePinned = notes[index].pinned || false;
         } else {
-            container.appendChild(placeholder);
+            document.getElementById("imageNoteTitle").value = "";
+            document.getElementById("imagePhotoInput").value = "";
+            document.getElementById("imageCameraInput").value = "";
+            imageImages = [];
+            imagePinned = false;
         }
+
+        updateImagePinIcon();
+        updateImageNotePreview();
+
+        if (source) setTimeout(() => pickImage(source), 150);
     }
 
-    function stopNoteDrag() {
-        if (!activeNoteDrag) return;
-
-        stopNoteAutoScroll();
-
-        const source = activeNoteDrag.source;
-        const floating = activeNoteDrag.floating;
-        const placeholder = activeNoteDrag.placeholder;
-        const container = activeNoteDrag.container;
-
-        container.insertBefore(source, placeholder);
-        source.classList.remove("drag-source-hidden");
-
-        floating.remove();
-        placeholder.remove();
-
-        activeNoteDrag = null;
-
-        document.removeEventListener("mousemove", onNoteDrag);
-        document.removeEventListener("mouseup", stopNoteDrag);
-
-        saveNotesOrder();
+    function toggleTextPin() {
+        textPinned = !textPinned;
+        updateTextPinIcon();
     }
 
-    function saveNotesOrder() {
-        const ids = [];
+    function toggleImagePin() {
+        imagePinned = !imagePinned;
+        updateImagePinIcon();
+    }
 
-        document.querySelectorAll(".main-content > .note-card").forEach(card => {
-            const id = card.getAttribute("data-id");
-            if (id) ids.push(Number(id));
+    function updateTextPinIcon() {
+        document.getElementById("textPinIcon").className = textPinned ? "fa-solid fa-star" : "fa-regular fa-star";
+    }
+
+    function updateImagePinIcon() {
+        document.getElementById("imagePinIcon").className = imagePinned ? "fa-solid fa-star" : "fa-regular fa-star";
+    }
+
+    function handleTextImage(event) {
+        const files = Array.from(event.target.files);
+        if (files.length === 0) return;
+
+        files.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                textImages.push(e.target.result);
+                updateTextImagePreview();
+            };
+            reader.readAsDataURL(file);
         });
 
-        fetch("/notes/reorder", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(ids)
+        event.target.value = "";
+    }
+
+    function updateTextImagePreview() {
+        const preview = document.getElementById("textImagePreview");
+        preview.innerHTML = "";
+
+        if (textImages.length === 0) {
+            preview.style.display = "none";
+            return;
+        }
+
+        preview.style.display = "grid";
+
+        textImages.forEach((src, index) => {
+            const item = document.createElement("div");
+            item.className = "image-item";
+            item.innerHTML = `
+                <button class="remove-image" onclick="removeTextImage(${index})" type="button">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <img src="${src}" alt="Text note image">
+            `;
+            preview.appendChild(item);
         });
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
-        initNoteDrag();
-    });
-
-    function openNotesSearch(e) {
-        if (e) e.stopPropagation();
-
-        const overlay = document.getElementById("notesSearchOverlay");
-        const input = document.getElementById("notesSearchInput");
-
-        overlay.style.display = "block";
-
-        setTimeout(() => {
-            input.focus();
-        }, 100);
+    function removeTextImage(index) {
+        textImages.splice(index, 1);
+        updateTextImagePreview();
     }
 
-    function closeNotesSearch() {
-        document.getElementById("notesSearchOverlay").style.display = "none";
-    }
-
-    function doNotesSearch() {
-        const keyword = document.getElementById("notesSearchInput").value.trim();
-
-        if (keyword !== "") {
-            window.location.href = "/notes?keyword=" + encodeURIComponent(keyword);
+    function pickImage(source) {
+        if (source === "camera") {
+            openCamera();
+        } else {
+            document.getElementById("imagePhotoInput").click();
         }
     }
 
-    document.getElementById("notesSearchOverlay").addEventListener("click", function (e) {
-        if (e.target === this) {
-            closeNotesSearch();
+    async function openCamera() {
+        const modal = document.getElementById("cameraModal");
+        const video = document.getElementById("cameraVideo");
+
+        try {
+            cameraStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: { ideal: "environment" } },
+                audio: false
+            });
+
+            video.srcObject = cameraStream;
+            modal.style.display = "flex";
+        } catch (error) {
+            showToast("Camera not available");
+        }
+    }
+
+    function closeCamera() {
+        const modal = document.getElementById("cameraModal");
+        const video = document.getElementById("cameraVideo");
+
+        if (cameraStream) {
+            cameraStream.getTracks().forEach(track => track.stop());
+            cameraStream = null;
+        }
+
+        if (video) video.srcObject = null;
+        if (modal) modal.style.display = "none";
+    }
+
+    function captureFromCamera() {
+        const video = document.getElementById("cameraVideo");
+
+        if (!video.videoWidth || !video.videoHeight) {
+            showToast("Camera is loading");
+            return;
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        const context = canvas.getContext("2d");
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        imageImages.push(canvas.toDataURL("image/jpeg", 0.9));
+        updateImageNotePreview();
+        closeCamera();
+    }
+
+    function handleImageNoteFile(event) {
+        const files = Array.from(event.target.files);
+        if (files.length === 0) return;
+
+        files.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imageImages.push(e.target.result);
+                updateImageNotePreview();
+            };
+            reader.readAsDataURL(file);
+        });
+
+        event.target.value = "";
+    }
+
+    function updateImageNotePreview() {
+        const preview = document.getElementById("imagePagePreview");
+        preview.innerHTML = "";
+
+        if (imageImages.length === 0) {
+            preview.style.display = "none";
+            return;
+        }
+
+        preview.style.display = "grid";
+
+        imageImages.forEach((src, index) => {
+            const item = document.createElement("div");
+            item.className = "image-item";
+            item.innerHTML = `
+                <button class="remove-image" onclick="removeImageNoteImage(${index})" type="button">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <img src="${src}" alt="Image note">
+            `;
+            preview.appendChild(item);
+        });
+    }
+
+    function removeImageNoteImage(index) {
+        imageImages.splice(index, 1);
+        updateImageNotePreview();
+    }
+
+    function saveTextNoteAndBack() {
+        const title = document.getElementById("textNoteTitle").value.trim();
+        const text = document.getElementById("textNoteText").value.trim();
+
+        if (title !== "" || text !== "" || textImages.length > 0) {
+            const now = new Date();
+            const note = {
+                type: "text",
+                title: title || "Untitled",
+                text: text,
+                images: textImages,
+                pinned: textPinned,
+                date: now.toLocaleDateString(),
+                updatedAt: now.getTime()
+            };
+
+            if (editingIndex !== null) {
+                notes[editingIndex] = note;
+                showToast("Text note updated");
+            } else {
+                notes.push(note);
+                showToast("Text note added");
+            }
+
+            saveStorage();
+        }
+
+        showHome();
+    }
+
+    function saveImageNoteAndBack() {
+        const title = document.getElementById("imageNoteTitle").value.trim();
+
+        if (title !== "" || imageImages.length > 0) {
+            const now = new Date();
+            const note = {
+                type: "image",
+                title: title || "Image",
+                images: imageImages,
+                pinned: imagePinned,
+                date: now.toLocaleDateString(),
+                updatedAt: now.getTime()
+            };
+
+            if (editingIndex !== null) {
+                notes[editingIndex] = note;
+                showToast("Image note updated");
+            } else {
+                notes.push(note);
+                showToast("Image note added");
+            }
+
+            saveStorage();
+        }
+
+        showHome();
+    }
+
+    function getFilteredNotes() {
+        const keyword = document.getElementById("searchInput").value.toLowerCase().trim();
+
+        return notes
+            .map((note, index) => ({ ...note, originalIndex: index }))
+            .filter(note => {
+                const noteType = note.type || "text";
+
+                const typeOk =
+                    currentFilter === "all" ||
+                    (currentFilter === "text" && noteType === "text") ||
+                    (currentFilter === "image" && noteType === "image") ||
+                    (currentFilter === "pinned" && note.pinned);
+
+                const keywordOk =
+                    (note.title || "").toLowerCase().includes(keyword) ||
+                    (note.text || "").toLowerCase().includes(keyword);
+
+                return typeOk && keywordOk;
+            });
+    }
+
+    function renderTextImages(images, index) {
+        if (!images || images.length === 0) return "";
+
+        return `
+            <div class="note-thumb-grid" onclick="openTextEditor(${index})">
+                ${images.slice(0, 4).map(src => `<img src="${src}" alt="Text note image">`).join("")}
+            </div>
+        `;
+    }
+
+    function renderImageGrid(images, index) {
+        if (!images || images.length === 0) return "";
+
+        if (images.length === 1) {
+            return `<img class="image-note-preview" onclick="openImageEditor(${index})" src="${images[0]}" alt="Image note">`;
+        }
+
+        return `
+            <div class="note-thumb-grid" onclick="openImageEditor(${index})">
+                ${images.slice(0, 4).map(src => `<img src="${src}" alt="Image note">`).join("")}
+            </div>
+        `;
+    }
+
+    function renderNotes() {
+        const notesList = document.getElementById("notesList");
+        const emptyState = document.getElementById("emptyState");
+        const keyword = document.getElementById("searchInput").value.trim();
+        const filtered = getFilteredNotes();
+
+        document.getElementById("tabAll").textContent = `All Notes (${notes.length})`;
+        document.getElementById("tabText").textContent = `Text (${notes.filter(n => (n.type || "text") === "text").length})`;
+        document.getElementById("tabImages").textContent = `Images (${notes.filter(n => n.type === "image").length})`;
+        document.getElementById("tabPinned").textContent = `⭐ Pinned (${notes.filter(n => n.pinned).length})`;
+
+        notesList.innerHTML = "";
+
+        if (filtered.length === 0) {
+            emptyState.style.display = "block";
+            emptyState.innerHTML = keyword
+                ? `<i class="fa-solid fa-magnifying-glass"></i><h2>No notes found</h2><p>Try another word or clear the search box.</p>`
+                : `<i class="fa-regular fa-note-sticky"></i><h2>No notes yet</h2><p>Click + and choose Text or Image.</p>`;
+            return;
+        }
+
+        emptyState.style.display = "none";
+
+        filtered.forEach(note => {
+            const card = document.createElement("article");
+            const isImage = note.type === "image";
+            const images = note.images || (note.image ? [note.image] : []);
+
+            card.className = `note-card ${note.pinned ? "pinned" : ""}`;
+
+            card.innerHTML = `
+                <div style="display:flex; justify-content:flex-end; align-items:flex-start; gap:10px;">
+                    <div class="card-actions">
+                        <button onclick="togglePin(${note.originalIndex})" title="Pin"><i class="${note.pinned ? "fa-solid" : "fa-regular"} fa-star"></i></button>
+                        <button onclick="${isImage ? `openImageEditor(${note.originalIndex})` : `openTextEditor(${note.originalIndex})`}" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                        <button class="delete" onclick="deleteNote(${note.originalIndex})" title="Delete"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+
+                <div class="note-body">
+                    <h3 onclick="${isImage ? `openImageEditor(${note.originalIndex})` : `openTextEditor(${note.originalIndex})`}">${escapeHtml(note.title || (isImage ? "Image" : "Untitled"))}</h3>
+                    ${!isImage && note.text ? `<p onclick="openTextEditor(${note.originalIndex})">${escapeHtml(note.text)}</p>` : ""}
+                    ${isImage ? renderImageGrid(images, note.originalIndex) : renderTextImages(images, note.originalIndex)}
+                    <div class="chips">
+                        <span class="chip"><span class="dot"></span>${isImage ? "Image" : "Text"}</span>
+                        <span class="chip"><i class="fa-regular fa-calendar"></i>${note.date || ""}</span>
+                        ${images.length ? `<span class="chip"><i class="fa-solid fa-image"></i>${images.length} photo${images.length > 1 ? "s" : ""}</span>` : ""}
+                    </div>
+                </div>
+            `;
+
+            notesList.appendChild(card);
+        });
+    }
+
+    function togglePin(index) {
+        notes[index].pinned = !notes[index].pinned;
+        notes[index].updatedAt = Date.now();
+        saveStorage();
+
+        document.addEventListener("click", function(e) {
+            const searchPanel = document.getElementById("searchPanel");
+            const searchInput = document.getElementById("searchInput");
+            const addMenu = document.getElementById("addMenu");
+            const imageChoiceMenu = document.getElementById("imageChoiceMenu");
+            const searchButton = document.querySelector('button[onclick="searchNotes()"]');
+            const addButton = document.querySelector('button[onclick="toggleAddMenu()"]');
+
+            if (
+                searchPanel &&
+                searchPanel.classList.contains("show") &&
+                !searchPanel.contains(e.target) &&
+                searchButton &&
+                !searchButton.contains(e.target)
+            ) {
+                searchPanel.classList.remove("show");
+                searchInput.value = "";
+                renderNotes();
+            }
+
+            if (
+                addMenu &&
+                addMenu.classList.contains("show") &&
+                !addMenu.contains(e.target) &&
+                addButton &&
+                !addButton.contains(e.target)
+            ) {
+                addMenu.classList.remove("show");
+                imageChoiceMenu.classList.remove("show");
+            }
+
+            if (
+                imageChoiceMenu &&
+                imageChoiceMenu.classList.contains("show") &&
+                !imageChoiceMenu.contains(e.target) &&
+                !addMenu.contains(e.target) &&
+                addButton &&
+                !addButton.contains(e.target)
+            ) {
+                imageChoiceMenu.classList.remove("show");
+            }
+        });
+
+        renderNotes();
+    }
+
+    function deleteNote(index) {
+        deleteIndex = index;
+        document.getElementById("deleteModal").style.display = "flex";
+    }
+
+    function closeDelete() {
+        deleteIndex = null;
+        document.getElementById("deleteModal").style.display = "none";
+    }
+
+    function confirmDelete() {
+        if (deleteIndex === null) return;
+
+        notes.splice(deleteIndex, 1);
+        saveStorage();
+
+        document.addEventListener("click", function(e) {
+            const searchPanel = document.getElementById("searchPanel");
+            const searchInput = document.getElementById("searchInput");
+            const addMenu = document.getElementById("addMenu");
+            const imageChoiceMenu = document.getElementById("imageChoiceMenu");
+            const searchButton = document.querySelector('button[onclick="searchNotes()"]');
+            const addButton = document.querySelector('button[onclick="toggleAddMenu()"]');
+
+            if (
+                searchPanel &&
+                searchPanel.classList.contains("show") &&
+                !searchPanel.contains(e.target) &&
+                searchButton &&
+                !searchButton.contains(e.target)
+            ) {
+                searchPanel.classList.remove("show");
+                searchInput.value = "";
+                renderNotes();
+            }
+
+            if (
+                addMenu &&
+                addMenu.classList.contains("show") &&
+                !addMenu.contains(e.target) &&
+                addButton &&
+                !addButton.contains(e.target)
+            ) {
+                addMenu.classList.remove("show");
+                imageChoiceMenu.classList.remove("show");
+            }
+
+            if (
+                imageChoiceMenu &&
+                imageChoiceMenu.classList.contains("show") &&
+                !imageChoiceMenu.contains(e.target) &&
+                !addMenu.contains(e.target) &&
+                addButton &&
+                !addButton.contains(e.target)
+            ) {
+                imageChoiceMenu.classList.remove("show");
+            }
+        });
+
+        renderNotes();
+        showToast("Note deleted");
+        closeDelete();
+    }
+
+    function escapeHtml(value) {
+        return String(value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+
+    document.addEventListener("click", function(e) {
+        const searchPanel = document.getElementById("searchPanel");
+        const searchInput = document.getElementById("searchInput");
+        const addMenu = document.getElementById("addMenu");
+        const imageChoiceMenu = document.getElementById("imageChoiceMenu");
+        const searchButton = document.querySelector('button[onclick="searchNotes()"]');
+        const addButton = document.querySelector('button[onclick="toggleAddMenu()"]');
+
+        if (
+            searchPanel &&
+            searchPanel.classList.contains("show") &&
+            !searchPanel.contains(e.target) &&
+            searchButton &&
+            !searchButton.contains(e.target)
+        ) {
+            searchPanel.classList.remove("show");
+            searchInput.value = "";
+            renderNotes();
+        }
+
+        if (
+            addMenu &&
+            addMenu.classList.contains("show") &&
+            !addMenu.contains(e.target) &&
+            addButton &&
+            !addButton.contains(e.target)
+        ) {
+            addMenu.classList.remove("show");
+            imageChoiceMenu.classList.remove("show");
+        }
+
+        if (
+            imageChoiceMenu &&
+            imageChoiceMenu.classList.contains("show") &&
+            !imageChoiceMenu.contains(e.target) &&
+            !addMenu.contains(e.target) &&
+            addButton &&
+            !addButton.contains(e.target)
+        ) {
+            imageChoiceMenu.classList.remove("show");
         }
     });
 
-    document.getElementById("notesSearchInput").addEventListener("keydown", function (e) {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            doNotesSearch();
-        }
-
-        if (e.key === "Escape") {
-            closeNotesSearch();
-        }
-    });
+    renderNotes();
 </script>
 
 </body>
