@@ -62,18 +62,19 @@ body {
 
 .menu-global {
     position: fixed;
-    top: 15px;
-    left: 15px;
+    top: 20px;
+    left: 20px;
+    width: 46px;
+    height: 46px;
     font-size: 20px;
-    background: var(--surface-solid);
-    color: var(--primary-700);
-    border: 1px solid var(--border);
+    background: #ffffff;
+    color: #2563eb;
+    border: 1px solid #dbeafe;
     cursor: pointer;
-    z-index: 1500;
-    padding: 9px 11px;
+    z-index: 2000;
+    padding: 0;
     border-radius: 14px;
-    box-shadow: 0 10px 25px rgba(0, 62, 143, 0.10);
-    transition: 0.2s ease;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
 }
 
 .menu-global:hover {
@@ -947,29 +948,7 @@ body.tabs-mode .section-toggle {
     color: #7d8ca4;
 }
 
-#sidebar {
-    background: linear-gradient(180deg, var(--primary-900), var(--primary-700)) !important;
-    box-shadow: 20px 0 60px rgba(0, 18, 41, 0.22);
-}
 
-#sidebar h3 {
-    color: white;
-}
-
-#sidebar a {
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.88);
-    display: block;
-    padding: 10px 12px;
-    border-radius: 12px;
-    transition: 0.18s ease;
-}
-
-#sidebar a:hover {
-    text-decoration: none;
-    background: rgba(255, 255, 255, 0.12);
-    color: white;
-}
 
 .drag-placeholder {
     border: 1px dashed var(--primary-400);
@@ -1126,16 +1105,9 @@ span.flatpickr-weekday {
         gap: 6px;
     }
 }
-html,
-body {
-    height: 100%;
-    overflow: hidden;
-}
 
-.page-content {
-    height: 100vh;
-    overflow: hidden;
-}
+
+
 
 .tasks-container {
     height: 100%;
@@ -1154,26 +1126,97 @@ body {
     min-height: 0;
     overflow: visible;
 }
-
 .tasks-main-column {
-    height: 100%;
+    max-height: calc(100vh - 180px);
     overflow-y: auto;
-    padding-right: 8px;
+    padding-right: 10px;
+    scroll-behavior: smooth;
+
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
 }
 
 .tasks-main-column::-webkit-scrollbar {
-    width: 0;
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
 }
-
 .right-column {
     height: 100%;
     overflow: visible;
     margin-top: -35px;
 }
 
+/* ===== SIDEBAR ===== */
+#sidebar {
+    width: 200px;
+    min-height: 100vh;
+    padding: 90px 16px 20px;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translateX(-200px);
+    transition: transform 0.28s ease;
+    z-index: 1200;
 
+    background: #cbe2ff;
+    border-right: 1px solid rgba(0,0,0,0.05);
+}
 
-        /* ===== MOBILE FIX (ضروري) ===== */
+body.sidebar-open #sidebar {
+    transform: translateX(0);
+}
+
+/* ===== LABELS ===== */
+.sidebar-label {
+    margin: 20px 10px 10px;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ===== LINKS ===== */
+#sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    text-decoration: none;
+    color: #1e293b;
+    font-size: 15px;
+    font-weight: 600;
+
+    padding: 10px 12px;
+    border-radius: 14px;
+    margin-bottom: 6px;
+
+    transition: 0.2s ease;
+}
+
+/* ICON */
+#sidebar a i {
+    width: 20px;
+    text-align: center;
+    color: #2563eb;
+}
+
+#sidebar a:hover {
+    background: rgba(255,255,255,0.7);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    color: #2563eb;
+}
+
+/* ===== PAGE PUSH ===== */
+.page-content {
+    transition: 0.3s ease;
+}
+
+body.sidebar-open .page-content {
+    padding-left: 260px;
+}
 @media (max-width: 1000px) {
 
     html, body {
@@ -1221,58 +1264,290 @@ body {
         align-self: center !important;
     }
 }
+
+
+        .custom-menu-pill[data-value="P1"] .custom-menu-btn i {
+    color: #ef4444;
+}
+
+.custom-menu-pill[data-value="P2"] .custom-menu-btn i {
+    color: #f97316;
+}
+
+.custom-menu-pill[data-value="P3"] .custom-menu-btn i {
+    color: #eab308;
+}
+
+.custom-menu-pill[data-value="P4"] .custom-menu-btn i {
+    color: #6b7280;
+}
+
+.custom-menu-pill[data-value="Work"] .custom-menu-btn i {
+    color: #4a90e2;
+}
+
+.custom-menu-pill[data-value="Study"] .custom-menu-btn i {
+    color: #9b59b6;
+}
+
+.custom-menu-pill[data-value="Personal"] .custom-menu-btn i {
+    color: #ff6fa5;
+}
+
+.custom-menu-pill[data-value="Shopping"] .custom-menu-btn i {
+    color: #2ecc71;
+}
+
+   .quick-add-box,
+.quick-add-top,
+.quick-add-actions {
+    overflow: visible !important;
+}
+
+.custom-menu-pill {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+}
+
+.custom-menu-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    border: 1px solid rgba(12, 108, 233, 0.15);
+    background: linear-gradient(135deg, #ffffff, #e4ecf6);
+    color: #003e8f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(0, 62, 143, 0.08);
+}
+
+.custom-menu-list {
+    display: none;
+    position: absolute;
+    top: 46px;
+    right: 0;
+    width: 170px;
+    background: white;
+    border: 1px solid #dbeafe;
+    border-radius: 18px;
+    padding: 8px;
+    box-shadow: 0 18px 45px rgba(0, 62, 143, 0.18);
+    z-index: 99999;
+}
+
+.custom-menu-pill.open .custom-menu-list {
+    display: block;
+}
+
+.custom-menu-list div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 12px;
+    border-radius: 14px;
+    cursor: pointer;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.custom-menu-list div:hover {
+    background: #f1f5ff;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.p1 { background: #ef4444; }
+.p2 { background: #f97316; }
+.p3 { background: #eab308; }
+.p4 { background: #6b7280; }
+
+.work { background: #4a90e2; }
+.study { background: #9b59b6; }
+.personal { background: #ff6fa5; }
+.shopping { background: #2ecc71; }
+
+
+.priority-menu .custom-menu-list {
+    width: 120px;
+}
+
+.priority-menu .custom-menu-list div {
+    width: 100%;
+}
+.priority-menu .custom-menu-list div {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* مهم */
+    gap: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.custom-menu-list {
+    position: absolute;
+    z-index: 9999;
+}
+
+
+        .page-content {
+    position: relative;
+    z-index: 1;
+}
+
+        .quick-add-box {
+    overflow: visible !important;
+}
+
+.quick-add-top {
+    z-index: 50 !important;
+}
+
+.quick-add-description-wrap {
+    z-index: 0 !important;
+}
+
+.custom-menu-pill.open {
+    z-index: 999999 !important;
+}
+
+.custom-menu-pill.open .custom-menu-list {
+    z-index: 999999 !important;
+}
+
+
+        html, body { height: auto; overflow-y: auto; overflow-x: hidden; }
+
+.page-content { height: auto; overflow: visible; }
+
+.tasks-container { min-height: 100vh; }
+
+
+body:not(.tabs-ready) .tasks-with-weekly {
+    visibility: hidden;
+}
+
+
+
+
+#overdueList .overdue-fake-drag {
+    pointer-events: none;
+    cursor: default;
+}
+
+
+
+@media (max-width: 1000px) {
+    .flatpickr-calendar {
+        width: 320px !important;
+        max-width: calc(100vw - 24px) !important;
+
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+    }
+
+    .flatpickr-days,
+    .dayContainer {
+        width: 300px !important;
+        min-width: 300px !important;
+        max-width: 300px !important;
+    }
+
+    .flatpickr-day {
+        width: 42px !important;
+        max-width: 42px !important;
+    }
+}
+
+
+        .inline-edit-title,
+.inline-edit-description {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+.inline-edit-box input,
+.inline-edit-box textarea {
+    outline: none;
+}
+        .inline-edit-box {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+}
+
+.inline-edit-box:focus-within {
+    border: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.inline-edit-description-wrap {
+    border-top: 1px solid #e5e7eb;
+}
     </style>
 </head>
 
 <body>
-
-<button class="menu-global" onclick="toggleSidebar()">
+<button type="button" class="menu-global" onclick="document.body.classList.toggle('sidebar-open')">
     <i class="fa-solid fa-bars"></i>
 </button>
 
 <div style="display:flex; min-height:100vh; position:relative;">
 
-    <div id="sidebar"
-         style="width:220px; background:#f5f5f5; min-height:100vh;
-         padding:20px; box-sizing:border-box; position:fixed; top:0; left:0;
-         transform:translateX(-100%); transition:transform 0.3s ease; z-index:3000;">
+    <div id="sidebar">
 
-        <h3 style="margin-top:45px;">Menu</h3>
+        <div class="sidebar-label">Menu</div>
 
-        <div style="margin-top:15px;">
-            <a href="/today"><i class="fa-solid fa-calendar-day"></i> Today</a>
-        </div>
+        <a href="/today">
+            <i class="fa-solid fa-calendar-day"></i>
+            Today
+        </a>
+        <a href="/tasks">
+            <i class="fa-solid fa-list"></i>
+            All Tasks
+        </a>
 
-        <div style="margin-top:15px;">
-            <a href="/tasks"><i class="fa-solid fa-list"></i> All Tasks</a>
-        </div>
+        <a href="/upcoming">
+            <i class="fa-solid fa-calendar"></i>
+            Upcoming
+        </a>
 
-        <div style="margin-top:15px;">
-            <a href="/priorities"><i class="fa-solid fa-filter"></i> Filter by priority</a>
-        </div>
+        <div class="sidebar-label">Organize</div>
 
-        <div style="margin-top:15px;">
-            <a href="/categories"><i class="fa-solid fa-layer-group"></i> Categories</a>
-        </div>
+        <a href="/categories">
+            <i class="fa-solid fa-layer-group"></i>
+            Categories
+        </a>
 
-        <div style="margin-top:15px;">
-            <a href="/upcoming"><i class="fa-solid fa-calendar"></i> Upcoming</a>
-        </div>
+        <a href="/priorities">
+            <i class="fa-solid fa-filter"></i>
+            Priorities
+        </a>
 
-        <div style="margin-top:15px;">
-            <a href="/notes"><i class="fa-solid fa-sticky-note"></i> Notes</a>
-        </div>
+        <a href="/notes">
+            <i class="fa-solid fa-note-sticky"></i>
+            Notes
+        </a>
 
-        <div style="margin-top:15px;">
-            <a href="/shopping"><i class="fa-solid fa-cart-shopping"></i> Shopping</a>
-        </div>
+        <a href="/shopping">
+            <i class="fa-solid fa-cart-shopping"></i>
+            Shopping
+        </a>
+
     </div>
 
-    <div id="overlay"
-         onclick="toggleSidebar()"
-         style="display:none; position:fixed; top:0; left:0; width:100%;
-         height:100%; background:rgba(0,0,0,0.2); z-index:2000;">
-    </div>
 
     <div class="page-content">
         <div class="tasks-container">
@@ -1293,7 +1568,7 @@ body {
                         </div>
                         <!-- SORT -->
                         <div class="sort-wrapper">
-                            <button type="button" class="sort-btn" onclick="toggleSortMenu()">
+                            <button type="button" class="sort-btn" onclick="toggleSortMenu(event)">
                                 <i class="fa-solid fa-arrow-up-wide-short"></i>
                             </button>
 
@@ -1403,28 +1678,44 @@ body {
                                    readonly>
                         </div>
 
-                        <div class="smart-pill" id="priorityPill">
-                            <i class="fa-solid fa-flag"></i>
-                            <span class="pill-text" id="priorityText"></span>
-                            <select th:field="*{priority}" id="prioritySelect">
-                                <option value=""></option>
-                                <option value="P1">P1</option>
-                                <option value="P2">P2</option>
-                                <option value="P3">P3</option>
-                                <option value="P4">P4</option>
-                            </select>
+                        <div class="custom-menu-pill priority-menu" id="priorityPill">
+                            <button type="button" class="custom-menu-btn" onclick="toggleCustomMenu(event, this)">
+                                <i class="fa-solid fa-flag"></i>
+                            </button>
+
+                            <input type="hidden" name="priority" value="">
+
+                            <div class="custom-menu-list">
+                                <div onclick="chooseCustomOption(event, this, 'P1')"><span class="dot p1"></span>P1
+                                </div>
+                                <div onclick="chooseCustomOption(event, this, 'P2')"><span class="dot p2"></span>P2
+                                </div>
+                                <div onclick="chooseCustomOption(event, this, 'P3')"><span class="dot p3"></span>P3
+                                </div>
+                                <div onclick="chooseCustomOption(event, this, 'P4')"><span class="dot p4"></span>P4
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="smart-pill" id="categoryPill">
-                            <i class="fa-solid fa-tag"></i>
-                            <span class="pill-text" id="categoryText"></span>
-                            <select th:field="*{category}" id="categorySelect">
-                                <option value=""></option>
-                                <option value="Work">Work</option>
-                                <option value="Study">Study</option>
-                                <option value="Personal">Personal</option>
-                                <option value="Shopping">Shopping</option>
-                            </select>
+                        <div class="custom-menu-pill category-menu" id="categoryPill">
+                            <button type="button" class="custom-menu-btn" onclick="toggleCustomMenu(event, this)">
+                                <i class="fa-solid fa-tag"></i>
+                            </button>
+
+                            <input type="hidden" name="category" value="">
+
+                            <div class="custom-menu-list">
+                                <div onclick="chooseCustomOption(event, this, 'Work')"><span class="dot work"></span>Work
+                                </div>
+                                <div onclick="chooseCustomOption(event, this, 'Study')"><span class="dot study"></span>Study
+                                </div>
+                                <div onclick="chooseCustomOption(event, this, 'Personal')"><span
+                                        class="dot personal"></span>Personal
+                                </div>
+                                <div onclick="chooseCustomOption(event, this, 'Shopping')"><span
+                                        class="dot shopping"></span>Shopping
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1440,17 +1731,17 @@ body {
             <div class="top-links">
                 <div class="tabs">
                     <span class="active" onclick="showTaskTab('all', this)">
-                        My Tasks (<span th:text="${#lists.size(tasks)}"></span>)
+                        My Tasks (<span id="myTasksCount" th:text="${#lists.size(tasks)}"></span>)
                     </span>
 
                     <span onclick="showTaskTab('completed', this)">
-                        Completed (<span th:text="${completedCount}"></span>)
+                        Completed (<span id="completedCount" th:text="${completedCount}"></span>)
                     </span>
 
                     <span th:if="${!isTodayPage}"
                           class="tab-link"
                           onclick="showTaskTab('overdue', this)">
-    Overdue (<span th:text="${overdueCount}">0</span>)
+    Overdue (<span id="overdueCount" th:text="${overdueCount}">0</span>)
 </span>
                 </div>
 
@@ -1475,11 +1766,11 @@ body {
                         <small>Add a new task to get started.</small>
 
                     </div>
-                    <div th:if="${!showOverdueFirst and !#lists.isEmpty(tasks)}" class="task-list-container"
-                         id="taskListContainer">
+                    <div th:if="${!showOverdueFirst and !#lists.isEmpty(tasks)}"
+                         class="task-list-container my-tasks-list">
                         <div th:each="task : ${tasks}"
                              class="task-block"
-                             th:attr="data-id=${task.id}"
+                             th:attr="data-id=${task.id}, data-due-date=${task.dueDate}"
                              th:id="'taskBlock-' + ${task.id}">
 
                             <div class="task-row" th:id="'taskView-' + ${task.id}">
@@ -1499,7 +1790,7 @@ body {
                                         <input type="checkbox"
                                                class="task-checkbox"
                                                th:checked="${task.done}"
-                                               onchange="this.form.submit()"/>
+                                               onchange="toggleTaskAjax(this)"/>
                                     </form>
 
                                     <div class="task-content">
@@ -1584,7 +1875,9 @@ body {
                             </div>
 
                             <div th:id="'taskEdit-' + ${task.id}" class="inline-edit-box">
-                                <form th:action="@{/tasks/update/{id}(id=${task.id})}" method="post">
+                                <form th:action="@{/tasks/update/{id}(id=${task.id})}"
+                                      method="post"
+                                      onsubmit="saveTaskAjax(event, this)">
                                     <input type="hidden" name="priorityFilter" th:value="${currentPriority}">
                                     <input type="hidden" name="currentCategory" th:value="${currentCategory}">
                                     <input type="hidden" name="source" th:value="${currentSource}">
@@ -1674,7 +1967,9 @@ body {
                         </div>
 
                         <div id="overdueList" th:style="${overdueOpen} ? 'display:block;' : 'display:none;'">
-                            <div th:each="task : ${overdueTasks}" class="task-block">
+                            <div th:each="task : ${overdueTasks}"
+                                 class="task-block"
+                                 th:attr="data-id=${task.id}, data-due-date=${task.dueDate}">
                                 <div class="task-row" th:id="'taskView-overdue-' + ${task.id}">
 
                                     <div class="task-left">
@@ -1689,7 +1984,7 @@ body {
                                             <input type="checkbox"
                                                    class="task-checkbox"
                                                    th:checked="${task.done}"
-                                                   onchange="this.form.submit()"/>
+                                                   onchange="toggleTaskAjax(this)"/>
                                         </form>
 
                                         <div class="task-content">
@@ -1763,7 +2058,9 @@ body {
                                 </div>
                                 <!-- Overdue inline edit form -->
                                 <div th:id="'taskEdit-overdue-' + ${task.id}" class="inline-edit-box">
-                                    <form th:action="@{/tasks/update/{id}(id=${task.id})}" method="post">
+                                    <form th:action="@{/tasks/update/{id}(id=${task.id})}"
+                                          method="post"
+                                          onsubmit="saveTaskAjax(event, this)">
                                         <input type="hidden" name="priorityFilter" th:value="${currentPriority}">
                                         <input type="hidden" name="currentCategory" th:value="${currentCategory}">
                                         <input type="hidden" name="source" th:value="${currentSource}">
@@ -1844,10 +2141,11 @@ body {
                         </div>
 
                     </div>
-                    <div th:if="${showOverdueFirst and !#lists.isEmpty(tasks)}" class="task-list-container">
+                    <div th:if="${showOverdueFirst and !#lists.isEmpty(tasks)}"
+                         class="task-list-container my-tasks-list">
                         <div th:each="task : ${tasks}"
                              class="task-block"
-                             th:attr="data-id=${task.id}"
+                             th:attr="data-id=${task.id}, data-due-date=${task.dueDate}"
                              th:id="'taskBlock-second-' + ${task.id}">
 
                             <div class="task-row" th:id="'taskView-second-' + ${task.id}">
@@ -1868,7 +2166,7 @@ body {
                                         <input type="checkbox"
                                                class="task-checkbox"
                                                th:checked="${task.done}"
-                                               onchange="this.form.submit()"/>
+                                               onchange="toggleTaskAjax(this)"/>
                                     </form>
 
                                     <div class="task-content">
@@ -1960,10 +2258,14 @@ body {
                         </div>
 
                         <div id="completedList" th:style="${completedOpen} ? 'display:block;' : 'display:none;'">
-                            <div th:each="task : ${completedTasks}" class="task-block">
+                            <div th:each="task : ${completedTasks}"
+                                 class="task-block"
+                                 th:attr="data-id=${task.id}, data-due-date=${task.dueDate}">
                                 <div class="task-row">
 
                                     <div class="task-left">
+
+
                                         <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post"
                                               style="margin:0;">
                                             <input type="hidden" name="priority" th:value="${currentPriority}"/>
@@ -1975,7 +2277,7 @@ body {
                                             <input type="checkbox"
                                                    class="task-checkbox"
                                                    th:checked="${task.done}"
-                                                   onchange="this.form.submit()"/>
+                                                   onchange="toggleTaskAjax(this)"/>
                                         </form>
 
                                         <div class="task-content">
@@ -2053,10 +2355,10 @@ body {
                             <div class="weekly-bars">
                                 <div th:each="count, stat : ${weeklyStats}"
                                      class="weekly-bar"
+                                     th:attr="data-count=${count}, data-day-index=${stat.index}"
                                      th:style="'height:' + (${count} * 22 + 20) + 'px'"
                                      th:classappend="${stat.index == todayIndex} ? ' active' : ''">
-                                </div>
-                            </div>
+                                </div>                           </div>
 
                             <div class="weekly-days">
                                 <span>Mon</span>
@@ -2073,12 +2375,12 @@ body {
 
                             <div class="summary-row">
                                 <span>✔ Completed</span>
-                                <b th:text="${todayCompleted}">0</b>
+                                <b id="todayCompletedCount" th:text="${todayCompleted}">0</b>
                             </div>
 
                             <div class="summary-row">
                                 <span>⏳ Remaining</span>
-                                <b th:text="${todayRemaining}">0</b>
+                                <b id="todayRemainingCount" th:text="${todayRemaining}">0</b>
                             </div>
 
                             <div class="summary-row overdue">
@@ -2105,619 +2407,1035 @@ body {
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        function toggleSidebar() {
-            var sidebar = document.getElementById("sidebar");
-            var overlay = document.getElementById("overlay");
-
-            if (sidebar.style.transform === "translateX(0%)") {
-                sidebar.style.transform = "translateX(-100%)";
-                overlay.style.display = "none";
-            } else {
-                sidebar.style.transform = "translateX(0%)";
-                overlay.style.display = "block";
-            }
-        }
-
-        function toggleDesc(el) {
-            var parent = el.parentElement;
-            var shortText = parent.querySelector(".desc-short");
-            var fullText = parent.querySelector(".desc-full");
-
-            if (fullText.style.display === "inline") {
-                fullText.style.display = "none";
-                shortText.style.display = "inline";
-                el.innerText = "More";
-            } else {
-                fullText.style.display = "inline";
-                shortText.style.display = "none";
-                el.innerText = "Less";
-            }
-        }
-
-        function closeAllEditInline() {
-            document.querySelectorAll(".inline-edit-box").forEach(function (edit) {
-                edit.classList.remove("active");
-            });
-
-            document.querySelectorAll(".task-row").forEach(function (view) {
-                view.style.display = "flex";
-            });
-        }
-
-        function toggleEditInline(id) {
-            var view = document.getElementById("taskView-" + id);
-            var edit = document.getElementById("taskEdit-" + id);
-
-            if (!view || !edit) return;
-
-            var isOpen = edit.classList.contains("active");
-
-            closeAllEditInline();
-
-            if (!isOpen) {
-                view.style.display = "none";
-                edit.classList.add("active");
-
-                var titleInput = edit.querySelector(".inline-edit-title");
-                if (titleInput) {
-                    setTimeout(function () {
-                        titleInput.focus();
-                        titleInput.select();
-                    }, 50);
-                }
-            }
-        }
-
-        function openEditDate(el) {
-            var input = el.querySelector("input");
-            if (!input) return;
-
-            if (!input._flatpickr) {
-                flatpickr(input, {
-                    dateFormat: "Y-m-d",
-                    allowInput: false,
-                    clickOpens: false,
-                    monthSelectorType: "dropdown",
-                    prevArrow: "&#10094;",
-                    nextArrow: "&#10095;",
-                    onChange: function (selectedDates, dateStr) {
-                        updateSmartPill(el, formatDateForPill(dateStr));
-                    }
-                });
-            }
-
-            input._flatpickr.open();
-        }
-
-        function formatDateForPill(value) {
-            if (!value) return "";
-            const parts = value.split("-");
-            if (parts.length !== 3) return value;
-            return parts[2] + "/" + parts[1];
-        }
-
-        function updateSmartPill(pill, value) {
-            const text = pill.querySelector(".pill-text");
-            if (!text) return;
-
-            if (value && value.trim() !== "") {
-                text.textContent = value;
-                pill.classList.add("active");
-            } else {
-                text.textContent = "";
-                pill.classList.remove("active");
-            }
-        }
-
-        let activeDrag = null;
-        let autoScrollInterval = null;
-
-        function initAdvancedDrag() {
-            document.querySelectorAll(".drag-handle").forEach(handle => {
-                handle.addEventListener("mousedown", startDrag);
-            });
-        }
-
-        function startDrag(e) {
+        function toggleSidebar(e) {
             e.preventDefault();
+            e.stopPropagation();
 
-            const task = e.currentTarget.closest(".task-block");
-            const container = document.getElementById("taskListContainer");
-            if (!task || !container) return;
-
-            const rect = task.getBoundingClientRect();
-
-            const placeholder = document.createElement("div");
-            placeholder.className = "drag-placeholder";
-            placeholder.style.height = rect.height + "px";
-
-            const floating = task.cloneNode(true);
-            floating.classList.add("drag-floating");
-            floating.style.width = rect.width + "px";
-            floating.style.left = rect.left + "px";
-            floating.style.top = rect.top + "px";
-
-            document.body.appendChild(floating);
-
-            task.classList.add("drag-source-hidden");
-            task.parentNode.insertBefore(placeholder, task.nextSibling);
-
-            activeDrag = {
-                source: task,
-                floating: floating,
-                placeholder: placeholder,
-                container: container,
-                offsetY: e.clientY - rect.top
-            };
-
-            document.addEventListener("mousemove", onDrag);
-            document.addEventListener("mouseup", stopDrag);
-        }
-
-
-        function stopAutoScroll() {
-            if (autoScrollInterval) {
-                clearInterval(autoScrollInterval);
-                autoScrollInterval = null;
+            if (document.body.classList.contains("sidebar-open")) {
+                document.body.classList.remove("sidebar-open");
+            } else {
+                document.body.classList.add("sidebar-open");
             }
         }
+         function toggleDesc(el) {
+                       var parent = el.parentElement;
+                       var shortText = parent.querySelector(".desc-short");
+                       var fullText = parent.querySelector(".desc-full");
 
-        function onDrag(e) {
-    if (!activeDrag) return;
+                       if (fullText.style.display === "inline") {
+                           fullText.style.display = "none";
+                           shortText.style.display = "inline";
+                           el.innerText = "More";
+                       } else {
+                           fullText.style.display = "inline";
+                           shortText.style.display = "none";
+                           el.innerText = "Less";
+                       }
+                   }
 
-    const floating = activeDrag.floating;
-    const offsetY = activeDrag.offsetY;
-    const source = activeDrag.source;
-    const placeholder = activeDrag.placeholder;
-    const container = activeDrag.container;
+                   function closeAllEditInline() {
+                       document.querySelectorAll(".inline-edit-box").forEach(function (edit) {
+                           edit.classList.remove("active");
+                       });
 
-    startAutoScroll(e.clientY);
+                       document.querySelectorAll(".task-row").forEach(function (view) {
+                           view.style.display = "flex";
+                       });
+                   }
 
-    floating.style.top = (e.clientY - offsetY) + "px";
+                   function toggleEditInline(id) {
+                       var view = document.getElementById("taskView-" + id);
+                       var edit = document.getElementById("taskEdit-" + id);
 
-    const items = Array.from(container.querySelectorAll(".task-block"))
-        .filter(item => item !== source);
+                       if (!view || !edit) return;
 
-    for (let item of items) {
-        const rect = item.getBoundingClientRect();
-        if (e.clientY < rect.top + rect.height / 2) {
-            container.insertBefore(placeholder, item);
-            return;
-        }
+                       var isOpen = edit.classList.contains("active");
+
+                       closeAllEditInline();
+
+                       if (!isOpen) {
+                           view.style.display = "none";
+                           edit.classList.add("active");
+
+                           var titleInput = edit.querySelector(".inline-edit-title");
+                           if (titleInput) {
+                               setTimeout(function () {
+                                   titleInput.focus();
+                                   titleInput.select();
+                               }, 50);
+                           }
+                       }
+                   }
+
+                   function openEditDate(el) {
+                       var input = el.querySelector("input");
+                       if (!input) return;
+
+                       if (!input._flatpickr) {
+                           flatpickr(input, {
+                               dateFormat: "Y-m-d",
+                               allowInput: false,
+                               clickOpens: false,
+                               monthSelectorType: "dropdown",
+                               prevArrow: "&#10094;",
+                               nextArrow: "&#10095;",
+                               onChange: function (selectedDates, dateStr) {
+                                   updateSmartPill(el, formatDateForPill(dateStr));
+                               }
+                           });
+                       }
+
+                       input._flatpickr.open();
+                   }
+
+                   function formatDateForPill(value) {
+                       if (!value) return "";
+                       const parts = value.split("-");
+                       if (parts.length !== 3) return value;
+                       return parts[2] + "/" + parts[1];
+                   }
+
+                   function updateSmartPill(pill, value) {
+                       const text = pill.querySelector(".pill-text");
+                       if (!text) return;
+
+                       if (value && value.trim() !== "") {
+                           text.textContent = value;
+                           pill.classList.add("active");
+                       } else {
+                           text.textContent = "";
+                           pill.classList.remove("active");
+                       }
+                   }
+
+                   let activeDrag = null;
+                   let autoScrollInterval = null;
+
+                   function initAdvancedDrag() {
+                       document.querySelectorAll(".drag-handle").forEach(handle => {
+                           handle.addEventListener("mousedown", startDrag);
+                       });
+                   }
+
+                   function startDrag(e) {
+                       e.preventDefault();
+
+                       const task = e.currentTarget.closest(".task-block");
+                       const container = task.closest(".my-tasks-list");
+                       if (!task || !container) return;
+
+                       const rect = task.getBoundingClientRect();
+
+                       const placeholder = document.createElement("div");
+                       placeholder.className = "drag-placeholder";
+                       placeholder.style.height = rect.height + "px";
+
+                       const floating = task.cloneNode(true);
+                       floating.classList.add("drag-floating");
+                       floating.style.width = rect.width + "px";
+                       floating.style.left = rect.left + "px";
+                       floating.style.top = rect.top + "px";
+
+                       document.body.appendChild(floating);
+
+                       task.classList.add("drag-source-hidden");
+                       task.parentNode.insertBefore(placeholder, task.nextSibling);
+
+                       activeDrag = {
+                           source: task,
+                           floating: floating,
+                           placeholder: placeholder,
+                           container: container,
+                           offsetY: e.clientY - rect.top
+                       };
+
+                       document.addEventListener("mousemove", onDrag);
+                       document.addEventListener("mouseup", stopDrag);
+                   }
+
+
+                   function stopAutoScroll() {
+                       if (autoScrollInterval) {
+                           clearInterval(autoScrollInterval);
+                           autoScrollInterval = null;
+                       }
+                   }
+
+                   function onDrag(e) {
+               if (!activeDrag) return;
+
+               const floating = activeDrag.floating;
+               const offsetY = activeDrag.offsetY;
+               const source = activeDrag.source;
+               const placeholder = activeDrag.placeholder;
+               const container = activeDrag.container;
+
+               startAutoScroll(e.clientY);
+
+               floating.style.top = (e.clientY - offsetY) + "px";
+
+               const items = Array.from(container.querySelectorAll(".task-block"))
+                   .filter(item => item !== source);
+
+               for (let item of items) {
+                   const rect = item.getBoundingClientRect();
+                   if (e.clientY < rect.top + rect.height / 2) {
+                       container.insertBefore(placeholder, item);
+                       return;
+                   }
+               }
+
+               container.appendChild(placeholder);
+           }
+           function stopDrag() {
+               if (!activeDrag) return;
+
+               stopAutoScroll();
+
+               const source = activeDrag.source;
+               const floating = activeDrag.floating;
+               const placeholder = activeDrag.placeholder;
+               const container = activeDrag.container;
+
+               container.insertBefore(source, placeholder);
+               source.classList.remove("drag-source-hidden");
+
+               floating.remove();
+               placeholder.remove();
+
+               activeDrag = null;
+
+               document.removeEventListener("mousemove", onDrag);
+               document.removeEventListener("mouseup", stopDrag);
+
+               saveOrder();
+           }
+                   function saveOrder() {
+                       const ids = [];
+
+                       document.querySelectorAll(".task-block").forEach(el => {
+                           const id = el.getAttribute("data-id");
+                           if (id) {
+                               ids.push(Number(id));
+                           }
+                       });
+
+                       fetch("/tasks/reorder", {
+                           method: "POST",
+                           headers: {"Content-Type": "application/json"},
+                           body: JSON.stringify(ids)
+                       });
+                   }
+
+                   document.addEventListener("DOMContentLoaded", function () {
+                       var quickAddBox = document.getElementById("quickAddBox");
+                       var quickAddTitle = document.getElementById("quickAddTitle");
+                       var quickAddDescription = document.getElementById("quickAddDescription");
+                       var dateInput = document.getElementById("dueDatePicker");
+                       var datePill = document.getElementById("datePill");
+
+                       if (quickAddTitle && quickAddBox) {
+                           quickAddTitle.addEventListener("focus", function () {
+                               quickAddBox.classList.add("expanded");
+                           });
+
+                         quickAddBox.addEventListener("keydown", function (e) {
+              if (e.key === "Enter" && !e.shiftKey) {
+
+                  if (e.target === quickAddDescription) return;
+
+                  e.preventDefault();
+
+                if (quickAddTitle.value.trim() === "") {
+              quickAddTitle.setCustomValidity("Your task needs a title");
+              quickAddTitle.reportValidity();
+              quickAddTitle.focus();
+              return;
+          }
+
+          quickAddTitle.setCustomValidity("");
+
+                  localStorage.setItem("activeTaskTab", "all");
+                  quickAddBox.requestSubmit();
+              }
+          });
+                       }
+
+                       if (quickAddDescription && quickAddBox) {
+                           quickAddDescription.addEventListener("focus", function () {
+                               quickAddBox.classList.add("expanded");
+                           });
+                       }
+
+                       document.querySelectorAll(".inline-edit-box").forEach(function (edit) {
+                           var titleInput = edit.querySelector(".inline-edit-title");
+                           if (titleInput) {
+                               titleInput.addEventListener("keydown", function (e) {
+                                   if (e.key === "Enter" && !e.shiftKey) {
+                                       e.preventDefault();
+
+                                       if (titleInput.value.trim() === "") {
+                                           titleInput.reportValidity();
+                                           return;
+                                       }
+
+                                       var form = edit.querySelector("form");
+                                       if (form) {
+                                           form.requestSubmit();
+                                       }
+                                   }
+                               });
+                           }
+                       });
+
+                      document.addEventListener("click", function (e) {
+    var clickedCalendar = e.target.closest(".flatpickr-calendar");
+
+    if (quickAddBox && !quickAddBox.contains(e.target) && !clickedCalendar) {
+        quickAddBox.classList.remove("expanded");
     }
 
-    container.appendChild(placeholder);
-}
-function stopDrag() {
-    if (!activeDrag) return;
+    var clickedEditButton = e.target.closest("[onclick*='toggleEditInline']");
+    var clickedEditBox = e.target.closest(".inline-edit-box");
 
-    stopAutoScroll();
+    if (!clickedEditButton && !clickedEditBox && !clickedCalendar) {
+        closeAllEditInline();
+    }
+});
 
-    const source = activeDrag.source;
-    const floating = activeDrag.floating;
-    const placeholder = activeDrag.placeholder;
-    const container = activeDrag.container;
+                       if (dateInput) {
+                           var fp = flatpickr(dateInput, {
+                               dateFormat: "Y-m-d",
+                               allowInput: false,
+                               clickOpens: false,
+                               monthSelectorType: "dropdown",
+                               prevArrow: "&#10094;",
+                               nextArrow: "&#10095;",
+                               onChange: function (selectedDates, dateStr) {
+                                   updateSmartPill(datePill, formatDateForPill(dateStr));
+                               }
+                           });
 
-    container.insertBefore(source, placeholder);
-    source.classList.remove("drag-source-hidden");
+                           if (datePill) {
+                             if (dateInput) {
+    let calendarOpen = false;
 
-    floating.remove();
-    placeholder.remove();
-
-    activeDrag = null;
-
-    document.removeEventListener("mousemove", onDrag);
-    document.removeEventListener("mouseup", stopDrag);
-
-    saveOrder();
-}
-        function saveOrder() {
-            const ids = [];
-
-            document.querySelectorAll(".task-block").forEach(el => {
-                const id = el.getAttribute("data-id");
-                if (id) {
-                    ids.push(Number(id));
-                }
-            });
-
-            fetch("/tasks/reorder", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(ids)
-            });
+    var fp = flatpickr(dateInput, {
+        dateFormat: "Y-m-d",
+        allowInput: false,
+        clickOpens: false,
+        monthSelectorType: "dropdown",
+        prevArrow: "&#10094;",
+        nextArrow: "&#10095;",
+        onOpen: function () {
+            calendarOpen = true;
+        },
+        onClose: function () {
+            calendarOpen = false;
+        },
+        onChange: function (selectedDates, dateStr) {
+            updateSmartPill(datePill, formatDateForPill(dateStr));
         }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            var quickAddBox = document.getElementById("quickAddBox");
-            var quickAddTitle = document.getElementById("quickAddTitle");
-            var quickAddDescription = document.getElementById("quickAddDescription");
-            var dateInput = document.getElementById("dueDatePicker");
-            var datePill = document.getElementById("datePill");
-
-            if (quickAddTitle && quickAddBox) {
-                quickAddTitle.addEventListener("focus", function () {
-                    quickAddBox.classList.add("expanded");
-                });
-
-                quickAddBox.addEventListener("keydown", function (e) {
-                    if (e.key === "Enter" && !e.shiftKey) {
-
-
-                        if (e.target === quickAddDescription) {
-                            return;
-                        }
-
-                        e.preventDefault();
-
-                        if (quickAddTitle.value.trim() === "") {
-                            quickAddTitle.reportValidity();
-                            return;
-                        }
-
-                        localStorage.setItem("activeTaskTab", "all");
-
-                        quickAddBox.requestSubmit();
-                    }
-                });
-            }
-
-            if (quickAddDescription && quickAddBox) {
-                quickAddDescription.addEventListener("focus", function () {
-                    quickAddBox.classList.add("expanded");
-                });
-            }
-
-            document.querySelectorAll(".inline-edit-box").forEach(function (edit) {
-                var titleInput = edit.querySelector(".inline-edit-title");
-                if (titleInput) {
-                    titleInput.addEventListener("keydown", function (e) {
-                        if (e.key === "Enter" && !e.shiftKey) {
-                            e.preventDefault();
-
-                            if (titleInput.value.trim() === "") {
-                                titleInput.reportValidity();
-                                return;
-                            }
-
-                            var form = edit.querySelector("form");
-                            if (form) {
-                                form.requestSubmit();
-                            }
-                        }
-                    });
-                }
-            });
-
-            document.addEventListener("click", function (e) {
-                if (quickAddBox && !quickAddBox.contains(e.target)) {
-                    quickAddBox.classList.remove("expanded");
-                }
-
-                var clickedEditButton = e.target.closest("[onclick*='toggleEditInline']");
-                var clickedEditBox = e.target.closest(".inline-edit-box");
-
-                if (!clickedEditButton && !clickedEditBox) {
-                    closeAllEditInline();
-                }
-            });
-
-            if (dateInput) {
-                var fp = flatpickr(dateInput, {
-                    dateFormat: "Y-m-d",
-                    allowInput: false,
-                    clickOpens: false,
-                    monthSelectorType: "dropdown",
-                    prevArrow: "&#10094;",
-                    nextArrow: "&#10095;",
-                    onChange: function (selectedDates, dateStr) {
-                        updateSmartPill(datePill, formatDateForPill(dateStr));
-                    }
-                });
-
-                if (datePill) {
-                    datePill.addEventListener("click", function (e) {
-                        e.preventDefault();
-                        fp.open();
-                    });
-                }
-            }
-
-            const priorityPill = document.getElementById("priorityPill");
-            const prioritySelect = document.getElementById("prioritySelect");
-            const categoryPill = document.getElementById("categoryPill");
-            const categorySelect = document.getElementById("categorySelect");
-
-            if (dateInput && datePill) {
-                updateSmartPill(datePill, formatDateForPill(dateInput.value));
-            }
-
-            if (prioritySelect && priorityPill) {
-                updateSmartPill(priorityPill, prioritySelect.value);
-                prioritySelect.addEventListener("change", function () {
-                    updateSmartPill(priorityPill, this.value);
-                    quickAddTitle.focus();
-                });
-            }
-
-            if (categorySelect && categoryPill) {
-                updateSmartPill(categoryPill, categorySelect.value);
-               categorySelect.addEventListener("change", function () {
-                    updateSmartPill(categoryPill, this.value);
-                    quickAddTitle.focus();
-                });
-            }
-
-            document.querySelectorAll(".edit-date-pill").forEach(function (pill) {
-                const input = pill.querySelector("input");
-                if (input) {
-                    updateSmartPill(pill, formatDateForPill(input.value));
-                }
-            });
-
-            document.querySelectorAll(".edit-priority-pill").forEach(function (pill) {
-                const select = pill.querySelector("select");
-                if (select) {
-                    updateSmartPill(pill, select.value);
-                    select.addEventListener("change", function () {
-                        updateSmartPill(pill, this.value);
-                    });
-                }
-            });
-
-            document.querySelectorAll(".edit-category-pill").forEach(function (pill) {
-                const select = pill.querySelector("select");
-                if (select) {
-                    updateSmartPill(pill, select.value);
-                    select.addEventListener("change", function () {
-                        updateSmartPill(pill, this.value);
-                    });
-                }
-            });
-
-            initAdvancedDrag();
-        });
-
-
-        document.addEventListener("click", function (e) {
-            var wrapper = document.querySelector(".sort-wrapper");
-            var menu = document.getElementById("sortMenu");
-
-            if (wrapper && menu && !wrapper.contains(e.target)) {
-                menu.style.display = "none";
-            }
-        });
-
-        function toggleSortMenu() {
-            var menu = document.getElementById("sortMenu");
-            if (menu.style.display === "block") {
-                menu.style.display = "none";
-            } else {
-                menu.style.display = "block";
-            }
-        }
-
-        document.addEventListener("click", function (e) {
-
-            // ========== SORT MENU ==========
-            var wrapper = document.querySelector(".sort-wrapper");
-            var menu = document.getElementById("sortMenu");
-
-            if (wrapper && menu && !wrapper.contains(e.target)) {
-                menu.style.display = "none";
-            }
-            // ========== SEARCH OVERLAY ==========
-            var overlay = document.getElementById("searchOverlay");
-            var box = document.querySelector(".search-box");
-
-            if (overlay && overlay.style.display === "block") {
-                if (box && !box.contains(e.target)) {
-                    overlay.style.display = "none";
-                }
-            }
-
-        });
-
-        document.addEventListener("keydown", function (e) {
-
-            if (e.key === "Enter") {
-
-                const input = document.getElementById("searchInput");
-
-                if (input && document.activeElement === input) {
-                    e.preventDefault();
-                    doSearch();
-                }
-            }
-
-        });
-
-        function openSearch(e) {
-            if (e) e.stopPropagation(); // 🔥 يمنع click يوصل للdocument
-
-            document.getElementById("searchOverlay").style.display = "block";
-
-            setTimeout(() => {
-                document.getElementById("searchInput").focus();
-            }, 100);
-        }
-
-        function closeSearch() {
-            document.getElementById("searchOverlay").style.display = "none";
-        }
-        function doSearch() {
-            let keyword = document.getElementById("searchInput").value;
-
-            window.location.href = "/tasks/search?keyword=" + encodeURIComponent(keyword);
-        }
-
-        function toggleOverdueSection() {
-            const list = document.getElementById("overdueList");
-            const header = document.querySelector(".section-toggle");
-            const arrow = document.getElementById("overdueArrow");
-
-            if (!list || !header || !arrow) return;
-
-            if (list.style.display === "none") {
-                list.style.display = "block";
-                header.classList.add("open");
-            } else {
-                list.style.display = "none";
-                header.classList.remove("open");
-            }
-        }
-
-        function toggleCompletedSection() {
-            const list = document.getElementById("completedList");
-            const header = document.querySelector(".completed-toggle");
-
-            if (!list || !header) return;
-
-            if (list.style.display === "none") {
-                list.style.display = "block";
-                header.classList.add("open");
-            } else {
-                list.style.display = "none";
-                header.classList.remove("open");
-            }
-        }
-        function updateAllScrollInputs() {
-            const value = window.scrollY || window.pageYOffset ||  0;
-
-            const mainInput = document.getElementById("scrollPosInput");
-            if (mainInput) {
-                mainInput.value = value;
-            }
-
-            document.querySelectorAll(".scroll-pos-input").forEach(input => {
-                input.value = value;
-            });
-
-            document.querySelectorAll('a[href*="/tasks/delete/"]').forEach(link => {
-                try {
-                    const url = new URL(link.href, window.location.origin);
-                    url.searchParams.set("scrollPos", value);
-                    link.href = url.toString();
-                } catch (e) {}
-            });
-        }
-
-        window.addEventListener("scroll", updateAllScrollInputs);
-
-        document.addEventListener("DOMContentLoaded", function () {
-            updateAllScrollInputs();
-
-            const savedScroll = "[[${scrollPos}]]";
-            if (savedScroll && savedScroll !== "null" && savedScroll !== "") {
-                setTimeout(() => {
-                    window.scrollTo(0, parseInt(savedScroll));
-                }, 50);
-            }
-        });
-
-
-        function showTaskTab(type, clickedTab) {
-            localStorage.setItem("activeTaskTab", type);
-            const allTasks = document.getElementById("taskListContainer");
-            const completedSection = document.getElementById("completedTasksPanel");
-            const overdueSection = document.getElementById("overdueTasksPanel");
-            const completedList = document.getElementById("completedList");
-            const overdueList = document.getElementById("overdueList");
-            const emptyMyTasksState = document.getElementById("emptyMyTasksState");
-
-            document.body.classList.add("tabs-mode");
-
-            if (allTasks) allTasks.style.display = "none";
-            if (completedSection) completedSection.style.display = "none";
-            if (overdueSection) overdueSection.style.display = "none";
-            if (emptyMyTasksState) emptyMyTasksState.style.display = "none";
-            if (type === "all") {
-    if (allTasks) allTasks.style.display = "block";
-    if (emptyMyTasksState) emptyMyTasksState.style.display = "block";
-}
-
-            if (type === "completed" && completedSection) {
-                completedSection.style.display = "block";
-                if (completedList) completedList.style.display = "block";
-            }
-
-            if (type === "overdue" && overdueSection) {
-                overdueSection.style.display = "block";
-                if (overdueList) overdueList.style.display = "block";
-            }
-
-            document.querySelectorAll(".tabs span").forEach(tab => tab.classList.remove("active"));
-            const tab = clickedTab ? clickedTab.closest("span") : document.querySelector(".tabs span");
-            if (tab) tab.classList.add("active");
-        }
-
-       document.addEventListener("DOMContentLoaded", function () {
-        const savedTab = localStorage.getItem("activeTaskTab") || "all";
-
-        const tabElement =
-            savedTab === "completed"
-                ? document.querySelector(".tabs span:nth-child(2)")
-                : savedTab === "overdue"
-                    ? document.querySelector(".tabs span:nth-child(3)")
-                    : document.querySelector(".tabs span:nth-child(1)");
-
-        showTaskTab(savedTab, tabElement);
     });
 
+    if (datePill) {
+        datePill.addEventListener("pointerdown", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+document.querySelectorAll(".custom-menu-pill").forEach(function (pill) {
+    pill.classList.remove("open");
 
-        function toggleEditInlineOverdue(id) {
-            var view = document.getElementById("taskView-overdue-" + id);
-            var edit = document.getElementById("taskEdit-overdue-" + id);
-
-            if (!view || !edit) return;
-
-            var isOpen = edit.classList.contains("active");
-
-            closeAllEditInline();
-
-            if (!isOpen) {
-                view.style.display = "none";
-                edit.classList.add("active");
-
-                var titleInput = edit.querySelector(".inline-edit-title");
-                if (titleInput) {
-                    setTimeout(function () {
-                        titleInput.focus();
-                        titleInput.select();
-                    }, 50);
-                }
+    const list = pill.querySelector(".custom-menu-list");
+    if (list) list.style.display = "none";
+});
+            if (calendarOpen) {
+                fp.close();
+            } else {
+                fp.open();
             }
+        });
+    }
+}
+                           }
+                       }
+
+                       const priorityPill = document.getElementById("priorityPill");
+                       const prioritySelect = document.getElementById("prioritySelect");
+                       const categoryPill = document.getElementById("categoryPill");
+                       const categorySelect = document.getElementById("categorySelect");
+
+                       if (dateInput && datePill) {
+                           updateSmartPill(datePill, formatDateForPill(dateInput.value));
+                       }
+
+                       if (prioritySelect && priorityPill) {
+                           updateSmartPill(priorityPill, prioritySelect.value);
+                           prioritySelect.addEventListener("change", function () {
+                               updateSmartPill(priorityPill, this.value);
+                               quickAddTitle.focus();
+                           });
+                       }
+
+                       if (categorySelect && categoryPill) {
+                           updateSmartPill(categoryPill, categorySelect.value);
+                          categorySelect.addEventListener("change", function () {
+                               updateSmartPill(categoryPill, this.value);
+                               quickAddTitle.focus();
+                           });
+                       }
+
+                       document.querySelectorAll(".edit-date-pill").forEach(function (pill) {
+                           const input = pill.querySelector("input");
+                           if (input) {
+                               updateSmartPill(pill, formatDateForPill(input.value));
+                           }
+                       });
+
+                       document.querySelectorAll(".edit-priority-pill").forEach(function (pill) {
+                           const select = pill.querySelector("select");
+                           if (select) {
+                               updateSmartPill(pill, select.value);
+                               select.addEventListener("change", function () {
+                                   updateSmartPill(pill, this.value);
+                               });
+                           }
+                       });
+
+                       document.querySelectorAll(".edit-category-pill").forEach(function (pill) {
+                           const select = pill.querySelector("select");
+                           if (select) {
+                               updateSmartPill(pill, select.value);
+                               select.addEventListener("change", function () {
+                                   updateSmartPill(pill, this.value);
+                               });
+                           }
+                       });
+
+                       initAdvancedDrag();
+                   });
+
+
+                   document.addEventListener("click", function (e) {
+                       var wrapper = document.querySelector(".sort-wrapper");
+                       var menu = document.getElementById("sortMenu");
+
+                       if (wrapper && menu && !wrapper.contains(e.target)) {
+                           menu.style.display = "none";
+                       }
+                   });
+function toggleSortMenu(e) {
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    var menu = document.getElementById("sortMenu");
+
+    // غلق priority/category بالقوة
+    document.querySelectorAll(".custom-menu-pill").forEach(function (pill) {
+        pill.classList.remove("open");
+
+        var list = pill.querySelector(".custom-menu-list");
+        if (list) {
+            list.style.display = "none";
         }
+    });
 
-   function startAutoScroll(y) {
-    stopAutoScroll();
-
-    autoScrollInterval = setInterval(() => {
-        const scrollContainer = document.querySelector(".tasks-main-column");
-
-        if (scrollContainer) {
-            const rect = scrollContainer.getBoundingClientRect();
-            const canScrollInside =
-                scrollContainer.scrollHeight > scrollContainer.clientHeight;
-
-            if (canScrollInside) {
-                if (y < rect.top + 80) scrollContainer.scrollTop -= 12;
-                if (y > rect.bottom - 80) scrollContainer.scrollTop += 12;
-                return;
-            }
-        }
-
-        // fallback للموبايل كي يكون scroll تاع الصفحة
-        if (y < 80) {
-            window.scrollBy(0, -12);
-        }
-
-        if (y > window.innerHeight - 80) {
-            window.scrollBy(0, 12);
-        }
-    }, 16);
+    if (menu.style.display === "block") {
+        menu.style.display = "none";
+    } else {
+        menu.style.display = "block";
+    }
 }
 
+                   document.addEventListener("click", function (e) {
+
+                       // ========== SORT MENU ==========
+                       var wrapper = document.querySelector(".sort-wrapper");
+                       var menu = document.getElementById("sortMenu");
+
+                       if (wrapper && menu && !wrapper.contains(e.target)) {
+                           menu.style.display = "none";
+                       }
+                       // ========== SEARCH OVERLAY ==========
+                       var overlay = document.getElementById("searchOverlay");
+                       var box = document.querySelector(".search-box");
+
+                       if (overlay && overlay.style.display === "block") {
+                           if (box && !box.contains(e.target)) {
+                               overlay.style.display = "none";
+                           }
+                       }
+
+                   });
+
+                   document.addEventListener("keydown", function (e) {
+
+                       if (e.key === "Enter") {
+
+                           const input = document.getElementById("searchInput");
+
+                           if (input && document.activeElement === input) {
+                               e.preventDefault();
+                               doSearch();
+                           }
+                       }
+
+                   });
+
+                   function openSearch(e) {
+                       if (e) e.stopPropagation();
+
+                       document.getElementById("searchOverlay").style.display = "block";
+
+                       setTimeout(() => {
+                           document.getElementById("searchInput").focus();
+                       }, 100);
+                   }
+
+                   function closeSearch() {
+                       document.getElementById("searchOverlay").style.display = "none";
+                   }
+                   function doSearch() {
+                       let keyword = document.getElementById("searchInput").value;
+
+                       window.location.href = "/tasks/search?keyword=" + encodeURIComponent(keyword);
+                   }
+
+                   function toggleOverdueSection() {
+                       const list = document.getElementById("overdueList");
+                       const header = document.querySelector(".section-toggle");
+                       const arrow = document.getElementById("overdueArrow");
+
+                       if (!list || !header || !arrow) return;
+
+                       if (list.style.display === "none") {
+                           list.style.display = "block";
+                           header.classList.add("open");
+                       } else {
+                            list.style.display = "none";
+                           header.classList.remove("open");
+                       }
+                   }
+
+                   function toggleCompletedSection() {
+                       const list = document.getElementById("completedList");
+                       const header = document.querySelector(".completed-toggle");
+
+                       if (!list || !header) return;
+
+                       if (list.style.display === "none") {
+                           list.style.display = "block";
+                           header.classList.add("open");
+                       } else {
+                           list.style.display = "none";
+                           header.classList.remove("open");
+                       }
+                   }
+                   function updateAllScrollInputs() {
+                      const scrollBox = document.querySelector(".tasks-main-column");
+                      const value = scrollBox ? scrollBox.scrollTop : 0;
+
+                       const mainInput = document.getElementById("scrollPosInput");
+                       if (mainInput) {
+                           mainInput.value = value;
+                       }
+
+                       document.querySelectorAll(".scroll-pos-input").forEach(input => {
+                           input.value = value;
+                       });
+
+                       document.querySelectorAll('a[href*="/tasks/delete/"]').forEach(link => {
+                           try {
+                               const url = new URL(link.href, window.location.origin);
+                               url.searchParams.set("scrollPos", value);
+                               link.href = url.toString();
+                           } catch (e) {}
+                       });
+                   }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const scrollBox = document.querySelector(".tasks-main-column");
+    if (scrollBox) {
+        scrollBox.addEventListener("scroll", updateAllScrollInputs);
+    }
+});
+                   document.addEventListener("DOMContentLoaded", function () {
+                       updateAllScrollInputs();
+
+                       const savedScroll = "[[${scrollPos}]]";
+                       if (savedScroll && savedScroll !== "null" && savedScroll !== "") {
+                           setTimeout(() => {
+                              const scrollBox = document.querySelector(".tasks-main-column");
+if (scrollBox) {
+    scrollBox.scrollTop = parseInt(savedScroll);
+}
+                           }, 50);
+                       }
+                   })
+
+
+                function showTaskTab(type, clickedTab) {
+    localStorage.setItem("activeTaskTab", type);
+
+    const allTaskLists = document.querySelectorAll(".my-tasks-list");
+    const completedSection = document.getElementById("completedTasksPanel");
+    const overdueSection = document.getElementById("overdueTasksPanel");
+    const completedList = document.getElementById("completedList");
+    const overdueList = document.getElementById("overdueList");
+    const emptyMyTasksState = document.getElementById("emptyMyTasksState");
+
+    document.body.classList.add("tabs-mode");
+
+    allTaskLists.forEach(list => list.style.display = "none");
+    if (completedSection) completedSection.style.display = "none";
+    if (overdueSection) overdueSection.style.display = "none";
+    if (emptyMyTasksState) emptyMyTasksState.style.display = "none";
+
+    if (type === "all") {
+        allTaskLists.forEach(list => list.style.display = "block");
+        if (emptyMyTasksState) emptyMyTasksState.style.display = "block";
+    }
+
+    if (type === "completed" && completedSection) {
+        completedSection.style.display = "block";
+        if (completedList) completedList.style.display = "block";
+    }
+
+    if (type === "overdue" && overdueSection) {
+        overdueSection.style.display = "block";
+        if (overdueList) overdueList.style.display = "block";
+    }
+
+    document.querySelectorAll(".tabs span").forEach(tab => tab.classList.remove("active"));
+    const tab = clickedTab ? clickedTab.closest("span") : document.querySelector(".tabs span");
+    if (tab) tab.classList.add("active");
+
+    document.body.classList.add("tabs-ready");
+}
+document.addEventListener("DOMContentLoaded", function () {
+    const savedTab = localStorage.getItem("activeTaskTab") || "all";
+
+    const tabElement =
+        savedTab === "completed"
+            ? document.querySelector(".tabs span:nth-child(2)")
+            : savedTab === "overdue"
+                ? document.querySelector(".tabs span:nth-child(3)")
+                : document.querySelector(".tabs span:nth-child(1)");
+
+    showTaskTab(savedTab, tabElement);
+});
+
+                   function toggleEditInlineOverdue(id) {
+                       var view = document.getElementById("taskView-overdue-" + id);
+                       var edit = document.getElementById("taskEdit-overdue-" + id);
+
+                       if (!view || !edit) return;
+
+                       var isOpen = edit.classList.contains("active");
+
+                       closeAllEditInline();
+
+                       if (!isOpen) {
+                           view.style.display = "none";
+                           edit.classList.add("active");
+
+                           var titleInput = edit.querySelector(".inline-edit-title");
+                           if (titleInput) {
+                               setTimeout(function () {
+                                   titleInput.focus();
+                                   titleInput.select();
+                               }, 50);
+                           }
+                       }
+                   }
+
+              function startAutoScroll(y) {
+               stopAutoScroll();
+
+               autoScrollInterval = setInterval(() => {
+                   const scrollContainer = document.querySelector(".tasks-main-column");
+
+                   if (scrollContainer) {
+                       const rect = scrollContainer.getBoundingClientRect();
+                       const canScrollInside =
+                           scrollContainer.scrollHeight > scrollContainer.clientHeight;
+
+                       if (canScrollInside) {
+                           if (y < rect.top + 80) scrollContainer.scrollTop -= 12;
+                           if (y > rect.bottom - 80) scrollContainer.scrollTop += 12;
+                           return;
+                       }
+                   }
+
+                   if (y < 80) {
+                       window.scrollBy(0, -12);
+                   }
+
+                   if (y > window.innerHeight - 80) {
+                       window.scrollBy(0, 12);
+                   }
+               }, 16);
+           }
+
+
+       function toggleCustomMenu(e, btn) {
+    e.stopPropagation();
+
+    var pill = btn.closest(".custom-menu-pill");
+    var list = pill.querySelector(".custom-menu-list");
+    var wasOpen = pill.classList.contains("open");
+
+    document.querySelectorAll(".custom-menu-pill").forEach(function (p) {
+        p.classList.remove("open");
+        var l = p.querySelector(".custom-menu-list");
+        if (l) l.style.display = "none";
+    });
+
+    if (!wasOpen) {
+        pill.classList.add("open");
+        if (list) list.style.display = "block";
+    }
+}
+document.addEventListener("click", function (e) {
+    if (!e.target.closest(".custom-menu-pill")) {
+        document.querySelectorAll(".custom-menu-pill").forEach(function (pill) {
+            pill.classList.remove("open");
+
+            const list = pill.querySelector(".custom-menu-list");
+            if (list) list.style.display = "none";
+        });
+    }
+});
+          function chooseCustomOption(e, item, value) {
+              e.stopPropagation();
+
+              const pill = item.closest(".custom-menu-pill");
+              const input = pill.querySelector("input");
+
+              input.value = value;
+              input.dispatchEvent(new Event("change"));
+
+              pill.dataset.value = value;
+              pill.classList.remove("open");
+
+              document.getElementById("quickAddTitle").focus();
+          }
+
+function changeCount(id, amount) {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    const current = parseInt(el.textContent || "0", 10);
+    el.textContent = Math.max(0, current + amount);
+}
+
+function setDragHandle(taskBlock, show) {
+    const dragHandle = taskBlock.querySelector(".drag-handle");
+    if (!dragHandle) return;
+    dragHandle.style.display = show ? "" : "none";
+}
+
+function isTaskOverdue(taskBlock) {
+    if (taskBlock.closest("#overdueList")) return true;
+
+    const dueDate = taskBlock.dataset.dueDate;
+    if (!dueDate) return false;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const taskDate = new Date(dueDate + "T00:00:00");
+    return taskDate < today;
+}
+
+function toggleTaskAjax(checkbox) {
+    const form = checkbox.closest("form");
+    const taskBlock = checkbox.closest(".task-block");
+
+    const wasInOverdue = taskBlock.closest("#overdueList") !== null;
+    const wasOverdue = wasInOverdue || isTaskOverdue(taskBlock);
+
+    fetch(form.action, {
+        method: "POST",
+        body: new FormData(form)
+    }).then(() => {
+        if (!taskBlock) return;
+
+        const completedList = document.getElementById("completedList");
+        const myTasksList = document.querySelector(".my-tasks-list");
+        const overdueList = document.getElementById("overdueList");
+
+        if (checkbox.checked) {
+            changeCount("completedCount", 1);
+            updateWeeklyBarByTask(taskBlock, 1);
+            if (isTaskToday(taskBlock)) {
+                changeCount("todayCompletedCount", 1);
+                changeCount("todayRemainingCount", -1);
+            }
+
+            if (wasOverdue) {
+                changeCount("overdueCount", -1);
+            } else {
+                changeCount("myTasksCount", -1);
+
+            }
+
+            taskBlock.querySelector(".task-title")?.classList.add("done");
+            taskBlock.querySelector(".task-title")?.classList.remove("active");
+            taskBlock.querySelector(".task-desc")?.classList.add("done");
+            taskBlock.querySelector(".task-date")?.classList.add("done");
+            taskBlock.querySelector(".overdue-icon")?.classList.remove("overdue-icon");
+            taskBlock.querySelector(".overdue-date")?.classList.remove("overdue-date");
+            setDragHandle(taskBlock, false);
+
+            if (completedList) completedList.prepend(taskBlock);
+            else taskBlock.remove();
+
+        } else {
+            changeCount("completedCount", -1);
+             updateWeeklyBarByTask(taskBlock, -1);
+            if (isTaskToday(taskBlock)) {
+                changeCount("todayCompletedCount", -1);
+                changeCount("todayRemainingCount", 1);
+            }
+
+            taskBlock.querySelector(".task-title")?.classList.remove("done");
+            taskBlock.querySelector(".task-title")?.classList.add("active");
+            taskBlock.querySelector(".task-desc")?.classList.remove("done");
+            taskBlock.querySelector(".task-date")?.classList.remove("done");
+
+            if (wasOverdue) {
+                changeCount("overdueCount", 1);
+                setDragHandle(taskBlock, false);
+
+                taskBlock.querySelector(".task-date i")?.classList.add("overdue-icon");
+                taskBlock.querySelector(".task-date span")?.classList.add("overdue-date");
+
+                if (overdueList) overdueList.prepend(taskBlock);
+                else taskBlock.remove();
+
+            } else {
+                changeCount("myTasksCount", 1);
+                setDragHandle(taskBlock, true);
+
+                if (myTasksList) myTasksList.prepend(taskBlock);
+                else taskBlock.remove();
+            }
+        }
+    }).catch(() => {
+        checkbox.checked = !checkbox.checked;
+        alert("Something went wrong");
+    });
+}
+
+
+function isTaskToday(taskBlock) {
+    const dueDate = taskBlock.dataset.dueDate;
+    if (!dueDate) return false;
+
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+
+    return dueDate === `${yyyy}-${mm}-${dd}`;
+}
+
+   function saveTaskAjax(event, form) {
+    event.preventDefault();
+
+    const taskBlock = form.closest(".task-block");
+    const titleInput = form.querySelector('input[name="title"]');
+    const descInput = form.querySelector('textarea[name="description"]');
+    const dateInput = form.querySelector('input[name="dueDate"]');
+    const prioritySelect = form.querySelector('select[name="priority"]');
+    const categorySelect = form.querySelector('select[name="category"]');
+
+    fetch(form.action, {
+        method: "POST",
+        body: new FormData(form)
+    }).then(() => {
+        if (!taskBlock) return;
+
+        taskBlock.querySelector(".task-title").textContent = titleInput.value;
+
+        const descBox = taskBlock.querySelector(".task-desc");
+        if (descBox && descInput) descBox.textContent = descInput.value;
+
+        updatePriorityUI(taskBlock, prioritySelect?.value);
+        updateCategoryUI(taskBlock, categorySelect?.value);
+        updateDateUI(taskBlock, dateInput?.value);
+        moveTaskAfterEdit(taskBlock, dateInput?.value);
+        closeAllEditInline();
+    }).catch(() => {
+        alert("Something went wrong");
+    });
+}
+function moveTaskAfterEdit(taskBlock, dueDate) {
+    if (!dueDate) return;
+
+    const isDone = taskBlock.querySelector(".task-checkbox")?.checked;
+    if (isDone) return;
+
+    const overdue = isDateOverdue(dueDate);
+    const isCurrentlyOverdue = taskBlock.closest("#overdueList") !== null;
+
+    if (overdue && !isCurrentlyOverdue) {
+        changeCount("myTasksCount", -1);
+        changeCount("overdueCount", 1);
+
+        taskBlock.querySelector(".task-date i")?.classList.add("overdue-icon");
+        taskBlock.querySelector(".task-date span")?.classList.add("overdue-date");
+        setDragHandle(taskBlock, false);
+
+        const overdueList = document.getElementById("overdueList");
+        if (overdueList) overdueList.prepend(taskBlock);
+
+    } else if (!overdue && isCurrentlyOverdue) {
+        changeCount("overdueCount", -1);
+        changeCount("myTasksCount", 1);
+
+        taskBlock.querySelector(".task-date i")?.classList.remove("overdue-icon");
+        taskBlock.querySelector(".task-date span")?.classList.remove("overdue-date");
+        setDragHandle(taskBlock, true);
+
+        const myTasksList = document.querySelector(".my-tasks-list");
+        if (myTasksList) myTasksList.prepend(taskBlock);
+    }
+}
+
+function isDateOverdue(dueDate) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const taskDate = new Date(dueDate + "T00:00:00");
+    return taskDate < today;
+}
+
+function updatePriorityUI(taskBlock, value) {
+    let metaRow = taskBlock.querySelector(".task-meta-row");
+    if (!metaRow || !value) return;
+
+    let label = taskBlock.querySelector(".priority-label");
+    if (!label) {
+        label = document.createElement("div");
+        label.className = "priority-label";
+        label.innerHTML = `<span class="priority-dot"></span><span></span>`;
+        metaRow.prepend(label);
+    }
+
+    const dot = label.querySelector(".priority-dot");
+    const text = label.querySelector("span:last-child");
+
+    text.textContent = value;
+
+    const colors = {
+        P1: "red",
+        P2: "#ff8800",
+        P3: "#f4f128",
+        P4: "gray"
+    };
+
+    dot.style.background = colors[value] || "gray";
+}
+
+function updateCategoryUI(taskBlock, value) {
+    let metaRow = taskBlock.querySelector(".task-meta-row");
+    if (!metaRow || !value) return;
+
+    let label = taskBlock.querySelector(".category-label");
+    if (!label) {
+        label = document.createElement("div");
+        label.className = "category-label";
+        label.innerHTML = `<span class="category-dot"></span><span></span>`;
+
+        const priority = taskBlock.querySelector(".priority-label");
+        if (priority) priority.after(label);
+        else metaRow.prepend(label);
+    }
+
+    const dot = label.querySelector(".category-dot");
+    const text = label.querySelector("span:last-child");
+
+    text.textContent = value;
+
+    const colors = {
+        Work: "#4a90e2",
+        Study: "#9b59b6",
+        Personal: "#ff6fa5",
+        Shopping: "#2ecc71"
+    };
+
+    dot.style.background = colors[value] || "#cfcfcf";
+}
+
+function updateDateUI(taskBlock, value) {
+    let metaRow = taskBlock.querySelector(".task-meta-row");
+    if (!metaRow || !value) return;
+
+    let dateBox = taskBlock.querySelector(".task-date");
+    if (!dateBox) {
+        dateBox = document.createElement("div");
+        dateBox.className = "task-date";
+        dateBox.innerHTML = `<i class="fa-regular fa-calendar"></i> <span></span>`;
+        metaRow.appendChild(dateBox);
+    }
+
+    const span = dateBox.querySelector("span");
+    span.textContent = formatDateLabel(value);
+}
+
+function formatDateLabel(value) {
+    if (!value) return "";
+
+    const date = new Date(value + "T00:00:00");
+    const currentYear = new Date().getFullYear();
+    const taskYear = date.getFullYear();
+
+    if (taskYear === currentYear) {
+        return date.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric"
+        });
+    }
+
+    return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric"
+    });
+}
+function updateTodayWeeklyBar(change) {
+    const todayBar = document.querySelector(".weekly-bar.active");
+    if (!todayBar) return;
+
+    let count = parseInt(todayBar.dataset.count || "0", 10);
+    count = Math.max(0, count + change);
+
+    todayBar.dataset.count = count;
+    todayBar.style.height = (count * 22 + 20) + "px";
+}
+
+
+      function updateWeeklyBarByTask(taskBlock, change) {
+    const dueDate = taskBlock.dataset.dueDate;
+    if (!dueDate) return;
+
+    const date = new Date(dueDate + "T00:00:00");
+    let dayIndex = date.getDay(); // Sunday=0, Monday=1
+
+    dayIndex = dayIndex === 0 ? 6 : dayIndex - 1; // Monday=0 ... Sunday=6
+
+    const bar = document.querySelector(`.weekly-bar[data-day-index="${dayIndex}"]`);
+    if (!bar) return;
+
+    let count = parseInt(bar.dataset.count || "0", 10);
+    count = Math.max(0, count + change);
+
+    bar.dataset.count = count;
+    bar.style.height = (count * 22 + 20) + "px";
+}
 
     </script>
 </div>
