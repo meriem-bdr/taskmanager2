@@ -121,6 +121,7 @@ public class TaskService {
 
     public List<Task> getTasksByCategory(String category) {
         initializeDisplayOrderIfNeeded();
+
         return taskRepository.findByCategoryOrderByDoneAscDisplayOrderAscIdAsc(category);
     }
 
@@ -271,12 +272,8 @@ public class TaskService {
     public List<Task> getOverdueTasks() {
         LocalDate today = LocalDate.now();
 
-        List<Task> overdueTasks = taskRepository.findAll().stream()
-                .filter(task -> !task.isDone())
-                .filter(task -> task.getDueDate() != null)
-                .filter(task -> task.getDueDate().isBefore(today))
-                .sorted(Comparator.comparing(Task::getDueDate))
-                .toList();
+        List<Task> overdueTasks =
+                taskRepository.findByDueDateBeforeAndDoneFalseOrderByDueDateDesc(today);
 
         List<Task> doneTasks = taskRepository.findAll().stream()
                 .filter(Task::isDone)

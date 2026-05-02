@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.Comparator;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -28,6 +28,7 @@ public class TaskController {
                 .filter(task -> task.getDueDate() != null)
                 .filter(task -> task.getDueDate().isBefore(LocalDate.now()))
                 .filter(task -> !task.isDone())
+                .sorted((t1, t2) -> t2.getDueDate().compareTo(t1.getDueDate()))
                 .toList();
 
         List<Task> completedTasks = sourceTasks.stream()
@@ -56,15 +57,19 @@ public class TaskController {
         LocalDate today = LocalDate.now();
         LocalDate startOfWeek = today.minusDays(today.getDayOfWeek().getValue() - 1);
 
+        List<Task> statsTasks = taskService.getAllTasks();
+
         List<Integer> weeklyStats = new ArrayList<>();
 
         for (int i = 0; i < 7; i++) {
             LocalDate day = startOfWeek.plusDays(i);
 
-            int count = (int) sourceTasks.stream()
+            int count = (int) statsTasks.stream()
                     .filter(Task::isDone)
-                    .filter(task -> task.getDueDate() != null)
-                    .filter(task -> task.getDueDate().isEqual(day))
+                    .filter(task -> {
+                        LocalDate taskDate = task.getDueDate() != null ? task.getDueDate() : LocalDate.now();
+                        return taskDate.isEqual(day);
+                    })
                     .count();
 
             weeklyStats.add(count);

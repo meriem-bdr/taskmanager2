@@ -7,71 +7,74 @@
 
     <style>
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: white;
-        }
+           margin: 0;
+           font-family: 'Segoe UI', sans-serif;
+           background: #f5f8ff;
+           color: #1e293b;
+       }
 
-        .container {
-            width: 550px;
-            margin: 70px auto;
-        }
+       .container {
+           width: 550px;
+           margin: 70px auto;
+       }
 
-        .priority-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 24px;
-            height: 72px;
-            width: 100%;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 14px;
-            text-decoration: none;
-            font-size: 20px;
-            color: black;
-            background: white;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-            transition: 0.2s;
-        }
+       .priority-btn {
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           gap: 20px;
+           height: 68px;
+           width: 100%;
+           margin-bottom: 18px;
+           border: 1px solid #e2e8f0;
+           border-radius: 12px;
+           text-decoration: none;
+           font-size: 18px;
+           font-weight: 600;
+           color: #0f172a;
+           background: white;
+           box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+           transition: all 0.25s ease;
+       }
+.priority-btn:hover {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+}
 
-        .priority-btn:hover {
-            background-color: #f8f8f8;
-        }
 
-        .p1 { border-left: 8px solid red; }
-        .p2 { border-left: 8px solid #ff8800; }
-        .p3 { border-left: 8px solid #f4f128; }
-        .p4 { border-left: 8px solid gray; }
+       .p1 { border-left: 6px solid #ef4444; }
+       .p2 { border-left: 6px solid #f97316; }
+       .p3 { border-left: 6px solid #eab308; }
+       .p4 { border-left: 6px solid #6b7280; }
 
-        /* ✅ زر menu ثابت */
-        .menu-global {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            font-size: 22px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            z-index: 1100;
-            padding: 8px 10px;
-            border-radius: 8px;
-        }
 
-        .menu-global:hover {
-            background: #f5f5f5;
-        }
+       .menu-global {
+           position: fixed;
+           top: 15px;
+           left: 15px;
+           font-size: 20px;
+           background: white;
+           border: 1px solid #e2e8f0;
+           cursor: pointer;
+           z-index: 1100;
+           padding: 8px 10px;
+           border-radius: 10px;
+       }
 
-        a { color: black; }
+       .menu-global:hover {
+           background: #f1f5f9;
+       }
 
-        #sidebar a {
-            text-decoration: none;
-            color: black;
-        }
+       a { color: inherit; }
 
-        #sidebar a:hover {
-            text-decoration: underline;
-        }
+       #sidebar a {
+           text-decoration: none;
+           color: #1e293b;
+       }
+
+       #sidebar a:hover {
+           color: #2563eb;
+       }
     </style>
 </head>
 

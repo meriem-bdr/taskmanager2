@@ -450,7 +450,8 @@ body.tabs-mode .section-toggle {
     transition: transform 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
     background: #ffffff;
     box-shadow: var(--shadow-card);
-    overflow: hidden;
+    overflow: visible;
+
 }
 
 .task-block:hover {
@@ -552,7 +553,7 @@ body.tabs-mode .section-toggle {
     height: 9px;
     border-radius: 50%;
     display: inline-block;
-    box-shadow: 0 0 0 3px rgba(12, 108, 233, 0.10);
+    box-shadow: none;
 }
 
 .task-date.done {
@@ -1294,8 +1295,8 @@ body.sidebar-open .page-content {
     color: #ff6fa5;
 }
 
-.custom-menu-pill[data-value="Shopping"] .custom-menu-btn i {
-    color: #2ecc71;
+.custom-menu-pill[data-value="Daily"] .custom-menu-btn i {
+    color: #22c55e;
 }
 
    .quick-add-box,
@@ -1326,34 +1327,14 @@ body.sidebar-open .page-content {
     box-shadow: 0 8px 18px rgba(0, 62, 143, 0.08);
 }
 
-.custom-menu-list {
-    display: none;
-    position: absolute;
-    top: 46px;
-    right: 0;
-    width: 170px;
-    background: white;
-    border: 1px solid #dbeafe;
-    border-radius: 18px;
-    padding: 8px;
-    box-shadow: 0 18px 45px rgba(0, 62, 143, 0.18);
-    z-index: 99999;
-}
+
+
 
 .custom-menu-pill.open .custom-menu-list {
     display: block;
 }
 
-.custom-menu-list div {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 11px 12px;
-    border-radius: 14px;
-    cursor: pointer;
-    font-weight: 700;
-    color: #0f172a;
-}
+
 
 .custom-menu-list div:hover {
     background: #f1f5ff;
@@ -1371,14 +1352,11 @@ body.sidebar-open .page-content {
 .p4 { background: #6b7280; }
 
 .work { background: #4a90e2; }
-.study { background: #9b59b6; }
-.personal { background: #ff6fa5; }
-.shopping { background: #2ecc71; }
+.personal { background: #ec4899; }
+.study { background: #7c3aed; }
+.daily { background: #22c55e; }
 
 
-.priority-menu .custom-menu-list {
-    width: 120px;
-}
 
 .priority-menu .custom-menu-list div {
     width: 100%;
@@ -1392,10 +1370,7 @@ body.sidebar-open .page-content {
     padding-right: 10px;
 }
 
-.custom-menu-list {
-    position: absolute;
-    z-index: 9999;
-}
+
 
 
         .page-content {
@@ -1495,6 +1470,137 @@ body:not(.tabs-ready) .tasks-with-weekly {
 
 .inline-edit-description-wrap {
     border-top: 1px solid #e5e7eb;
+    position: relative;
+    z-index: 0;
+}
+
+.inline-edit-top {
+    z-index: 50 !important;
+}
+
+
+
+
+
+        .task-meta-row {
+    gap: 8px !important;
+}
+
+.task-meta-row .priority-label,
+.task-meta-row .category-label,
+.task-meta-row .task-date {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    padding: 3px 7px !important;
+    border-radius: 999px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    border: 1px solid transparent !important;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.035) !important;
+}
+
+.task-meta-row .priority-label:has(.priority-dot[style*="red"]) {
+    background: #ffecef !important;
+    border-color: #ffd5dc !important;
+    color: #b91c1c !important;
+}
+
+.task-meta-row .priority-label:has(.priority-dot[style*="#ff8800"]) {
+    background: #fff3e6 !important;
+    border-color: #ffd7ad !important;
+    color: #c2410c !important;
+}
+
+.task-meta-row .priority-label:has(.priority-dot[style*="#f4f128"]),
+.task-meta-row .priority-label:has(.priority-dot[style*="#eab308"]) {
+    background: #fffbea !important;
+    border-color: #fef08a !important;
+    color: #a16207 !important;
+}
+
+.task-meta-row .priority-label:has(.priority-dot[style*="gray"]) {
+    background: #f1f5f9 !important;
+    border-color: #e2e8f0 !important;
+    color: #475569 !important;
+}
+
+.task-meta-row .category-label:has(.category-dot[style*="#4a90e2"]) {
+    background: #eaf4ff !important;
+    border-color: #d6eaff !important;
+    color: #155e9f !important;
+}
+
+.task-meta-row .category-label:has(.category-dot[style*="#7c3aed"]) {
+    background: #ede9fe !important;
+    border-color: #c4b5fd !important;
+    color: #5b21b6 !important;
+}
+
+
+.task-meta-row .category-label:has(.category-dot[style*="#ec4899"]) {
+    background: #fce7f3 !important;
+    border-color: #f9a8d4 !important;
+    color: #9d174d !important;
+}
+
+
+.task-meta-row .category-label:has(.category-dot[style*="#2ecc71"]) {
+    background: #eafaf1 !important;
+    border-color: #c9f2da !important;
+    color: #16834a !important;
+}
+
+
+
+        .custom-menu-list {
+    display: none;
+    position: absolute;
+    top: 46px;
+    right: 0;
+    width: 170px;
+    background: white;
+    border: 1px solid #dbeafe;
+    border-radius: 18px;
+    padding: 8px;
+    box-shadow: 0 18px 45px rgba(0, 62, 143, 0.18);
+    z-index: 999999;
+}
+
+.custom-menu-list div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 12px;
+    border-radius: 14px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.priority-menu .custom-menu-list {
+    width: 120px;
+}
+
+
+        .inline-edit-box .custom-menu-list {
+    top: 40px;
+    width: 105px;
+    padding: 4px;
+    border-radius: 14px;
+}
+
+.inline-edit-box .custom-menu-list div {
+    gap: 8px;
+    padding: 6px 8px;
+    font-size: 13px;
+    border-radius: 10px;
+}
+
+.inline-edit-box .priority-menu .custom-menu-list {
+    width: 95px;
 }
     </style>
 </head>
@@ -1712,8 +1818,9 @@ body:not(.tabs-ready) .tasks-with-weekly {
                                 <div onclick="chooseCustomOption(event, this, 'Personal')"><span
                                         class="dot personal"></span>Personal
                                 </div>
-                                <div onclick="chooseCustomOption(event, this, 'Shopping')"><span
-                                        class="dot shopping"></span>Shopping
+                                <div onclick="chooseCustomOption(event, this, 'Daily')"><span
+                                        class="dot daily"></span>Daily
+
                                 </div>
                             </div>
                         </div>
@@ -1831,13 +1938,13 @@ body:not(.tabs-ready) .tasks-with-weekly {
                                         <span class="category-dot"
                                               th:style="${
                                                   task.category == 'Work' ? 'background:#4a90e2;' :
-                                                  (task.category == 'Study' ? 'background:#9b59b6;' :
-                                                  (task.category == 'Personal' ? 'background:#ff6fa5;' :
-                                                  (task.category == 'Shopping' ? 'background:#2ecc71;' :
+                                                  (task.category == 'Personal' ? 'background:#ec4899;' :
+                                                  (task.category == 'Study' ? 'background:#7c3aed;' :
+                                                  ((task.category == 'Daily' or task.category == 'Shopping') ? 'background:#22c55e;' :
                                                   'background:#cfcfcf;')))
                                               }">
                                         </span>
-                                                <span th:text="${task.category}"></span>
+                                                <span th:text="${task.category == 'Shopping' ? 'Daily' : task.category}"></span>
                                             </div>
 
                                             <div th:if="${task.dueDate != null}"
@@ -1893,7 +2000,7 @@ body:not(.tabs-ready) .tasks-with-weekly {
                                                required>
 
                                         <div class="inline-edit-actions">
-                                            <div class="smart-pill edit-date-pill" onclick="openEditDate(this)">
+                                            <div class="smart-pill edit-date-pill" onpointerdown="openEditDate(event, this)">
                                                 <i class="fa-regular fa-calendar"></i>
                                                 <span class="pill-text"></span>
                                                 <input type="text"
@@ -1903,41 +2010,34 @@ body:not(.tabs-ready) .tasks-with-weekly {
                                                        readonly>
                                             </div>
 
-                                            <div class="smart-pill edit-priority-pill">
-                                                <i class="fa-solid fa-flag"></i>
-                                                <span class="pill-text"></span>
-                                                <select name="priority">
-                                                    <option value=""></option>
-                                                    <option value="P1" th:selected="${task.priority == 'P1'}">P1
-                                                    </option>
-                                                    <option value="P2" th:selected="${task.priority == 'P2'}">P2
-                                                    </option>
-                                                    <option value="P3" th:selected="${task.priority == 'P3'}">P3
-                                                    </option>
-                                                    <option value="P4" th:selected="${task.priority == 'P4'}">P4
-                                                    </option>
-                                                </select>
+                                            <div class="custom-menu-pill priority-menu edit-priority-pill">
+                                                <button type="button" class="custom-menu-btn" onclick="toggleCustomMenu(event, this)">
+                                                    <i class="fa-solid fa-flag"></i>
+                                                </button>
+
+                                                <input type="hidden" name="priority" th:value="${task.priority}">
+
+                                                <div class="custom-menu-list">
+                                                    <div onclick="chooseCustomOption(event, this, 'P1')"><span class="priority-dot" style="background:red"></span>P1</div>
+                                                    <div onclick="chooseCustomOption(event, this, 'P2')"><span class="priority-dot" style="background:#ff8800"></span>P2</div>
+                                                    <div onclick="chooseCustomOption(event, this, 'P3')"><span class="priority-dot" style="background:#eab308"></span>P3</div>
+                                                    <div onclick="chooseCustomOption(event, this, 'P4')"><span class="priority-dot" style="background:gray"></span>P4</div>
+                                                </div>
                                             </div>
 
-                                            <div class="smart-pill edit-category-pill">
-                                                <i class="fa-solid fa-tag"></i>
-                                                <span class="pill-text"></span>
-                                                <select name="category">
-                                                    <option value=""></option>
-                                                    <option value="Work" th:selected="${task.category == 'Work'}">Work
-                                                    </option>
-                                                    <option value="Study" th:selected="${task.category == 'Study'}">
-                                                        Study
-                                                    </option>
-                                                    <option value="Personal"
-                                                            th:selected="${task.category == 'Personal'}">
-                                                        Personal
-                                                    </option>
-                                                    <option value="Shopping"
-                                                            th:selected="${task.category == 'Shopping'}">
-                                                        Shopping
-                                                    </option>
-                                                </select>
+                                            <div class="custom-menu-pill category-menu edit-category-pill">
+                                                <button type="button" class="custom-menu-btn" onclick="toggleCustomMenu(event, this)">
+                                                    <i class="fa-solid fa-tag"></i>
+                                                </button>
+
+                                                <input type="hidden" name="category" th:value="${task.category}">
+
+                                                <div class="custom-menu-list">
+                                                    <div onclick="chooseCustomOption(event, this, 'Work')"><span class="dot work"></span>Work</div>
+                                                    <div onclick="chooseCustomOption(event, this, 'Study')"><span class="dot study"></span>Study</div>
+                                                    <div onclick="chooseCustomOption(event, this, 'Personal')"><span class="dot personal"></span>Personal</div>
+                                                    <div onclick="chooseCustomOption(event, this, 'Daily')"><span class="dot daily"></span>Daily</div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -2015,13 +2115,13 @@ body:not(.tabs-ready) .tasks-with-weekly {
                                 <span class="category-dot"
                                       th:style="${
                                           task.category == 'Work' ? 'background:#4a90e2;' :
-                                          (task.category == 'Study' ? 'background:#9b59b6;' :
-                                          (task.category == 'Personal' ? 'background:#ff6fa5;' :
-                                          (task.category == 'Shopping' ? 'background:#2ecc71;' :
+                                         (task.category == 'Personal' ? 'background:#ec4899;' :
+                                          (task.category == 'Study' ? 'background:#7c3aed;' :
+                                          ((task.category == 'Daily' or task.category == 'Shopping') ? 'background:#22c55e;' :
                                           'background:#cfcfcf;')))
                                       }">
                                 </span>
-                                                    <span th:text="${task.category}"></span>
+                                                    <span th:text="${task.category == 'Shopping' ? 'Daily' : task.category}"></span>
                                                 </div>
 
                                                 <div th:if="${task.dueDate != null}" class="task-date">
@@ -2077,7 +2177,7 @@ body:not(.tabs-ready) .tasks-with-weekly {
                                                    required>
 
                                             <div class="inline-edit-actions">
-                                                <div class="smart-pill edit-date-pill" onclick="openEditDate(this)">
+                                                <div class="smart-pill edit-date-pill" onpointerdown="openEditDate(event, this)">
                                                     <i class="fa-regular fa-calendar"></i>
                                                     <span class="pill-text"></span>
                                                     <input type="text"
@@ -2087,40 +2187,34 @@ body:not(.tabs-ready) .tasks-with-weekly {
                                                            readonly>
                                                 </div>
 
-                                                <div class="smart-pill edit-priority-pill">
-                                                    <i class="fa-solid fa-flag"></i>
-                                                    <span class="pill-text"></span>
-                                                    <select name="priority">
-                                                        <option value=""></option>
-                                                        <option value="P1" th:selected="${task.priority == 'P1'}">P1
-                                                        </option>
-                                                        <option value="P2" th:selected="${task.priority == 'P2'}">P2
-                                                        </option>
-                                                        <option value="P3" th:selected="${task.priority == 'P3'}">P3
-                                                        </option>
-                                                        <option value="P4" th:selected="${task.priority == 'P4'}">P4
-                                                        </option>
-                                                    </select>
+                                                <div class="custom-menu-pill priority-menu edit-priority-pill">
+                                                    <button type="button" class="custom-menu-btn" onclick="toggleCustomMenu(event, this)">
+                                                        <i class="fa-solid fa-flag"></i>
+                                                    </button>
+
+                                                    <input type="hidden" name="priority" th:value="${task.priority}">
+
+                                                    <div class="custom-menu-list">
+                                                        <div onclick="chooseCustomOption(event, this, 'P1')"><span class="priority-dot" style="background:red"></span>P1</div>
+                                                        <div onclick="chooseCustomOption(event, this, 'P2')"><span class="priority-dot" style="background:#ff8800"></span>P2</div>
+                                                        <div onclick="chooseCustomOption(event, this, 'P3')"><span class="priority-dot" style="background:#eab308"></span>P3</div>
+                                                        <div onclick="chooseCustomOption(event, this, 'P4')"><span class="priority-dot" style="background:gray"></span>P4</div>
+                                                    </div>
                                                 </div>
 
-                                                <div class="smart-pill edit-category-pill">
-                                                    <i class="fa-solid fa-tag"></i>
-                                                    <span class="pill-text"></span>
-                                                    <select name="category">
-                                                        <option value=""></option>
-                                                        <option value="Work" th:selected="${task.category == 'Work'}">
-                                                            Work
-                                                        </option>
-                                                        <option value="Study" th:selected="${task.category == 'Study'}">
-                                                            Study
-                                                        </option>
-                                                        <option value="Personal"
-                                                                th:selected="${task.category == 'Personal'}">Personal
-                                                        </option>
-                                                        <option value="Shopping"
-                                                                th:selected="${task.category == 'Shopping'}">Shopping
-                                                        </option>
-                                                    </select>
+                                                <div class="custom-menu-pill category-menu edit-category-pill">
+                                                    <button type="button" class="custom-menu-btn" onclick="toggleCustomMenu(event, this)">
+                                                        <i class="fa-solid fa-tag"></i>
+                                                    </button>
+
+                                                    <input type="hidden" name="category" th:value="${task.category}">
+
+                                                    <div class="custom-menu-list">
+                                                        <div onclick="chooseCustomOption(event, this, 'Work')"><span class="dot work"></span>Work</div>
+                                                        <div onclick="chooseCustomOption(event, this, 'Study')"><span class="dot study"></span>Study</div>
+                                                        <div onclick="chooseCustomOption(event, this, 'Personal')"><span class="dot personal"></span>Personal</div>
+                                                        <div onclick="chooseCustomOption(event, this, 'Daily')"><span class="dot daily"></span>Daily</div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -2207,13 +2301,13 @@ body:not(.tabs-ready) .tasks-with-weekly {
                             <span class="category-dot"
                                   th:style="${
                                       task.category == 'Work' ? 'background:#4a90e2;' :
-                                      (task.category == 'Study' ? 'background:#9b59b6;' :
-                                      (task.category == 'Personal' ? 'background:#ff6fa5;' :
-                                      (task.category == 'Shopping' ? 'background:#2ecc71;' :
+                                      (task.category == 'Personal' ? 'background:#ec4899;' :
+                                      (task.category == 'Study' ? 'background:#7c3aed;' :
+                                      ((task.category == 'Daily' or task.category == 'Shopping') ? 'background:#22c55e;' :
                                       'background:#cfcfcf;')))
                                   }">
                             </span>
-                                                <span th:text="${task.category}"></span>
+                                                <span th:text="${task.category == 'Shopping' ? 'Daily' : task.category}"></span>
                                             </div>
 
                                             <div th:if="${task.dueDate != null}"
@@ -2306,13 +2400,13 @@ body:not(.tabs-ready) .tasks-with-weekly {
                                 <span class="category-dot"
                                       th:style="${
                                           task.category == 'Work' ? 'background:#4a90e2;' :
-                                          (task.category == 'Study' ? 'background:#9b59b6;' :
-                                          (task.category == 'Personal' ? 'background:#ff6fa5;' :
-                                          (task.category == 'Shopping' ? 'background:#2ecc71;' :
+                                         (task.category == 'Personal' ? 'background:#ec4899;' :
+                                          (task.category == 'Study' ? 'background:#7c3aed;' :
+                                          ((task.category == 'Daily' or task.category == 'Shopping') ? 'background:#22c55e;' :
                                           'background:#cfcfcf;')))
                                       }">
                                 </span>
-                                                    <span th:text="${task.category}"></span>
+                                                    <span th:text="${task.category == 'Shopping' ? 'Daily' : task.category}"></span>
                                                 </div>
 
                                                 <div th:if="${task.dueDate != null}" class="task-date done">
@@ -2467,26 +2561,39 @@ body:not(.tabs-ready) .tasks-with-weekly {
                        }
                    }
 
-                   function openEditDate(el) {
-                       var input = el.querySelector("input");
-                       if (!input) return;
+            function openEditDate(e, el) {
+    e.preventDefault();
+    e.stopPropagation();
 
-                       if (!input._flatpickr) {
-                           flatpickr(input, {
-                               dateFormat: "Y-m-d",
-                               allowInput: false,
-                               clickOpens: false,
-                               monthSelectorType: "dropdown",
-                               prevArrow: "&#10094;",
-                               nextArrow: "&#10095;",
-                               onChange: function (selectedDates, dateStr) {
-                                   updateSmartPill(el, formatDateForPill(dateStr));
-                               }
-                           });
-                       }
+    var input = el.querySelector("input");
+    if (!input) return;
 
-                       input._flatpickr.open();
-                   }
+    if (!input._flatpickr) {
+        flatpickr(input, {
+            dateFormat: "Y-m-d",
+            allowInput: false,
+            clickOpens: false,
+            monthSelectorType: "dropdown",
+            prevArrow: "&#10094;",
+            nextArrow: "&#10095;",
+            onOpen: function () {
+                el.dataset.calendarOpen = "true";
+            },
+            onClose: function () {
+                el.dataset.calendarOpen = "false";
+            },
+            onChange: function (selectedDates, dateStr) {
+                updateSmartPill(el, formatDateForPill(dateStr));
+            }
+        });
+    }
+
+    if (el.dataset.calendarOpen === "true") {
+        input._flatpickr.close();
+    } else {
+        input._flatpickr.open();
+    }
+}
 
                    function formatDateForPill(value) {
                        if (!value) return "";
@@ -2655,8 +2762,10 @@ body:not(.tabs-ready) .tasks-with-weekly {
 
           quickAddTitle.setCustomValidity("");
 
-                  localStorage.setItem("activeTaskTab", "all");
-                  quickAddBox.requestSubmit();
+                 localStorage.setItem("activeTaskTab", "all");
+quickAddBox.classList.remove("expanded");
+quickAddTitle.blur();
+quickAddBox.submit();
               }
           });
                        }
@@ -3107,21 +3216,25 @@ document.addEventListener("click", function (e) {
         });
     }
 });
-          function chooseCustomOption(e, item, value) {
-              e.stopPropagation();
+         function chooseCustomOption(e, item, value) {
+    e.preventDefault();
+    e.stopPropagation();
 
-              const pill = item.closest(".custom-menu-pill");
-              const input = pill.querySelector("input");
+    const pill = item.closest(".custom-menu-pill");
+    const input = pill.querySelector("input");
+    const list = pill.querySelector(".custom-menu-list");
 
-              input.value = value;
-              input.dispatchEvent(new Event("change"));
+    input.value = value;
+    input.dispatchEvent(new Event("change", { bubbles: true }));
 
-              pill.dataset.value = value;
-              pill.classList.remove("open");
+    pill.dataset.value = value;
 
-              document.getElementById("quickAddTitle").focus();
-          }
+    pill.classList.remove("open");
+    if (list) list.style.display = "none";
 
+    const title = pill.closest("form")?.querySelector(".quick-add-title");
+    if (title) title.focus();
+}
 function changeCount(id, amount) {
     const el = document.getElementById(id);
     if (!el) return;
@@ -3154,6 +3267,7 @@ function toggleTaskAjax(checkbox) {
     const taskBlock = checkbox.closest(".task-block");
 
     const wasInOverdue = taskBlock.closest("#overdueList") !== null;
+    const wasInCompleted = taskBlock.closest("#completedList") !== null;
     const wasOverdue = wasInOverdue || isTaskOverdue(taskBlock);
 
     fetch(form.action, {
@@ -3169,6 +3283,7 @@ function toggleTaskAjax(checkbox) {
         if (checkbox.checked) {
             changeCount("completedCount", 1);
             updateWeeklyBarByTask(taskBlock, 1);
+
             if (isTaskToday(taskBlock)) {
                 changeCount("todayCompletedCount", 1);
                 changeCount("todayRemainingCount", -1);
@@ -3178,7 +3293,6 @@ function toggleTaskAjax(checkbox) {
                 changeCount("overdueCount", -1);
             } else {
                 changeCount("myTasksCount", -1);
-
             }
 
             taskBlock.querySelector(".task-title")?.classList.add("done");
@@ -3189,12 +3303,17 @@ function toggleTaskAjax(checkbox) {
             taskBlock.querySelector(".overdue-date")?.classList.remove("overdue-date");
             setDragHandle(taskBlock, false);
 
-            if (completedList) completedList.prepend(taskBlock);
-            else taskBlock.remove();
+            if (completedList) {
+                completedList.prepend(taskBlock);
+            } else {
+                window.location.reload();
+            }
 
         } else {
+
             changeCount("completedCount", -1);
-             updateWeeklyBarByTask(taskBlock, -1);
+            updateWeeklyBarByTask(taskBlock, -1);
+
             if (isTaskToday(taskBlock)) {
                 changeCount("todayCompletedCount", -1);
                 changeCount("todayRemainingCount", 1);
@@ -3212,15 +3331,32 @@ function toggleTaskAjax(checkbox) {
                 taskBlock.querySelector(".task-date i")?.classList.add("overdue-icon");
                 taskBlock.querySelector(".task-date span")?.classList.add("overdue-date");
 
-                if (overdueList) overdueList.prepend(taskBlock);
-                else taskBlock.remove();
+                if (overdueList) {
+                    overdueList.prepend(taskBlock);
+                } else {
+                    window.location.reload();
+                }
 
             } else {
                 changeCount("myTasksCount", 1);
+                if (!taskBlock.querySelector(".drag-handle")) {
+    const taskLeft = taskBlock.querySelector(".task-left");
+    if (taskLeft) {
+        taskLeft.insertAdjacentHTML(
+            "afterbegin",
+            `<span class="drag-handle" title="Move task">
+                <i class="fa-solid fa-grip-lines"></i>
+            </span>`
+        );
+    }
+}
                 setDragHandle(taskBlock, true);
 
-                if (myTasksList) myTasksList.prepend(taskBlock);
-                else taskBlock.remove();
+                if (myTasksList) {
+                    myTasksList.prepend(taskBlock);
+                } else {
+                    window.location.reload();
+                }
             }
         }
     }).catch(() => {
@@ -3249,9 +3385,11 @@ function isTaskToday(taskBlock) {
     const titleInput = form.querySelector('input[name="title"]');
     const descInput = form.querySelector('textarea[name="description"]');
     const dateInput = form.querySelector('input[name="dueDate"]');
-    const prioritySelect = form.querySelector('select[name="priority"]');
-    const categorySelect = form.querySelector('select[name="category"]');
-
+    const prioritySelect = form.querySelector('input[name="priority"]');
+    const categorySelect = form.querySelector('input[name="category"]');
+    const sourceInput = form.querySelector('input[name="source"]');
+    const currentCategoryInput = form.querySelector('input[name="currentCategory"]');
+   const priorityFilterInput = form.querySelector('input[name="priorityFilter"]');
     fetch(form.action, {
         method: "POST",
         body: new FormData(form)
@@ -3267,7 +3405,28 @@ function isTaskToday(taskBlock) {
         updateCategoryUI(taskBlock, categorySelect?.value);
         updateDateUI(taskBlock, dateInput?.value);
         moveTaskAfterEdit(taskBlock, dateInput?.value);
-        closeAllEditInline();
+
+if (sourceInput?.value === "category") {
+    const currentCategory = currentCategoryInput?.value;
+    const newCategory = categorySelect?.value;
+
+    if (currentCategory && newCategory && currentCategory !== newCategory) {
+        window.location.reload();
+        return;
+    }
+}
+
+if (sourceInput?.value === "priority") {
+    const currentPriority = priorityFilterInput?.value;
+    const newPriority = prioritySelect?.value;
+
+    if (currentPriority && newPriority && currentPriority !== newPriority) {
+        window.location.reload();
+        return;
+    }
+}
+
+closeAllEditInline();
     }).catch(() => {
         alert("Something went wrong");
     });
@@ -3333,7 +3492,7 @@ function updatePriorityUI(taskBlock, value) {
     const colors = {
         P1: "red",
         P2: "#ff8800",
-        P3: "#f4f128",
+        P3: "#eab308",
         P4: "gray"
     };
 
@@ -3364,7 +3523,7 @@ function updateCategoryUI(taskBlock, value) {
         Work: "#4a90e2",
         Study: "#9b59b6",
         Personal: "#ff6fa5",
-        Shopping: "#2ecc71"
+       Daily: "#22c55e"
     };
 
     dot.style.background = colors[value] || "#cfcfcf";
@@ -3418,14 +3577,22 @@ function updateTodayWeeklyBar(change) {
 }
 
 
-      function updateWeeklyBarByTask(taskBlock, change) {
-    const dueDate = taskBlock.dataset.dueDate;
-    if (!dueDate) return;
+    function updateWeeklyBarByTask(taskBlock, change) {
+    let dueDate = taskBlock.dataset.dueDate;
+
+
+    if (!dueDate) {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, "0");
+        const dd = String(today.getDate()).padStart(2, "0");
+        dueDate = `${yyyy}-${mm}-${dd}`;
+    }
 
     const date = new Date(dueDate + "T00:00:00");
-    let dayIndex = date.getDay(); // Sunday=0, Monday=1
 
-    dayIndex = dayIndex === 0 ? 6 : dayIndex - 1; // Monday=0 ... Sunday=6
+    let dayIndex = date.getDay(); // Sunday=0
+    dayIndex = dayIndex === 0 ? 6 : dayIndex - 1; // Monday=0
 
     const bar = document.querySelector(`.weekly-bar[data-day-index="${dayIndex}"]`);
     if (!bar) return;
@@ -3433,8 +3600,23 @@ function updateTodayWeeklyBar(change) {
     let count = parseInt(bar.dataset.count || "0", 10);
     count = Math.max(0, count + change);
 
-    bar.dataset.count = count;
-    bar.style.height = (count * 22 + 20) + "px";
+ bar.dataset.count = count;
+
+const allBars = document.querySelectorAll(".weekly-bar");
+let maxCount = 0;
+
+allBars.forEach(b => {
+    const c = parseInt(b.dataset.count || "0", 10);
+    if (c > maxCount) maxCount = c;
+});
+
+const maxHeight = 120;
+
+const height = maxCount > 0
+    ? (count / maxCount) * maxHeight
+    : 10;
+
+bar.style.height = height + "px";
 }
 
     </script>

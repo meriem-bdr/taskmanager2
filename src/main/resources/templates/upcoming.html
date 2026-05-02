@@ -778,10 +778,32 @@ body.sidebar-open #sidebar { transform: translateX(0) !important; }
     box-shadow: 0 4px 10px rgba(15, 23, 42, 0.035) !important;
 }
 
-.task-meta-row .priority-label {
+/* P1 */
+.task-meta-row .priority-label:has(.priority-dot[style*="red"]) {
     background: #ffecef !important;
     border-color: #ffd5dc !important;
-    color: #7f4a65 !important;
+    color: #b91c1c !important;
+}
+
+/* P2 */
+.task-meta-row .priority-label:has(.priority-dot[style*="#ff8800"]) {
+    background: #fff3e6 !important;
+    border-color: #ffd7ad !important;
+    color: #c2410c !important;
+}
+
+/* P3 */
+.task-meta-row .priority-label:has(.priority-dot[style*="#f4f128"]) {
+    background: #fffbea !important;
+    border-color: #fef08a !important;
+    color: #a16207 !important;
+}
+
+/* P4 */
+.task-meta-row .priority-label:has(.priority-dot[style*="gray"]) {
+    background: #f1f5f9 !important;
+    border-color: #e2e8f0 !important;
+    color: #475569 !important;
 }
 
 .task-meta-row .category-label {
@@ -790,11 +812,32 @@ body.sidebar-open #sidebar { transform: translateX(0) !important; }
     color: #155e9f !important;
 }
 
-.task-meta-row .category-label:has(.category-dot[style*="#9b59b6"]),
-.task-meta-row .category-label:has(.category-dot[style*="ff6fa5"]) {
-    background: #fff0fb !important;
-    border-color: #ffd8f2 !important;
-    color: #7a4f84 !important;
+/* Personal */
+.task-meta-row .category-label:has(.category-dot[style*="#ec4899"]) {
+    background: #fce7f3 !important;
+    border-color: #f9a8d4 !important;
+    color: #9d174d !important;
+}
+
+/* Study */
+.task-meta-row .category-label:has(.category-dot[style*="#7c3aed"]) {
+    background: #ede9fe !important;
+    border-color: #c4b5fd !important;
+    color: #5b21b6 !important;
+}
+
+/* Shopping */
+.task-meta-row .category-label:has(.category-dot[style*="#2ecc71"]) {
+    background: #edfff6 !important;
+    border-color: #d4f8e6 !important;
+    color: #176b43 !important;
+}
+
+/* Work */
+.task-meta-row .category-label:has(.category-dot[style*="#4a90e2"]) {
+    background: #eaf4ff !important;
+    border-color: #d6eaff !important;
+    color: #155e9f !important;
 }
 
 .task-meta-row .category-label:has(.category-dot[style*="#2ecc71"]) {
@@ -1004,15 +1047,15 @@ body.sidebar-open #sidebar { transform: translateX(0) !important; }
                                         </div>
 
                                         <div class="category-label" th:if="${task.category != null and !#strings.isEmpty(task.category)}">
-                                            <span class="category-dot"
-                                                  th:style="${
-                                                      task.category == 'Work' ? 'background:#4a90e2;' :
-                                                      (task.category == 'Study' ? 'background:#9b59b6;' :
-                                                      (task.category == 'Personal' ? 'background:#ff6fa5;' :
-                                                      (task.category == 'Shopping' ? 'background:#2ecc71;' :
-                                                      'background:#cfcfcf;')))
-                                                  }">
-                                            </span>
+                                           <span class="category-dot"
+                                                 th:style="${
+          task.category == 'Work' ? 'background:#4a90e2;' :
+          (task.category == 'Study' ? 'background:#7c3aed;' :
+          (task.category == 'Personal' ? 'background:#ec4899;' :
+          (task.category == 'Shopping' ? 'background:#2ecc71;' :
+          'background:#cfcfcf;')))
+      }">
+</span>
                                             <span th:text="${task.category}"></span>
                                         </div>
 
