@@ -10,1598 +10,1598 @@
     <style>
         /* ===== CLEAN TASKS PAGE CSS ===== */
 
-:root {
-    --primary-50: #e4ecf6;
-    --primary-100: #bad0ee;
-    --primary-200: #8ab4ea;
-    --primary-300: #5597ec;
-    --primary-400: #1b79f3;
-    --primary-500: #2563eb;
-    --primary-600: #1d4ed8;
-    --primary-700: #003e8f;
-    --primary-800: #00285c;
-    --primary-900: #001229;
-
-    --secondary-50: #ecf1f9;
-    --secondary-100: #d6e3f5;
-    --secondary-200: #bed5f4;
-    --secondary-300: #a3c7f5;
-    --secondary-500: #5a9ef6;
-
-    --bg: #f5f8ff;
-    --surface: #ffffff;
-    --surface-solid: #ffffff;
-    --border: rgba(12, 108, 233, 0.16);
-    --text: #08213f;
-    --muted: #64748b;
-    --danger: #ef4444;
-    --soft-blue: #55b6e8;
-
-    --shadow-soft: 0 16px 42px rgba(0, 62, 143, 0.10);
-    --shadow-card: 0 8px 22px rgba(12, 108, 233, 0.06);
-}
-
-* {
-    box-sizing: border-box;
-}
-
-html,
-body {
-    margin: 0;
-    min-height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-    font-family: Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-}
-
-body {
-    min-height: 100vh;
-}
-
-.menu-global {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    width: 46px;
-    height: 46px;
-    font-size: 20px;
-    background: #ffffff;
-    color: #2563eb;
-    border: 1px solid #dbeafe;
-    cursor: pointer;
-    z-index: 2000;
-    padding: 0;
-    border-radius: 14px;
-    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
-}
-
-.menu-global:hover {
-    background: var(--primary-50);
-    transform: translateY(-1px);
-}
-
-.page-content {
-    flex: 1;
-    width: 100%;
-    min-height: 100vh;
-    padding: 10px 34px 34px 78px;
-    display: flex;
-    justify-content: center;
-    background: var(--bg);
-    overflow: visible;
-}
-
-.tasks-container {
-    width: 100%;
-    max-width: 1180px;
-    background: transparent;
-}
-
-.title-sort-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 6px;
-    padding: 4px 0;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    position: relative;
-    z-index: 100;
-}
-
-.title-sort-row h1 {
-    margin-top: 0;
-    margin-bottom:2px ;
-    margin-left: 7px;
-    font-size: 32px;
-    line-height: 1;
-    letter-spacing: -0.5px;
-    color: var(--primary-900);
-}
-
-.actions-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.top-links {
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.back-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    text-decoration: none;
-    color: var(--primary-700);
-    background: var(--surface-solid);
-    border: 1px solid var(--border);
-    transition: 0.2s;
-}
-
-.back-btn:hover {
-    background: var(--primary-50);
-    transform: translateX(-2px);
-}
-
-.quick-add-box,
-.inline-edit-box {
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    background: var(--surface);
-    padding: 8px 12px;
-    transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-    box-shadow: var(--shadow-soft);
-    backdrop-filter: blur(16px);
-}
-
-.quick-add-box {
-    margin-bottom: 8px;
-    position: relative;
-    z-index: 1;
-    overflow: hidden;
-}
-
-.quick-add-box::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: 24px;
-    pointer-events: none;
-    background: linear-gradient(135deg, rgba(12, 108, 233, 0.10), transparent 45%);
-}
-
-.quick-add-box:focus-within,
-.inline-edit-box:focus-within {
-    border-color: rgba(12, 108, 233, 0.48);
-    box-shadow: 0 18px 45px rgba(12, 108, 233, 0.18);
-    transform: translateY(-1px);
-}
-
-.quick-add-top,
-.inline-edit-top {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    position: relative;
-    z-index: 1;
-}
-
-.quick-add-title,
-.inline-edit-title {
-    flex: 1;
-    min-width: 0;
-    border: none;
-    outline: none;
-    font-size: 17px;
-    background: transparent;
-    color: var(--primary-900);
-    padding: 8px 0;
-    font-family: Arial, sans-serif;
-}
-
-.quick-add-title::placeholder,
-.inline-edit-title::placeholder {
-    color: #7d8ca4;
-}
-
-.quick-add-actions,
-.inline-edit-actions {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    flex-wrap: wrap;
-}
-
-.quick-add-description-wrap,
-.inline-edit-description-wrap {
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid rgba(12, 108, 233, 0.12);
-    position: relative;
-    z-index: 1;
-}
-
-.quick-add-description-wrap {
-    display: none;
-}
-
-.quick-add-box.expanded .quick-add-description-wrap {
-    display: block;
-}
-
-.quick-add-description,
-.inline-edit-description {
-    width: 100%;
-    min-height: 48px;
-    resize: vertical;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--muted);
-    padding: 0;
-    font-family: Arial, sans-serif;
-}
-
-.quick-add-description::placeholder,
-.inline-edit-description::placeholder {
-    color: #9aa8ba;
-}
-
-.hint-text {
-    margin-top: 8px;
-    font-size: 12px;
-    color: var(--primary-600);
-}
-
-.inline-edit-box {
-    display: none;
-    width: 100%;
-}
-
-.inline-edit-box.active {
-    display: block;
-}
-
-.inline-edit-save-row {
-    margin-top: 12px;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.small-save-btn {
-    border: none !important;
-    background: #6366f1 !important;
-    color: white !important;
-    border-radius: 14px;
-    padding: 10px 18px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 800;
-    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.22);
-}
-
-.small-save-btn:hover {
-    background: #4f46e5 !important;
-}
-
-.smart-pill {
-    width: 38px;
-    height: 38px;
-    border-radius: 999px;
-    border: 1px solid rgba(12, 108, 233, 0.15);
-    background: linear-gradient(135deg, #ffffff, var(--primary-50));
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    padding: 0;
-    cursor: pointer;
-    position: relative;
-    flex-shrink: 0;
-    transition: all 0.2s ease;
-    overflow: hidden;
-    box-shadow: 0 8px 18px rgba(0, 62, 143, 0.08);
-}
-
-.smart-pill:hover {
-    background: linear-gradient(135deg, var(--primary-50), var(--secondary-100));
-    transform: translateY(-1px);
-}
-
-.smart-pill i {
-    font-size: 14px;
-    color: var(--primary-700);
-    flex-shrink: 0;
-}
-
-.smart-pill .pill-text {
-    display: none;
-    font-size: 13px;
-    color: var(--primary-800);
-    white-space: nowrap;
-    font-weight: 700;
-}
-
-.smart-pill.active {
-    width: auto;
-    min-width: 38px;
-    border-radius: 999px;
-    justify-content: flex-start;
-    padding: 0 13px;
-    background: #eef2ff !important;
-    border: none !important;
-}
-
-.smart-pill.active i,
-.smart-pill.active .pill-text {
-    color: #4f46e5 !important;
-}
-
-.smart-pill.active .pill-text {
-    display: inline;
-}
-
-.smart-pill select,
-.smart-pill input {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    border: none;
-}
-
-.hidden-flatpickr-input {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-    width: 1px;
-    height: 1px;
-}
-
-.tabs {
-    display: flex;
-    gap: 28px;
-    margin: 6px 0;
-    font-size: 13px;
-    font-weight: 500;
-}
-
-.tabs span {
-    cursor: pointer;
-    color: #6b7280;
-    position: relative;
-    padding-bottom: 6px;
-}
-
-
-
-.tabs span.active:hover {
-    background: rgba(59, 140, 246, 0.1);
-}
-
-.tabs span.active {
-    color: #3b82f6;
-    font-weight: 600;
-}
-
-.tabs span.active::after {
-    content: "";
-    position: absolute;
-    left: -4px;
-    bottom: -2px;
-    width: calc(100% + 8px);
-    height: 2px;
-    background: #3b82f6;
-    border-radius: 3px;
-}
-
-body.tabs-mode .overdue-section,
-body.tabs-mode .completed-section {
-    border-top: none;
-    margin-top: 0;
-    padding-top: 0;
-}
-
-body.tabs-mode .section-toggle {
-    display: none;
-}
-
-.tasks-with-weekly {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 290px;
-    gap: 24px;
-    align-items: start;
-    overflow: visible;
-}
-
-.tasks-main-column {
-    min-width: 0;
-    width: 100%;
-}
-
-.task-list-container {
-    position: relative;
-}
-
-.task-block {
-    width: 100%;
-    padding: 8px 20px;
-    margin-bottom: 12px;
-    border: 1px solid #dbeafe;
-    border-left: 5px solid var(--soft-blue);
-    border-radius: 18px;
-    position: relative;
-    transition: transform 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
-    background: #ffffff;
-    box-shadow: var(--shadow-card);
-    overflow: visible;
-
-}
-
-.task-block:hover {
-    background: #ffffff;
-    transform: none;
-    border-color: #dbeafe;
-    border-left: 5px solid var(--soft-blue) !important;
-    box-shadow: var(--shadow-card);
-}
-
-.task-block.drag-source-hidden {
-    opacity: 0;
-}
-
-.task-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 18px;
-    width: 100%;
-}
-
-.task-left {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex: 1;
-    min-width: 0;
-}
-
-.task-content {
-    flex: 1;
-    min-width: 0;
-    max-width: 560px;
-}
-
-.task-title {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    font-size: 16px;
-    line-height: 1.45;
-    font-weight: 600;
-    color: #0f172a;
-}
-
-.task-title.done {
-    color: #94a3b8;
-    text-decoration: line-through;
-}
-
-.task-title.active {
-    font-weight: 550;
-    color: var(--primary-900);
-}
-
-.task-desc {
-    margin-top: 6px;
-    line-height: 1.55;
-    color: var(--muted);
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    font-size: 14px;
-}
-
-.task-desc.done {
-    color: #9aa8ba;
-}
-
-.task-meta-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 11px;
-    flex-wrap: wrap;
-}
-
-.priority-label,
-.category-label,
-.task-date {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 13px;
-    color: #155e9f;
-    background: #eaf7ff;
-    border: 1px solid rgba(85, 182, 232, 0.25);
-    padding: 5px 10px;
-    border-radius: 999px;
-}
-
-.category-label {
-    background: var(--secondary-50);
-    color: var(--secondary-800);
-}
-
-.priority-dot,
-.category-dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    display: inline-block;
-    box-shadow: none;
-}
-
-.task-date.done {
-    color: #94a3b8;
-    background: #f1f5f9;
-}
-
-.overdue-date {
-    color: var(--danger);
-}
-
-.overdue-icon {
-    color: var(--danger) !important;
-}
-
-.task-checkbox {
-    margin-top: 0;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    flex-shrink: 0;
-    accent-color: var(--soft-blue);
-}
-
-.drag-handle {
-    width: 16px;
-    min-width: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--soft-blue);
-    cursor: grab;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.15s ease, color 0.15s ease;
-    margin-top: 0;
-    flex-shrink: 0;
-    user-select: none;
-}
-
-.task-block:hover .drag-handle {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.drag-handle:hover {
-    color: var(--primary-600);
-}
-
-.drag-handle:active {
-    cursor: grabbing;
-}
-
-.task-actions {
-    display: flex;
-    gap: 10px;
-    flex-shrink: 0;
-    align-items: center;
-    white-space: nowrap;
-    padding-top: 0;
-    opacity: 0;
-    transition: 0.2s;
-}
-
-.task-block:hover .task-actions {
-    opacity: 1;
-}
-
-.task-actions a,
-.task-actions button {
-    text-decoration: none;
-    font-size: 15px;
-    color: var(--primary-700) !important;
-    border: none !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    cursor: pointer;
-    padding: 4px !important;
-    width: auto;
-    height: auto;
-    border-radius: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.18s ease;
-}
-
-.task-actions a:hover,
-.task-actions button:hover {
-    background: transparent !important;
-    color: var(--primary-700) !important;
-    transform: none !important;
-}
-
-.desc-short,
-.desc-full {
-    display: inline;
-}
-
-.desc-full {
-    display: none;
-}
-
-.more-btn {
-    color: var(--primary-600);
-    cursor: pointer;
-    font-size: 13px;
-    margin-left: 6px;
-    text-decoration: underline;
-    font-weight: 700;
-}
-
-.more-btn:hover {
-    color: var(--primary-800);
-}
-
-.overdue-section,
-.completed-section {
-    border-top: 1px solid rgba(12, 108, 233, 0.12);
-    margin-top: 18px;
-    padding-top: 16px;
-}
-
-.section-toggle {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 16px;
-    font-weight: 800;
-    cursor: pointer;
-    color: var(--primary-900);
-    margin-top: 0;
-    margin-bottom: 12px;
-    padding: 12px 14px;
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.70);
-    border: 1px solid rgba(12, 108, 233, 0.10);
-}
-
-.section-toggle i {
-    font-size: 12px;
-    transition: transform 0.2s ease;
-    color: var(--primary-600);
-}
-
-.section-toggle.open i {
-    transform: rotate(90deg);
-}
-
-.empty-state {
-    text-align: left;
-    margin-top: 20px;
-    padding: 0;
-    border: none;
-    background: transparent;
-    color: #64748b;
-}
-
-.empty-state p {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 4px;
-}
-
-.empty-state small {
-    font-size: 13px;
-    opacity: 0.7;
-}
-
-.right-column {
-    width: 290px;
-    overflow: visible;
-    margin-top: -35px;
-}
-
-.weekly-card,
-.today-summary-card {
-    background: #ffffff;
-    border: 1px solid #dbeafe;
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: var(--shadow-card);
-}
-
-.weekly-card h3 {
-    margin: 0;
-    padding: 18px 20px;
-    background: #cbe2ff;
-    color: #0f172a;
-    font-size: 20px;
-    font-weight: 800;
-}
-
-.weekly-chart-line {
-    height: 1px;
-    background: #e5e7eb;
-    margin: 24px 22px 0;
-}
-
-.weekly-bars {
-    height: 155px;
-    display: flex;
-    align-items: flex-end;
-    gap: 14px;
-    padding: 20px 22px 10px;
-}
-
-.weekly-bar {
-    flex: 1;
-    background: #cfe8f7;
-    border-radius: 8px 8px 0 0;
-}
-
-.weekly-bar.active {
-    background: #55b6e8;
-}
-
-.weekly-days {
-    display: flex;
-    gap: 14px;
-    padding: 0 22px 18px;
-    color: #777;
-    font-size: 13px;
-}
-
-.today-summary-card {
-    margin-top: 18px;
-    padding: 16px;
-}
-
-.today-summary-card h3 {
-    margin: 0 0 12px;
-    font-size: 18px;
-    font-weight: 800;
-}
-
-.summary-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    font-size: 14px;
-    color: #374151;
-}
-
-.summary-row b {
-    font-weight: 800;
-}
-
-.summary-row.overdue {
-    color: #ef4444;
-}
-
-.sort-wrapper,
-.search-wrapper {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 0;
-    z-index: 300;
-}
-
-.sort-btn {
-    width: 50px;
-    height: 50px;
-    border-radius: 18px;
-    border: 1px solid rgba(12, 108, 233, 0.16);
-    background: rgba(255, 255, 255, 0.88);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: 0.2s;
-    flex-shrink: 0;
-    box-shadow: 0 10px 24px rgba(0, 62, 143, 0.08);
-    backdrop-filter: blur(10px);
-}
-
-.sort-btn:hover {
-    background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
-    transform: translateY(-2px);
-    box-shadow: 0 14px 30px rgba(12, 108, 233, 0.24);
-}
-
-.sort-btn i {
-    font-size: 17px;
-    color: var(--primary-800);
-}
-
-.sort-btn:hover i {
-    color: white;
-}
-
-.sort-tooltip,
-.search-tooltip {
-    position: absolute;
-    top: 58px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--primary-900);
-    color: white;
-    font-size: 12px;
-    padding: 8px 12px;
-    border-radius: 12px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: 0.2s;
-    z-index: 2000;
-    box-shadow: 0 10px 25px rgba(0, 18, 41, 0.18);
-}
-
-.sort-wrapper:hover .sort-tooltip,
-.search-wrapper:hover .search-tooltip {
-    opacity: 1;
-}
-
-.sort-tooltip {
-    display: none;
-}
-
-.sort-menu {
-    display: none;
-    position: absolute;
-    top: 60px;
-    right: 0;
-    left: auto;
-    min-width: 210px;
-    background: rgba(255, 255, 255, 0.98);
-    border: 1px solid rgba(12, 108, 233, 0.12);
-    border-radius: 18px;
-    box-shadow: 0 18px 45px rgba(0, 62, 143, 0.16);
-    padding: 8px;
-    z-index: 6000;
-    backdrop-filter: blur(14px);
-}
-
-.sort-menu a {
-    display: block;
-    text-decoration: none;
-    color: var(--primary-900);
-    font-size: 14px;
-    padding: 11px 13px;
-    border-radius: 12px;
-    font-weight: 600;
-}
-
-.sort-menu a:hover {
-    background: var(--primary-50);
-    color: var(--primary-700);
-}
-
-.search-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 18, 41, 0.55);
-    backdrop-filter: blur(7px);
-    z-index: 5000;
-}
-
-.search-box {
-    background: rgba(255, 255, 255, 0.96);
-    width: 720px;
-    max-width: 92%;
-    margin: 120px auto;
-    padding: 8px 16px;
-    height: 64px;
-    display: flex;
-    align-items: center;
-    border-radius: 24px;
-    border: 1px solid rgba(12, 108, 233, 0.18);
-    transition: 0.2s ease;
-    box-shadow: 0 25px 70px rgba(0, 18, 41, 0.20);
-}
-
-.search-box:focus-within {
-    border-color: var(--primary-500);
-    box-shadow: 0 25px 70px rgba(12, 108, 233, 0.25);
-}
-
-#searchInput {
-    flex: 1;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 18px;
-    color: var(--primary-900);
-    font-family: Arial, sans-serif;
-}
-
-#searchInput::placeholder {
-    color: #7d8ca4;
-}
-
-
-
-.drag-placeholder {
-    border: 1px dashed var(--primary-400);
-    border-radius: 18px;
-    background: rgba(228, 236, 246, 0.65);
-    margin: 4px 0 14px;
-}
-
-.drag-floating {
-    position: fixed;
-    z-index: 9999;
-    pointer-events: none;
-    width: 760px;
-    max-width: calc(100vw - 120px);
-    box-shadow: 0 24px 60px rgba(0, 62, 143, 0.22);
-    border-radius: 22px;
-    background: white;
-    opacity: 0.96;
-    transform: rotate(0.2deg);
-}
-
-.flatpickr-calendar {
-    border: 1px solid rgba(12, 108, 233, 0.12) !important;
-    border-radius: 20px !important;
-    box-shadow: 0 20px 60px rgba(0, 62, 143, 0.18) !important;
-    padding: 10px !important;
-    width: 360px !important;
-    max-width: 90vw !important;
-    font-family: Arial, sans-serif !important;
-}
-
-.flatpickr-current-month {
-    font-size: 16px !important;
-    padding-top: 4px !important;
-    color: var(--primary-900) !important;
-}
-
-.flatpickr-current-month .flatpickr-monthDropdown-months,
-.flatpickr-current-month input.cur-year {
-    font-size: 16px !important;
-    font-weight: 700 !important;
-}
-
-span.flatpickr-weekday {
-    color: var(--primary-700) !important;
-    font-size: 12px !important;
-    font-weight: 700 !important;
-}
-
-.flatpickr-day {
-    border-radius: 999px !important;
-    font-size: 14px !important;
-    height: 42px !important;
-    line-height: 42px !important;
-    max-width: 42px !important;
-}
-
-.flatpickr-day.today {
-    border: 1px solid var(--primary-400) !important;
-}
-
-.flatpickr-day.selected {
-    background: var(--primary-600) !important;
-    border-color: var(--primary-600) !important;
-    color: #fff !important;
-}
-
-.flatpickr-day:hover {
-    background: var(--primary-50) !important;
-}
-
-.flatpickr-prev-month,
-.flatpickr-next-month {
-    top: 12px !important;
-}
-
-@media (max-width: 1000px) {
-    html,
-    body {
-        height: auto;
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
-
-    .page-content {
-        min-height: 100vh;
-        overflow: visible;
-        padding: 20px;
-    }
-
-    .tasks-container {
-        max-width: 100%;
-    }
-
-    .title-sort-row {
-        align-items: flex-start;
-        gap: 14px;
-    }
-
-    .title-sort-row h1 {
-        font-size: 30px;
-    }
-
-    .quick-add-top,
-    .inline-edit-top {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .quick-add-actions,
-    .inline-edit-actions {
-        justify-content: flex-start;
-    }
-
-    .tasks-with-weekly {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        overflow: visible;
-    }
-
-    .tasks-main-column {
-        width: 100%;
-        order: 1;
-        overflow: visible;
-        padding-right: 0;
-    }
-
-    .right-column {
-        width: 100%;
-        order: 2;
-        margin-top: 16px;
-        overflow: visible;
-    }
-
-    .task-block {
-        width: 100%;
-    }
-
-    .flatpickr-calendar {
-        width: 95vw !important;
-    }
-
-    .task-row {
-        gap: 12px;
-        align-items: flex-start;
-    }
-
-    .task-left {
-        align-items: flex-start;
-    }
-
-    .task-actions {
-        gap: 6px;
-    }
-}
-
-
-
-
-.tasks-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.title-sort-row,
-.quick-add-box,
-.top-links {
-    flex-shrink: 0;
-}
-
-.tasks-with-weekly {
-    flex: 1;
-    min-height: 0;
-    overflow: visible;
-}
-.tasks-main-column {
-    max-height: calc(100vh - 180px);
-    overflow-y: auto;
-    padding-right: 10px;
-    scroll-behavior: smooth;
-
-    scrollbar-width: none !important;
-    -ms-overflow-style: none !important;
-}
-
-.tasks-main-column::-webkit-scrollbar {
-    display: none !important;
-    width: 0 !important;
-    height: 0 !important;
-}
-.right-column {
-    height: 100%;
-    overflow: visible;
-    margin-top: -35px;
-}
-
-/* ===== SIDEBAR ===== */
-#sidebar {
-    width: 200px;
-    min-height: 100vh;
-    padding: 90px 16px 20px;
-    box-sizing: border-box;
-    position: fixed;
-    top: 0;
-    left: 0;
-    transform: translateX(-200px);
-    transition: transform 0.28s ease;
-    z-index: 1200;
-
-    background: #cbe2ff;
-    border-right: 1px solid rgba(0,0,0,0.05);
-}
-
-body.sidebar-open #sidebar {
-    transform: translateX(0);
-}
-
-/* ===== LABELS ===== */
-.sidebar-label {
-    margin: 20px 10px 10px;
-    color: #475569;
-    font-size: 11px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* ===== LINKS ===== */
-#sidebar a {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    text-decoration: none;
-    color: #1e293b;
-    font-size: 15px;
-    font-weight: 600;
-
-    padding: 10px 12px;
-    border-radius: 14px;
-    margin-bottom: 6px;
-
-    transition: 0.2s ease;
-}
-
-/* ICON */
-#sidebar a i {
-    width: 20px;
-    text-align: center;
-    color: #2563eb;
-}
-
-#sidebar a:hover {
-    background: rgba(255,255,255,0.7);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-    color: #2563eb;
-}
-
-/* ===== PAGE PUSH ===== */
-.page-content {
-    transition: 0.3s ease;
-}
-
-body.sidebar-open .page-content {
-    padding-left: 260px;
-}
-@media (max-width: 1000px) {
-
-    html, body {
-        height: auto !important;
-        overflow-x: hidden !important;
-        overflow-y: auto !important;
-    }
-
-    .page-content {
-        height: auto !important;
-        padding: 70px 12px 20px 12px !important;
-        display: block !important;
-    }
-
-    .tasks-with-weekly {
-        display: flex !important;
-        flex-direction: column !important;
-    }
-
-    .right-column {
-        width: 100% !important;
-        margin-top: 10px !important;
-    }
-
-    .tasks-main-column {
-        width: 100% !important;
-        overflow: visible !important;
-    }
-}
+        :root {
+            --primary-50: #e4ecf6;
+            --primary-100: #bad0ee;
+            --primary-200: #8ab4ea;
+            --primary-300: #5597ec;
+            --primary-400: #1b79f3;
+            --primary-500: #2563eb;
+            --primary-600: #1d4ed8;
+            --primary-700: #003e8f;
+            --primary-800: #00285c;
+            --primary-900: #001229;
+
+            --secondary-50: #ecf1f9;
+            --secondary-100: #d6e3f5;
+            --secondary-200: #bed5f4;
+            --secondary-300: #a3c7f5;
+            --secondary-500: #5a9ef6;
+
+            --bg: #f5f8ff;
+            --surface: #ffffff;
+            --surface-solid: #ffffff;
+            --border: rgba(12, 108, 233, 0.16);
+            --text: #08213f;
+            --muted: #64748b;
+            --danger: #ef4444;
+            --soft-blue: #55b6e8;
+
+            --shadow-soft: 0 16px 42px rgba(0, 62, 143, 0.10);
+            --shadow-card: 0 8px 22px rgba(12, 108, 233, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        body {
+            min-height: 100vh;
+        }
+
+        .menu-global {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 46px;
+            height: 46px;
+            font-size: 20px;
+            background: #ffffff;
+            color: #2563eb;
+            border: 1px solid #dbeafe;
+            cursor: pointer;
+            z-index: 2000;
+            padding: 0;
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+        }
+
+        .menu-global:hover {
+            background: var(--primary-50);
+            transform: translateY(-1px);
+        }
+
+        .page-content {
+            flex: 1;
+            width: 100%;
+            min-height: 100vh;
+            padding: 10px 34px 34px 78px;
+            display: flex;
+            justify-content: center;
+            background: var(--bg);
+            overflow: visible;
+        }
+
+        .tasks-container {
+            width: 100%;
+            max-width: 1180px;
+            background: transparent;
+        }
+
+        .title-sort-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 6px;
+            padding: 4px 0;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            position: relative;
+            z-index: 100;
+        }
+
+        .title-sort-row h1 {
+            margin-top: 0;
+            margin-bottom:2px ;
+            margin-left: 7px;
+            font-size: 32px;
+            line-height: 1;
+            letter-spacing: -0.5px;
+            color: var(--primary-900);
+        }
+
+        .actions-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .top-links {
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            text-decoration: none;
+            color: var(--primary-700);
+            background: var(--surface-solid);
+            border: 1px solid var(--border);
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-50);
+            transform: translateX(-2px);
+        }
+
+        .quick-add-box,
+        .inline-edit-box {
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            background: var(--surface);
+            padding: 8px 12px;
+            transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(16px);
+        }
+
+        .quick-add-box {
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .quick-add-box::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            pointer-events: none;
+            background: linear-gradient(135deg, rgba(12, 108, 233, 0.10), transparent 45%);
+        }
+
+        .quick-add-box:focus-within,
+        .inline-edit-box:focus-within {
+            border-color: rgba(12, 108, 233, 0.48);
+            box-shadow: 0 18px 45px rgba(12, 108, 233, 0.18);
+            transform: translateY(-1px);
+        }
+
+        .quick-add-top,
+        .inline-edit-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quick-add-title,
+        .inline-edit-title {
+            flex: 1;
+            min-width: 0;
+            border: none;
+            outline: none;
+            font-size: 17px;
+            background: transparent;
+            color: var(--primary-900);
+            padding: 8px 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .quick-add-title::placeholder,
+        .inline-edit-title::placeholder {
+            color: #7d8ca4;
+        }
+
+        .quick-add-actions,
+        .inline-edit-actions {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            flex-wrap: wrap;
+        }
+
+        .quick-add-description-wrap,
+        .inline-edit-description-wrap {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(12, 108, 233, 0.12);
+            position: relative;
+            z-index: 1;
+        }
+
+        .quick-add-description-wrap {
+            display: none;
+        }
+
+        .quick-add-box.expanded .quick-add-description-wrap {
+            display: block;
+        }
+
+        .quick-add-description,
+        .inline-edit-description {
+            width: 100%;
+            min-height: 48px;
+            resize: vertical;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--muted);
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .quick-add-description::placeholder,
+        .inline-edit-description::placeholder {
+            color: #9aa8ba;
+        }
+
+        .hint-text {
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--primary-600);
+        }
+
+        .inline-edit-box {
+            display: none;
+            width: 100%;
+        }
+
+        .inline-edit-box.active {
+            display: block;
+        }
+
+        .inline-edit-save-row {
+            margin-top: 12px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .small-save-btn {
+            border: none !important;
+            background: #6366f1 !important;
+            color: white !important;
+            border-radius: 14px;
+            padding: 10px 18px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 800;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.22);
+        }
+
+        .small-save-btn:hover {
+            background: #4f46e5 !important;
+        }
+
+        .smart-pill {
+            width: 38px;
+            height: 38px;
+            border-radius: 999px;
+            border: 1px solid rgba(12, 108, 233, 0.15);
+            background: linear-gradient(135deg, #ffffff, var(--primary-50));
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 0;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+            overflow: hidden;
+            box-shadow: 0 8px 18px rgba(0, 62, 143, 0.08);
+        }
+
+        .smart-pill:hover {
+            background: linear-gradient(135deg, var(--primary-50), var(--secondary-100));
+            transform: translateY(-1px);
+        }
+
+        .smart-pill i {
+            font-size: 14px;
+            color: var(--primary-700);
+            flex-shrink: 0;
+        }
+
+        .smart-pill .pill-text {
+            display: none;
+            font-size: 13px;
+            color: var(--primary-800);
+            white-space: nowrap;
+            font-weight: 700;
+        }
+
+        .smart-pill.active {
+            width: auto;
+            min-width: 38px;
+            border-radius: 999px;
+            justify-content: flex-start;
+            padding: 0 13px;
+            background: #eef2ff !important;
+            border: none !important;
+        }
+
+        .smart-pill.active i,
+        .smart-pill.active .pill-text {
+            color: #4f46e5 !important;
+        }
+
+        .smart-pill.active .pill-text {
+            display: inline;
+        }
+
+        .smart-pill select,
+        .smart-pill input {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            border: none;
+        }
+
+        .hidden-flatpickr-input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            width: 1px;
+            height: 1px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 28px;
+            margin: 6px 0;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .tabs span {
+            cursor: pointer;
+            color: #6b7280;
+            position: relative;
+            padding-bottom: 6px;
+        }
+
+
+
+        .tabs span.active:hover {
+            background: rgba(59, 140, 246, 0.1);
+        }
+
+        .tabs span.active {
+            color: #3b82f6;
+            font-weight: 600;
+        }
+
+        .tabs span.active::after {
+            content: "";
+            position: absolute;
+            left: -4px;
+            bottom: -2px;
+            width: calc(100% + 8px);
+            height: 2px;
+            background: #3b82f6;
+            border-radius: 3px;
+        }
+
+        body.tabs-mode .overdue-section,
+        body.tabs-mode .completed-section {
+            border-top: none;
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        body.tabs-mode .section-toggle {
+            display: none;
+        }
+
+        .tasks-with-weekly {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 290px;
+            gap: 24px;
+            align-items: start;
+            overflow: visible;
+        }
+
+        .tasks-main-column {
+            min-width: 0;
+            width: 100%;
+        }
+
+        .task-list-container {
+            position: relative;
+        }
+
+        .task-block {
+            width: 100%;
+            padding: 8px 20px;
+            margin-bottom: 12px;
+            border: 1px solid #dbeafe;
+            border-left: 5px solid var(--soft-blue);
+            border-radius: 18px;
+            position: relative;
+            transition: transform 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+            background: #ffffff;
+            box-shadow: var(--shadow-card);
+            overflow: visible;
+
+        }
+
+        .task-block:hover {
+            background: #ffffff;
+            transform: none;
+            border-color: #dbeafe;
+            border-left: 5px solid var(--soft-blue) !important;
+            box-shadow: var(--shadow-card);
+        }
+
+        .task-block.drag-source-hidden {
+            opacity: 0;
+        }
+
+        .task-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            width: 100%;
+        }
+
+        .task-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .task-content {
+            flex: 1;
+            min-width: 0;
+            max-width: 560px;
+        }
+
+        .task-title {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            font-size: 16px;
+            line-height: 1.45;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .task-title.done {
+            color: #94a3b8;
+            text-decoration: line-through;
+        }
+
+        .task-title.active {
+            font-weight: 550;
+            color: var(--primary-900);
+        }
+
+        .task-desc {
+            margin-top: 6px;
+            line-height: 1.55;
+            color: var(--muted);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            font-size: 14px;
+        }
+
+        .task-desc.done {
+            color: #9aa8ba;
+        }
+
+        .task-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 11px;
+            flex-wrap: wrap;
+        }
+
+        .priority-label,
+        .category-label,
+        .task-date {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 13px;
+            color: #155e9f;
+            background: #eaf7ff;
+            border: 1px solid rgba(85, 182, 232, 0.25);
+            padding: 5px 10px;
+            border-radius: 999px;
+        }
+
+        .category-label {
+            background: var(--secondary-50);
+            color: var(--secondary-800);
+        }
+
+        .priority-dot,
+        .category-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: none;
+        }
+
+        .task-date.done {
+            color: #94a3b8;
+            background: #f1f5f9;
+        }
+
+        .overdue-date {
+            color: var(--danger);
+        }
+
+        .overdue-icon {
+            color: var(--danger) !important;
+        }
+
+        .task-checkbox {
+            margin-top: 0;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            flex-shrink: 0;
+            accent-color: var(--soft-blue);
+        }
+
+        .drag-handle {
+            width: 16px;
+            min-width: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--soft-blue);
+            cursor: grab;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s ease, color 0.15s ease;
+            margin-top: 0;
+            flex-shrink: 0;
+            user-select: none;
+        }
+
+        .task-block:hover .drag-handle {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .drag-handle:hover {
+            color: var(--primary-600);
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+            align-items: center;
+            white-space: nowrap;
+            padding-top: 0;
+            opacity: 0;
+            transition: 0.2s;
+        }
+
+        .task-block:hover .task-actions {
+            opacity: 1;
+        }
+
+        .task-actions a,
+        .task-actions button {
+            text-decoration: none;
+            font-size: 15px;
+            color: var(--primary-700) !important;
+            border: none !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            cursor: pointer;
+            padding: 4px !important;
+            width: auto;
+            height: auto;
+            border-radius: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.18s ease;
+        }
+
+        .task-actions a:hover,
+        .task-actions button:hover {
+            background: transparent !important;
+            color: var(--primary-700) !important;
+            transform: none !important;
+        }
+
+        .desc-short,
+        .desc-full {
+            display: inline;
+        }
+
+        .desc-full {
+            display: none;
+        }
+
+        .more-btn {
+            color: var(--primary-600);
+            cursor: pointer;
+            font-size: 13px;
+            margin-left: 6px;
+            text-decoration: underline;
+            font-weight: 700;
+        }
+
+        .more-btn:hover {
+            color: var(--primary-800);
+        }
+
+        .overdue-section,
+        .completed-section {
+            border-top: 1px solid rgba(12, 108, 233, 0.12);
+            margin-top: 18px;
+            padding-top: 16px;
+        }
+
+        .section-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            color: var(--primary-900);
+            margin-top: 0;
+            margin-bottom: 12px;
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.70);
+            border: 1px solid rgba(12, 108, 233, 0.10);
+        }
+
+        .section-toggle i {
+            font-size: 12px;
+            transition: transform 0.2s ease;
+            color: var(--primary-600);
+        }
+
+        .section-toggle.open i {
+            transform: rotate(90deg);
+        }
+
+        .empty-state {
+            text-align: left;
+            margin-top: 20px;
+            padding: 0;
+            border: none;
+            background: transparent;
+            color: #64748b;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .empty-state small {
+            font-size: 13px;
+            opacity: 0.7;
+        }
+
+        .right-column {
+            width: 290px;
+            overflow: visible;
+            margin-top: -35px;
+        }
+
+        .weekly-card,
+        .today-summary-card {
+            background: #ffffff;
+            border: 1px solid #dbeafe;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+        }
+
+        .weekly-card h3 {
+            margin: 0;
+            padding: 18px 20px;
+            background: #cbe2ff;
+            color: #0f172a;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .weekly-chart-line {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 24px 22px 0;
+        }
+
+        .weekly-bars {
+            height: 155px;
+            display: flex;
+            align-items: flex-end;
+            gap: 14px;
+            padding: 20px 22px 10px;
+        }
+
+        .weekly-bar {
+            flex: 1;
+            background: #cfe8f7;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .weekly-bar.active {
+            background: #55b6e8;
+        }
+
+        .weekly-days {
+            display: flex;
+            gap: 14px;
+            padding: 0 22px 18px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        .today-summary-card {
+            margin-top: 18px;
+            padding: 16px;
+        }
+
+        .today-summary-card h3 {
+            margin: 0 0 12px;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .summary-row b {
+            font-weight: 800;
+        }
+
+        .summary-row.overdue {
+            color: #ef4444;
+        }
+
+        .sort-wrapper,
+        .search-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 0;
+            z-index: 300;
+        }
+
+        .sort-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 18px;
+            border: 1px solid rgba(12, 108, 233, 0.16);
+            background: rgba(255, 255, 255, 0.88);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            flex-shrink: 0;
+            box-shadow: 0 10px 24px rgba(0, 62, 143, 0.08);
+            backdrop-filter: blur(10px);
+        }
+
+        .sort-btn:hover {
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(12, 108, 233, 0.24);
+        }
+
+        .sort-btn i {
+            font-size: 17px;
+            color: var(--primary-800);
+        }
+
+        .sort-btn:hover i {
+            color: white;
+        }
+
+        .sort-tooltip,
+        .search-tooltip {
+            position: absolute;
+            top: 58px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-900);
+            color: white;
+            font-size: 12px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.2s;
+            z-index: 2000;
+            box-shadow: 0 10px 25px rgba(0, 18, 41, 0.18);
+        }
+
+        .sort-wrapper:hover .sort-tooltip,
+        .search-wrapper:hover .search-tooltip {
+            opacity: 1;
+        }
+
+        .sort-tooltip {
+            display: none;
+        }
+
+        .sort-menu {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 0;
+            left: auto;
+            min-width: 210px;
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid rgba(12, 108, 233, 0.12);
+            border-radius: 18px;
+            box-shadow: 0 18px 45px rgba(0, 62, 143, 0.16);
+            padding: 8px;
+            z-index: 6000;
+            backdrop-filter: blur(14px);
+        }
+
+        .sort-menu a {
+            display: block;
+            text-decoration: none;
+            color: var(--primary-900);
+            font-size: 14px;
+            padding: 11px 13px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .sort-menu a:hover {
+            background: var(--primary-50);
+            color: var(--primary-700);
+        }
+
+        .search-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 18, 41, 0.55);
+            backdrop-filter: blur(7px);
+            z-index: 5000;
+        }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.96);
+            width: 720px;
+            max-width: 92%;
+            margin: 120px auto;
+            padding: 8px 16px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            border-radius: 24px;
+            border: 1px solid rgba(12, 108, 233, 0.18);
+            transition: 0.2s ease;
+            box-shadow: 0 25px 70px rgba(0, 18, 41, 0.20);
+        }
+
+        .search-box:focus-within {
+            border-color: var(--primary-500);
+            box-shadow: 0 25px 70px rgba(12, 108, 233, 0.25);
+        }
+
+        #searchInput {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 18px;
+            color: var(--primary-900);
+            font-family: Arial, sans-serif;
+        }
+
+        #searchInput::placeholder {
+            color: #7d8ca4;
+        }
+
+
+
+        .drag-placeholder {
+            border: 1px dashed var(--primary-400);
+            border-radius: 18px;
+            background: rgba(228, 236, 246, 0.65);
+            margin: 4px 0 14px;
+        }
+
+        .drag-floating {
+            position: fixed;
+            z-index: 9999;
+            pointer-events: none;
+            width: 760px;
+            max-width: calc(100vw - 120px);
+            box-shadow: 0 24px 60px rgba(0, 62, 143, 0.22);
+            border-radius: 22px;
+            background: white;
+            opacity: 0.96;
+            transform: rotate(0.2deg);
+        }
+
+        .flatpickr-calendar {
+            border: 1px solid rgba(12, 108, 233, 0.12) !important;
+            border-radius: 20px !important;
+            box-shadow: 0 20px 60px rgba(0, 62, 143, 0.18) !important;
+            padding: 10px !important;
+            width: 360px !important;
+            max-width: 90vw !important;
+            font-family: Arial, sans-serif !important;
+        }
+
+        .flatpickr-current-month {
+            font-size: 16px !important;
+            padding-top: 4px !important;
+            color: var(--primary-900) !important;
+        }
+
+        .flatpickr-current-month .flatpickr-monthDropdown-months,
+        .flatpickr-current-month input.cur-year {
+            font-size: 16px !important;
+            font-weight: 700 !important;
+        }
+
+        span.flatpickr-weekday {
+            color: var(--primary-700) !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+        }
+
+        .flatpickr-day {
+            border-radius: 999px !important;
+            font-size: 14px !important;
+            height: 42px !important;
+            line-height: 42px !important;
+            max-width: 42px !important;
+        }
+
+        .flatpickr-day.today {
+            border: 1px solid var(--primary-400) !important;
+        }
+
+        .flatpickr-day.selected {
+            background: var(--primary-600) !important;
+            border-color: var(--primary-600) !important;
+            color: #fff !important;
+        }
+
+        .flatpickr-day:hover {
+            background: var(--primary-50) !important;
+        }
+
+        .flatpickr-prev-month,
+        .flatpickr-next-month {
+            top: 12px !important;
+        }
+
+        @media (max-width: 1000px) {
+            html,
+            body {
+                height: auto;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+
+            .page-content {
+                min-height: 100vh;
+                overflow: visible;
+                padding: 20px;
+            }
+
+            .tasks-container {
+                max-width: 100%;
+            }
+
+            .title-sort-row {
+                align-items: flex-start;
+                gap: 14px;
+            }
+
+            .title-sort-row h1 {
+                font-size: 30px;
+            }
+
+            .quick-add-top,
+            .inline-edit-top {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .quick-add-actions,
+            .inline-edit-actions {
+                justify-content: flex-start;
+            }
+
+            .tasks-with-weekly {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                overflow: visible;
+            }
+
+            .tasks-main-column {
+                width: 100%;
+                order: 1;
+                overflow: visible;
+                padding-right: 0;
+            }
+
+            .right-column {
+                width: 100%;
+                order: 2;
+                margin-top: 16px;
+                overflow: visible;
+            }
+
+            .task-block {
+                width: 100%;
+            }
+
+            .flatpickr-calendar {
+                width: 95vw !important;
+            }
+
+            .task-row {
+                gap: 12px;
+                align-items: flex-start;
+            }
+
+            .task-left {
+                align-items: flex-start;
+            }
+
+            .task-actions {
+                gap: 6px;
+            }
+        }
+
+
+
+
+        .tasks-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .title-sort-row,
+        .quick-add-box,
+        .top-links {
+            flex-shrink: 0;
+        }
+
+        .tasks-with-weekly {
+            flex: 1;
+            min-height: 0;
+            overflow: visible;
+        }
+        .tasks-main-column {
+            max-height: calc(100vh - 180px);
+            overflow-y: auto;
+            padding-right: 10px;
+            scroll-behavior: smooth;
+
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+        }
+
+        .tasks-main-column::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
+        .right-column {
+            height: 100%;
+            overflow: visible;
+            margin-top: -35px;
+        }
+
+        /* ===== SIDEBAR ===== */
+        #sidebar {
+            width: 200px;
+            min-height: 100vh;
+            padding: 90px 16px 20px;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translateX(-200px);
+            transition: transform 0.28s ease;
+            z-index: 1200;
+
+            background: #cbe2ff;
+            border-right: 1px solid rgba(0,0,0,0.05);
+        }
+
+        body.sidebar-open #sidebar {
+            transform: translateX(0);
+        }
+
+        /* ===== LABELS ===== */
+        .sidebar-label {
+            margin: 20px 10px 10px;
+            color: #475569;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===== LINKS ===== */
+        #sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            text-decoration: none;
+            color: #1e293b;
+            font-size: 15px;
+            font-weight: 600;
+
+            padding: 10px 12px;
+            border-radius: 14px;
+            margin-bottom: 6px;
+
+            transition: 0.2s ease;
+        }
+
+        /* ICON */
+        #sidebar a i {
+            width: 20px;
+            text-align: center;
+            color: #2563eb;
+        }
+
+        #sidebar a:hover {
+            background: rgba(255,255,255,0.7);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+            color: #2563eb;
+        }
+
+        /* ===== PAGE PUSH ===== */
+        .page-content {
+            transition: 0.3s ease;
+        }
+
+        body.sidebar-open .page-content {
+            padding-left: 260px;
+        }
+        @media (max-width: 1000px) {
+
+            html, body {
+                height: auto !important;
+                overflow-x: hidden !important;
+                overflow-y: auto !important;
+            }
+
+            .page-content {
+                height: auto !important;
+                padding: 70px 12px 20px 12px !important;
+                display: block !important;
+            }
+
+            .tasks-with-weekly {
+                display: flex !important;
+                flex-direction: column !important;
+            }
+
+            .right-column {
+                width: 100% !important;
+                margin-top: 10px !important;
+            }
+
+            .tasks-main-column {
+                width: 100% !important;
+                overflow: visible !important;
+            }
+        }
 
 
 
 
         @media (max-width: 1000px) {
-    .task-row {
-        align-items: center !important;
-    }
+            .task-row {
+                align-items: center !important;
+            }
 
-    .task-left {
-        align-items: center !important;
-    }
+            .task-left {
+                align-items: center !important;
+            }
 
-    .drag-handle,
-    .task-actions {
-        align-self: center !important;
-    }
-}
+            .drag-handle,
+            .task-actions {
+                align-self: center !important;
+            }
+        }
 
 
         .custom-menu-pill[data-value="P1"] .custom-menu-btn i {
-    color: #ef4444;
-}
+            color: #ef4444;
+        }
 
-.custom-menu-pill[data-value="P2"] .custom-menu-btn i {
-    color: #f97316;
-}
+        .custom-menu-pill[data-value="P2"] .custom-menu-btn i {
+            color: #f97316;
+        }
 
-.custom-menu-pill[data-value="P3"] .custom-menu-btn i {
-    color: #eab308;
-}
+        .custom-menu-pill[data-value="P3"] .custom-menu-btn i {
+            color: #eab308;
+        }
 
-.custom-menu-pill[data-value="P4"] .custom-menu-btn i {
-    color: #6b7280;
-}
+        .custom-menu-pill[data-value="P4"] .custom-menu-btn i {
+            color: #6b7280;
+        }
 
-.custom-menu-pill[data-value="Work"] .custom-menu-btn i {
-    color: #4a90e2;
-}
+        .custom-menu-pill[data-value="Work"] .custom-menu-btn i {
+            color: #4a90e2;
+        }
 
-.custom-menu-pill[data-value="Study"] .custom-menu-btn i {
-    color: #9b59b6;
-}
+        .custom-menu-pill[data-value="Study"] .custom-menu-btn i {
+            color: #9b59b6;
+        }
 
-.custom-menu-pill[data-value="Personal"] .custom-menu-btn i {
-    color: #ff6fa5;
-}
+        .custom-menu-pill[data-value="Personal"] .custom-menu-btn i {
+            color: #ff6fa5;
+        }
 
-.custom-menu-pill[data-value="Daily"] .custom-menu-btn i {
-    color: #22c55e;
-}
+        .custom-menu-pill[data-value="Daily"] .custom-menu-btn i {
+            color: #22c55e;
+        }
 
-   .quick-add-box,
-.quick-add-top,
-.quick-add-actions {
-    overflow: visible !important;
-}
+        .quick-add-box,
+        .quick-add-top,
+        .quick-add-actions {
+            overflow: visible !important;
+        }
 
-.custom-menu-pill {
-    position: relative;
-    width: 38px;
-    height: 38px;
-    flex-shrink: 0;
-}
+        .custom-menu-pill {
+            position: relative;
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+        }
 
-.custom-menu-btn {
-    width: 38px;
-    height: 38px;
-    border-radius: 999px;
-    border: 1px solid rgba(12, 108, 233, 0.15);
-    background: linear-gradient(135deg, #ffffff, #e4ecf6);
-    color: #003e8f;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    cursor: pointer;
-    box-shadow: 0 8px 18px rgba(0, 62, 143, 0.08);
-}
-
-
-
-
-.custom-menu-pill.open .custom-menu-list {
-    display: block;
-}
+        .custom-menu-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 999px;
+            border: 1px solid rgba(12, 108, 233, 0.15);
+            background: linear-gradient(135deg, #ffffff, #e4ecf6);
+            color: #003e8f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            cursor: pointer;
+            box-shadow: 0 8px 18px rgba(0, 62, 143, 0.08);
+        }
 
 
 
-.custom-menu-list div:hover {
-    background: #f1f5ff;
-}
 
-.dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-}
-
-.p1 { background: #ef4444; }
-.p2 { background: #f97316; }
-.p3 { background: #eab308; }
-.p4 { background: #6b7280; }
-
-.work { background: #4a90e2; }
-.personal { background: #ec4899; }
-.study { background: #7c3aed; }
-.daily { background: #22c55e; }
+        .custom-menu-pill.open .custom-menu-list {
+            display: block;
+        }
 
 
 
-.priority-menu .custom-menu-list div {
-    width: 100%;
-}
-.priority-menu .custom-menu-list div {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* مهم */
-    gap: 8px;
-    padding-left: 10px;
-    padding-right: 10px;
-}
+        .custom-menu-list div:hover {
+            background: #f1f5ff;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .p1 { background: #ef4444; }
+        .p2 { background: #f97316; }
+        .p3 { background: #eab308; }
+        .p4 { background: #6b7280; }
+
+        .work { background: #4a90e2; }
+        .personal { background: #ec4899; }
+        .study { background: #7c3aed; }
+        .daily { background: #22c55e; }
+
+
+
+        .priority-menu .custom-menu-list div {
+            width: 100%;
+        }
+        .priority-menu .custom-menu-list div {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* مهم */
+            gap: 8px;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
 
 
 
 
         .page-content {
-    position: relative;
-    z-index: 1;
-}
+            position: relative;
+            z-index: 1;
+        }
 
         .quick-add-box {
-    overflow: visible !important;
-}
+            overflow: visible !important;
+        }
 
-.quick-add-top {
-    z-index: 50 !important;
-}
+        .quick-add-top {
+            z-index: 50 !important;
+        }
 
-.quick-add-description-wrap {
-    z-index: 0 !important;
-}
+        .quick-add-description-wrap {
+            z-index: 0 !important;
+        }
 
-.custom-menu-pill.open {
-    z-index: 999999 !important;
-}
+        .custom-menu-pill.open {
+            z-index: 999999 !important;
+        }
 
-.custom-menu-pill.open .custom-menu-list {
-    z-index: 999999 !important;
-}
+        .custom-menu-pill.open .custom-menu-list {
+            z-index: 999999 !important;
+        }
 
 
         html, body { height: auto; overflow-y: auto; overflow-x: hidden; }
 
-.page-content { height: auto; overflow: visible; }
+        .page-content { height: auto; overflow: visible; }
 
-.tasks-container { min-height: 100vh; }
-
-
-body:not(.tabs-ready) .tasks-with-weekly {
-    visibility: hidden;
-}
+        .tasks-container { min-height: 100vh; }
 
 
-
-
-#overdueList .overdue-fake-drag {
-    pointer-events: none;
-    cursor: default;
-}
+        body:not(.tabs-ready) .tasks-with-weekly {
+            visibility: hidden;
+        }
 
 
 
-@media (max-width: 1000px) {
-    .flatpickr-calendar {
-        width: 320px !important;
-        max-width: calc(100vw - 24px) !important;
 
-        left: auto !important;
-        right: auto !important;
-        transform: none !important;
-    }
+        #overdueList .overdue-fake-drag {
+            pointer-events: none;
+            cursor: default;
+        }
 
-    .flatpickr-days,
-    .dayContainer {
-        width: 300px !important;
-        min-width: 300px !important;
-        max-width: 300px !important;
-    }
 
-    .flatpickr-day {
-        width: 42px !important;
-        max-width: 42px !important;
-    }
-}
+
+        @media (max-width: 1000px) {
+            .flatpickr-calendar {
+                width: 320px !important;
+                max-width: calc(100vw - 24px) !important;
+
+                left: auto !important;
+                right: auto !important;
+                transform: none !important;
+            }
+
+            .flatpickr-days,
+            .dayContainer {
+                width: 300px !important;
+                min-width: 300px !important;
+                max-width: 300px !important;
+            }
+
+            .flatpickr-day {
+                width: 42px !important;
+                max-width: 42px !important;
+            }
+        }
 
 
         .inline-edit-title,
-.inline-edit-description {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-.inline-edit-box input,
-.inline-edit-box textarea {
-    outline: none;
-}
+        .inline-edit-description {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+        .inline-edit-box input,
+        .inline-edit-box textarea {
+            outline: none;
+        }
         .inline-edit-box {
-    border: none !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    border-radius: 0 !important;
-}
+            border: none !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            border-radius: 0 !important;
+        }
 
-.inline-edit-box:focus-within {
-    border: none !important;
-    box-shadow: none !important;
-    transform: none !important;
-}
+        .inline-edit-box:focus-within {
+            border: none !important;
+            box-shadow: none !important;
+            transform: none !important;
+        }
 
-.inline-edit-description-wrap {
-    border-top: 1px solid #e5e7eb;
-    position: relative;
-    z-index: 0;
-}
+        .inline-edit-description-wrap {
+            border-top: 1px solid #e5e7eb;
+            position: relative;
+            z-index: 0;
+        }
 
-.inline-edit-top {
-    z-index: 50 !important;
-}
+        .inline-edit-top {
+            z-index: 50 !important;
+        }
 
 
 
 
 
         .task-meta-row {
-    gap: 8px !important;
-}
+            gap: 8px !important;
+        }
 
-.task-meta-row .priority-label,
-.task-meta-row .category-label,
-.task-meta-row .task-date {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 5px !important;
-    padding: 3px 7px !important;
-    border-radius: 999px !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    line-height: 1 !important;
-    border: 1px solid transparent !important;
-    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.035) !important;
-}
+        .task-meta-row .priority-label,
+        .task-meta-row .category-label,
+        .task-meta-row .task-date {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 5px !important;
+            padding: 3px 7px !important;
+            border-radius: 999px !important;
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            line-height: 1 !important;
+            border: 1px solid transparent !important;
+            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.035) !important;
+        }
 
-.task-meta-row .priority-label:has(.priority-dot[style*="red"]) {
-    background: #ffecef !important;
-    border-color: #ffd5dc !important;
-    color: #b91c1c !important;
-}
+        .task-meta-row .priority-label:has(.priority-dot[style*="red"]) {
+            background: #ffecef !important;
+            border-color: #ffd5dc !important;
+            color: #b91c1c !important;
+        }
 
-.task-meta-row .priority-label:has(.priority-dot[style*="#ff8800"]) {
-    background: #fff3e6 !important;
-    border-color: #ffd7ad !important;
-    color: #c2410c !important;
-}
+        .task-meta-row .priority-label:has(.priority-dot[style*="#ff8800"]) {
+            background: #fff3e6 !important;
+            border-color: #ffd7ad !important;
+            color: #c2410c !important;
+        }
 
-.task-meta-row .priority-label:has(.priority-dot[style*="#f4f128"]),
-.task-meta-row .priority-label:has(.priority-dot[style*="#eab308"]) {
-    background: #fffbea !important;
-    border-color: #fef08a !important;
-    color: #a16207 !important;
-}
+        .task-meta-row .priority-label:has(.priority-dot[style*="#f4f128"]),
+        .task-meta-row .priority-label:has(.priority-dot[style*="#eab308"]) {
+            background: #fffbea !important;
+            border-color: #fef08a !important;
+            color: #a16207 !important;
+        }
 
-.task-meta-row .priority-label:has(.priority-dot[style*="gray"]) {
-    background: #f1f5f9 !important;
-    border-color: #e2e8f0 !important;
-    color: #475569 !important;
-}
+        .task-meta-row .priority-label:has(.priority-dot[style*="gray"]) {
+            background: #f1f5f9 !important;
+            border-color: #e2e8f0 !important;
+            color: #475569 !important;
+        }
 
-.task-meta-row .category-label:has(.category-dot[style*="#4a90e2"]) {
-    background: #eaf4ff !important;
-    border-color: #d6eaff !important;
-    color: #155e9f !important;
-}
+        .task-meta-row .category-label:has(.category-dot[style*="#4a90e2"]) {
+            background: #eaf4ff !important;
+            border-color: #d6eaff !important;
+            color: #155e9f !important;
+        }
 
-.task-meta-row .category-label:has(.category-dot[style*="#7c3aed"]) {
-    background: #ede9fe !important;
-    border-color: #c4b5fd !important;
-    color: #5b21b6 !important;
-}
-
-
-.task-meta-row .category-label:has(.category-dot[style*="#ec4899"]) {
-    background: #fce7f3 !important;
-    border-color: #f9a8d4 !important;
-    color: #9d174d !important;
-}
+        .task-meta-row .category-label:has(.category-dot[style*="#7c3aed"]) {
+            background: #ede9fe !important;
+            border-color: #c4b5fd !important;
+            color: #5b21b6 !important;
+        }
 
 
-.task-meta-row .category-label:has(.category-dot[style*="#2ecc71"]) {
-    background: #eafaf1 !important;
-    border-color: #c9f2da !important;
-    color: #16834a !important;
-}
+        .task-meta-row .category-label:has(.category-dot[style*="#ec4899"]) {
+            background: #fce7f3 !important;
+            border-color: #f9a8d4 !important;
+            color: #9d174d !important;
+        }
+
+
+        .task-meta-row .category-label:has(.category-dot[style*="#2ecc71"]) {
+            background: #eafaf1 !important;
+            border-color: #c9f2da !important;
+            color: #16834a !important;
+        }
 
 
 
         .custom-menu-list {
-    display: none;
-    position: absolute;
-    top: 46px;
-    right: 0;
-    width: 170px;
-    background: white;
-    border: 1px solid #dbeafe;
-    border-radius: 18px;
-    padding: 8px;
-    box-shadow: 0 18px 45px rgba(0, 62, 143, 0.18);
-    z-index: 999999;
-}
+            display: none;
+            position: absolute;
+            top: 46px;
+            right: 0;
+            width: 170px;
+            background: white;
+            border: 1px solid #dbeafe;
+            border-radius: 18px;
+            padding: 8px;
+            box-shadow: 0 18px 45px rgba(0, 62, 143, 0.18);
+            z-index: 999999;
+        }
 
-.custom-menu-list div {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 11px 12px;
-    border-radius: 14px;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: 700;
-    color: #0f172a;
-}
+        .custom-menu-list div {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 12px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 700;
+            color: #0f172a;
+        }
 
-.priority-menu .custom-menu-list {
-    width: 120px;
-}
+        .priority-menu .custom-menu-list {
+            width: 120px;
+        }
 
 
         .inline-edit-box .custom-menu-list {
-    top: 40px;
-    width: 105px;
-    padding: 4px;
-    border-radius: 14px;
-}
+            top: 40px;
+            width: 105px;
+            padding: 4px;
+            border-radius: 14px;
+        }
 
-.inline-edit-box .custom-menu-list div {
-    gap: 8px;
-    padding: 6px 8px;
-    font-size: 13px;
-    border-radius: 10px;
-}
+        .inline-edit-box .custom-menu-list div {
+            gap: 8px;
+            padding: 6px 8px;
+            font-size: 13px;
+            border-radius: 10px;
+        }
 
-.inline-edit-box .priority-menu .custom-menu-list {
-    width: 95px;
-}
+        .inline-edit-box .priority-menu .custom-menu-list {
+            width: 95px;
+        }
     </style>
 </head>
 
@@ -2511,1113 +2511,1134 @@ body:not(.tabs-ready) .tasks-with-weekly {
                 document.body.classList.add("sidebar-open");
             }
         }
-         function toggleDesc(el) {
-                       var parent = el.parentElement;
-                       var shortText = parent.querySelector(".desc-short");
-                       var fullText = parent.querySelector(".desc-full");
+        function toggleDesc(el) {
+            var parent = el.parentElement;
+            var shortText = parent.querySelector(".desc-short");
+            var fullText = parent.querySelector(".desc-full");
 
-                       if (fullText.style.display === "inline") {
-                           fullText.style.display = "none";
-                           shortText.style.display = "inline";
-                           el.innerText = "More";
-                       } else {
-                           fullText.style.display = "inline";
-                           shortText.style.display = "none";
-                           el.innerText = "Less";
-                       }
-                   }
-
-                   function closeAllEditInline() {
-                       document.querySelectorAll(".inline-edit-box").forEach(function (edit) {
-                           edit.classList.remove("active");
-                       });
-
-                       document.querySelectorAll(".task-row").forEach(function (view) {
-                           view.style.display = "flex";
-                       });
-                   }
-
-                   function toggleEditInline(id) {
-                       var view = document.getElementById("taskView-" + id);
-                       var edit = document.getElementById("taskEdit-" + id);
-
-                       if (!view || !edit) return;
-
-                       var isOpen = edit.classList.contains("active");
-
-                       closeAllEditInline();
-
-                       if (!isOpen) {
-                           view.style.display = "none";
-                           edit.classList.add("active");
-
-                           var titleInput = edit.querySelector(".inline-edit-title");
-                           if (titleInput) {
-                               setTimeout(function () {
-                                   titleInput.focus();
-                                   titleInput.select();
-                               }, 50);
-                           }
-                       }
-                   }
-
-            function openEditDate(e, el) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    var input = el.querySelector("input");
-    if (!input) return;
-
-    if (!input._flatpickr) {
-        flatpickr(input, {
-            dateFormat: "Y-m-d",
-            allowInput: false,
-            clickOpens: false,
-            monthSelectorType: "dropdown",
-            prevArrow: "&#10094;",
-            nextArrow: "&#10095;",
-            onOpen: function () {
-                el.dataset.calendarOpen = "true";
-            },
-            onClose: function () {
-                el.dataset.calendarOpen = "false";
-            },
-            onChange: function (selectedDates, dateStr) {
-                updateSmartPill(el, formatDateForPill(dateStr));
+            if (fullText.style.display === "inline") {
+                fullText.style.display = "none";
+                shortText.style.display = "inline";
+                el.innerText = "More";
+            } else {
+                fullText.style.display = "inline";
+                shortText.style.display = "none";
+                el.innerText = "Less";
             }
-        });
-    }
-
-    if (el.dataset.calendarOpen === "true") {
-        input._flatpickr.close();
-    } else {
-        input._flatpickr.open();
-    }
-}
-
-                   function formatDateForPill(value) {
-                       if (!value) return "";
-                       const parts = value.split("-");
-                       if (parts.length !== 3) return value;
-                       return parts[2] + "/" + parts[1];
-                   }
-
-                   function updateSmartPill(pill, value) {
-                       const text = pill.querySelector(".pill-text");
-                       if (!text) return;
-
-                       if (value && value.trim() !== "") {
-                           text.textContent = value;
-                           pill.classList.add("active");
-                       } else {
-                           text.textContent = "";
-                           pill.classList.remove("active");
-                       }
-                   }
-
-                   let activeDrag = null;
-                   let autoScrollInterval = null;
-
-                   function initAdvancedDrag() {
-                       document.querySelectorAll(".drag-handle").forEach(handle => {
-                           handle.addEventListener("mousedown", startDrag);
-                       });
-                   }
-
-                   function startDrag(e) {
-                       e.preventDefault();
-
-                       const task = e.currentTarget.closest(".task-block");
-                       const container = task.closest(".my-tasks-list");
-                       if (!task || !container) return;
-
-                       const rect = task.getBoundingClientRect();
-
-                       const placeholder = document.createElement("div");
-                       placeholder.className = "drag-placeholder";
-                       placeholder.style.height = rect.height + "px";
-
-                       const floating = task.cloneNode(true);
-                       floating.classList.add("drag-floating");
-                       floating.style.width = rect.width + "px";
-                       floating.style.left = rect.left + "px";
-                       floating.style.top = rect.top + "px";
-
-                       document.body.appendChild(floating);
-
-                       task.classList.add("drag-source-hidden");
-                       task.parentNode.insertBefore(placeholder, task.nextSibling);
-
-                       activeDrag = {
-                           source: task,
-                           floating: floating,
-                           placeholder: placeholder,
-                           container: container,
-                           offsetY: e.clientY - rect.top
-                       };
-
-                       document.addEventListener("mousemove", onDrag);
-                       document.addEventListener("mouseup", stopDrag);
-                   }
-
-
-                   function stopAutoScroll() {
-                       if (autoScrollInterval) {
-                           clearInterval(autoScrollInterval);
-                           autoScrollInterval = null;
-                       }
-                   }
-
-                   function onDrag(e) {
-               if (!activeDrag) return;
-
-               const floating = activeDrag.floating;
-               const offsetY = activeDrag.offsetY;
-               const source = activeDrag.source;
-               const placeholder = activeDrag.placeholder;
-               const container = activeDrag.container;
-
-               startAutoScroll(e.clientY);
-
-               floating.style.top = (e.clientY - offsetY) + "px";
-
-               const items = Array.from(container.querySelectorAll(".task-block"))
-                   .filter(item => item !== source);
-
-               for (let item of items) {
-                   const rect = item.getBoundingClientRect();
-                   if (e.clientY < rect.top + rect.height / 2) {
-                       container.insertBefore(placeholder, item);
-                       return;
-                   }
-               }
-
-               container.appendChild(placeholder);
-           }
-           function stopDrag() {
-               if (!activeDrag) return;
-
-               stopAutoScroll();
-
-               const source = activeDrag.source;
-               const floating = activeDrag.floating;
-               const placeholder = activeDrag.placeholder;
-               const container = activeDrag.container;
-
-               container.insertBefore(source, placeholder);
-               source.classList.remove("drag-source-hidden");
-
-               floating.remove();
-               placeholder.remove();
-
-               activeDrag = null;
-
-               document.removeEventListener("mousemove", onDrag);
-               document.removeEventListener("mouseup", stopDrag);
-
-               saveOrder();
-           }
-                   function saveOrder() {
-                       const ids = [];
-
-                       document.querySelectorAll(".task-block").forEach(el => {
-                           const id = el.getAttribute("data-id");
-                           if (id) {
-                               ids.push(Number(id));
-                           }
-                       });
-
-                       fetch("/tasks/reorder", {
-                           method: "POST",
-                           headers: {"Content-Type": "application/json"},
-                           body: JSON.stringify(ids)
-                       });
-                   }
-
-                   document.addEventListener("DOMContentLoaded", function () {
-                       var quickAddBox = document.getElementById("quickAddBox");
-                       var quickAddTitle = document.getElementById("quickAddTitle");
-                       var quickAddDescription = document.getElementById("quickAddDescription");
-                       var dateInput = document.getElementById("dueDatePicker");
-                       var datePill = document.getElementById("datePill");
-
-                       if (quickAddTitle && quickAddBox) {
-                           quickAddTitle.addEventListener("focus", function () {
-                               quickAddBox.classList.add("expanded");
-                           });
-
-                         quickAddBox.addEventListener("keydown", function (e) {
-              if (e.key === "Enter" && !e.shiftKey) {
-
-                  if (e.target === quickAddDescription) return;
-
-                  e.preventDefault();
-
-                if (quickAddTitle.value.trim() === "") {
-              quickAddTitle.setCustomValidity("Your task needs a title");
-              quickAddTitle.reportValidity();
-              quickAddTitle.focus();
-              return;
-          }
-
-          quickAddTitle.setCustomValidity("");
-
-                 localStorage.setItem("activeTaskTab", "all");
-quickAddBox.classList.remove("expanded");
-quickAddTitle.blur();
-quickAddBox.submit();
-              }
-          });
-                       }
-
-                       if (quickAddDescription && quickAddBox) {
-                           quickAddDescription.addEventListener("focus", function () {
-                               quickAddBox.classList.add("expanded");
-                           });
-                       }
-
-                       document.querySelectorAll(".inline-edit-box").forEach(function (edit) {
-                           var titleInput = edit.querySelector(".inline-edit-title");
-                           if (titleInput) {
-                               titleInput.addEventListener("keydown", function (e) {
-                                   if (e.key === "Enter" && !e.shiftKey) {
-                                       e.preventDefault();
-
-                                       if (titleInput.value.trim() === "") {
-                                           titleInput.reportValidity();
-                                           return;
-                                       }
-
-                                       var form = edit.querySelector("form");
-                                       if (form) {
-                                           form.requestSubmit();
-                                       }
-                                   }
-                               });
-                           }
-                       });
-
-                      document.addEventListener("click", function (e) {
-    var clickedCalendar = e.target.closest(".flatpickr-calendar");
-
-    if (quickAddBox && !quickAddBox.contains(e.target) && !clickedCalendar) {
-        quickAddBox.classList.remove("expanded");
-    }
-
-    var clickedEditButton = e.target.closest("[onclick*='toggleEditInline']");
-    var clickedEditBox = e.target.closest(".inline-edit-box");
-
-    if (!clickedEditButton && !clickedEditBox && !clickedCalendar) {
-        closeAllEditInline();
-    }
-});
-
-                       if (dateInput) {
-                           var fp = flatpickr(dateInput, {
-                               dateFormat: "Y-m-d",
-                               allowInput: false,
-                               clickOpens: false,
-                               monthSelectorType: "dropdown",
-                               prevArrow: "&#10094;",
-                               nextArrow: "&#10095;",
-                               onChange: function (selectedDates, dateStr) {
-                                   updateSmartPill(datePill, formatDateForPill(dateStr));
-                               }
-                           });
-
-                           if (datePill) {
-                             if (dateInput) {
-    let calendarOpen = false;
-
-    var fp = flatpickr(dateInput, {
-        dateFormat: "Y-m-d",
-        allowInput: false,
-        clickOpens: false,
-        monthSelectorType: "dropdown",
-        prevArrow: "&#10094;",
-        nextArrow: "&#10095;",
-        onOpen: function () {
-            calendarOpen = true;
-        },
-        onClose: function () {
-            calendarOpen = false;
-        },
-        onChange: function (selectedDates, dateStr) {
-            updateSmartPill(datePill, formatDateForPill(dateStr));
         }
-    });
 
-    if (datePill) {
-        datePill.addEventListener("pointerdown", function (e) {
+        function closeAllEditInline() {
+            document.querySelectorAll(".inline-edit-box").forEach(function (edit) {
+                edit.classList.remove("active");
+            });
+
+            document.querySelectorAll(".task-row").forEach(function (view) {
+                view.style.display = "flex";
+            });
+        }
+
+        function toggleEditInline(id) {
+            var view = document.getElementById("taskView-" + id);
+            var edit = document.getElementById("taskEdit-" + id);
+
+            if (!view || !edit) return;
+
+            var isOpen = edit.classList.contains("active");
+
+            closeAllEditInline();
+
+            if (!isOpen) {
+                view.style.display = "none";
+                edit.classList.add("active");
+
+                var titleInput = edit.querySelector(".inline-edit-title");
+                if (titleInput) {
+                    setTimeout(function () {
+                        titleInput.focus();
+                        titleInput.select();
+                    }, 50);
+                }
+            }
+        }
+
+        function openEditDate(e, el) {
             e.preventDefault();
             e.stopPropagation();
-document.querySelectorAll(".custom-menu-pill").forEach(function (pill) {
-    pill.classList.remove("open");
 
-    const list = pill.querySelector(".custom-menu-list");
-    if (list) list.style.display = "none";
-});
-            if (calendarOpen) {
-                fp.close();
-            } else {
-                fp.open();
+            var input = el.querySelector("input");
+            if (!input) return;
+
+            if (!input._flatpickr) {
+                flatpickr(input, {
+                    dateFormat: "Y-m-d",
+                    allowInput: false,
+                    clickOpens: false,
+                    monthSelectorType: "dropdown",
+                    prevArrow: "&#10094;",
+                    nextArrow: "&#10095;",
+                    onOpen: function () {
+                        el.dataset.calendarOpen = "true";
+                    },
+                    onClose: function () {
+                        el.dataset.calendarOpen = "false";
+                    },
+                    onChange: function (selectedDates, dateStr) {
+                        updateSmartPill(el, formatDateForPill(dateStr));
+                    }
+                });
             }
-        });
-    }
-}
-                           }
-                       }
 
-                       const priorityPill = document.getElementById("priorityPill");
-                       const prioritySelect = document.getElementById("prioritySelect");
-                       const categoryPill = document.getElementById("categoryPill");
-                       const categorySelect = document.getElementById("categorySelect");
-
-                       if (dateInput && datePill) {
-                           updateSmartPill(datePill, formatDateForPill(dateInput.value));
-                       }
-
-                       if (prioritySelect && priorityPill) {
-                           updateSmartPill(priorityPill, prioritySelect.value);
-                           prioritySelect.addEventListener("change", function () {
-                               updateSmartPill(priorityPill, this.value);
-                               quickAddTitle.focus();
-                           });
-                       }
-
-                       if (categorySelect && categoryPill) {
-                           updateSmartPill(categoryPill, categorySelect.value);
-                          categorySelect.addEventListener("change", function () {
-                               updateSmartPill(categoryPill, this.value);
-                               quickAddTitle.focus();
-                           });
-                       }
-
-                       document.querySelectorAll(".edit-date-pill").forEach(function (pill) {
-                           const input = pill.querySelector("input");
-                           if (input) {
-                               updateSmartPill(pill, formatDateForPill(input.value));
-                           }
-                       });
-
-                       document.querySelectorAll(".edit-priority-pill").forEach(function (pill) {
-                           const select = pill.querySelector("select");
-                           if (select) {
-                               updateSmartPill(pill, select.value);
-                               select.addEventListener("change", function () {
-                                   updateSmartPill(pill, this.value);
-                               });
-                           }
-                       });
-
-                       document.querySelectorAll(".edit-category-pill").forEach(function (pill) {
-                           const select = pill.querySelector("select");
-                           if (select) {
-                               updateSmartPill(pill, select.value);
-                               select.addEventListener("change", function () {
-                                   updateSmartPill(pill, this.value);
-                               });
-                           }
-                       });
-
-                       initAdvancedDrag();
-                   });
-
-
-                   document.addEventListener("click", function (e) {
-                       var wrapper = document.querySelector(".sort-wrapper");
-                       var menu = document.getElementById("sortMenu");
-
-                       if (wrapper && menu && !wrapper.contains(e.target)) {
-                           menu.style.display = "none";
-                       }
-                   });
-function toggleSortMenu(e) {
-    if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-
-    var menu = document.getElementById("sortMenu");
-
-    // غلق priority/category بالقوة
-    document.querySelectorAll(".custom-menu-pill").forEach(function (pill) {
-        pill.classList.remove("open");
-
-        var list = pill.querySelector(".custom-menu-list");
-        if (list) {
-            list.style.display = "none";
+            if (el.dataset.calendarOpen === "true") {
+                input._flatpickr.close();
+            } else {
+                input._flatpickr.open();
+            }
         }
-    });
 
-    if (menu.style.display === "block") {
-        menu.style.display = "none";
-    } else {
-        menu.style.display = "block";
-    }
-}
+        function formatDateForPill(value) {
+            if (!value) return "";
+            const parts = value.split("-");
+            if (parts.length !== 3) return value;
+            return parts[2] + "/" + parts[1];
+        }
 
-                   document.addEventListener("click", function (e) {
+        function updateSmartPill(pill, value) {
+            const text = pill.querySelector(".pill-text");
+            if (!text) return;
 
-                       // ========== SORT MENU ==========
-                       var wrapper = document.querySelector(".sort-wrapper");
-                       var menu = document.getElementById("sortMenu");
+            if (value && value.trim() !== "") {
+                text.textContent = value;
+                pill.classList.add("active");
+            } else {
+                text.textContent = "";
+                pill.classList.remove("active");
+            }
+        }
 
-                       if (wrapper && menu && !wrapper.contains(e.target)) {
-                           menu.style.display = "none";
-                       }
-                       // ========== SEARCH OVERLAY ==========
-                       var overlay = document.getElementById("searchOverlay");
-                       var box = document.querySelector(".search-box");
+        let activeDrag = null;
+        let autoScrollInterval = null;
 
-                       if (overlay && overlay.style.display === "block") {
-                           if (box && !box.contains(e.target)) {
-                               overlay.style.display = "none";
-                           }
-                       }
+        function initAdvancedDrag() {
+            document.querySelectorAll(".drag-handle").forEach(handle => {
+                handle.addEventListener("mousedown", startDrag);
+            });
+        }
 
-                   });
+        function startDrag(e) {
+            e.preventDefault();
 
-                   document.addEventListener("keydown", function (e) {
+            const task = e.currentTarget.closest(".task-block");
+            const container = task.closest(".my-tasks-list");
+            if (!task || !container) return;
 
-                       if (e.key === "Enter") {
+            const rect = task.getBoundingClientRect();
 
-                           const input = document.getElementById("searchInput");
+            const placeholder = document.createElement("div");
+            placeholder.className = "drag-placeholder";
+            placeholder.style.height = rect.height + "px";
 
-                           if (input && document.activeElement === input) {
-                               e.preventDefault();
-                               doSearch();
-                           }
-                       }
+            const floating = task.cloneNode(true);
+            floating.classList.add("drag-floating");
+            floating.style.width = rect.width + "px";
+            floating.style.left = rect.left + "px";
+            floating.style.top = rect.top + "px";
 
-                   });
+            document.body.appendChild(floating);
 
-                   function openSearch(e) {
-                       if (e) e.stopPropagation();
+            task.classList.add("drag-source-hidden");
+            task.parentNode.insertBefore(placeholder, task.nextSibling);
 
-                       document.getElementById("searchOverlay").style.display = "block";
+            activeDrag = {
+                source: task,
+                floating: floating,
+                placeholder: placeholder,
+                container: container,
+                offsetY: e.clientY - rect.top
+            };
 
-                       setTimeout(() => {
-                           document.getElementById("searchInput").focus();
-                       }, 100);
-                   }
-
-                   function closeSearch() {
-                       document.getElementById("searchOverlay").style.display = "none";
-                   }
-                   function doSearch() {
-                       let keyword = document.getElementById("searchInput").value;
-
-                       window.location.href = "/tasks/search?keyword=" + encodeURIComponent(keyword);
-                   }
-
-                   function toggleOverdueSection() {
-                       const list = document.getElementById("overdueList");
-                       const header = document.querySelector(".section-toggle");
-                       const arrow = document.getElementById("overdueArrow");
-
-                       if (!list || !header || !arrow) return;
-
-                       if (list.style.display === "none") {
-                           list.style.display = "block";
-                           header.classList.add("open");
-                       } else {
-                            list.style.display = "none";
-                           header.classList.remove("open");
-                       }
-                   }
-
-                   function toggleCompletedSection() {
-                       const list = document.getElementById("completedList");
-                       const header = document.querySelector(".completed-toggle");
-
-                       if (!list || !header) return;
-
-                       if (list.style.display === "none") {
-                           list.style.display = "block";
-                           header.classList.add("open");
-                       } else {
-                           list.style.display = "none";
-                           header.classList.remove("open");
-                       }
-                   }
-                   function updateAllScrollInputs() {
-                      const scrollBox = document.querySelector(".tasks-main-column");
-                      const value = scrollBox ? scrollBox.scrollTop : 0;
-
-                       const mainInput = document.getElementById("scrollPosInput");
-                       if (mainInput) {
-                           mainInput.value = value;
-                       }
-
-                       document.querySelectorAll(".scroll-pos-input").forEach(input => {
-                           input.value = value;
-                       });
-
-                       document.querySelectorAll('a[href*="/tasks/delete/"]').forEach(link => {
-                           try {
-                               const url = new URL(link.href, window.location.origin);
-                               url.searchParams.set("scrollPos", value);
-                               link.href = url.toString();
-                           } catch (e) {}
-                       });
-                   }
-
-document.addEventListener("DOMContentLoaded", function () {
-    const scrollBox = document.querySelector(".tasks-main-column");
-    if (scrollBox) {
-        scrollBox.addEventListener("scroll", updateAllScrollInputs);
-    }
-});
-                   document.addEventListener("DOMContentLoaded", function () {
-                       updateAllScrollInputs();
-
-                       const savedScroll = "[[${scrollPos}]]";
-                       if (savedScroll && savedScroll !== "null" && savedScroll !== "") {
-                           setTimeout(() => {
-                              const scrollBox = document.querySelector(".tasks-main-column");
-if (scrollBox) {
-    scrollBox.scrollTop = parseInt(savedScroll);
-}
-                           }, 50);
-                       }
-                   })
+            document.addEventListener("mousemove", onDrag);
+            document.addEventListener("mouseup", stopDrag);
+        }
 
 
-                function showTaskTab(type, clickedTab) {
-    localStorage.setItem("activeTaskTab", type);
+        function stopAutoScroll() {
+            if (autoScrollInterval) {
+                clearInterval(autoScrollInterval);
+                autoScrollInterval = null;
+            }
+        }
 
-    const allTaskLists = document.querySelectorAll(".my-tasks-list");
-    const completedSection = document.getElementById("completedTasksPanel");
-    const overdueSection = document.getElementById("overdueTasksPanel");
-    const completedList = document.getElementById("completedList");
-    const overdueList = document.getElementById("overdueList");
-    const emptyMyTasksState = document.getElementById("emptyMyTasksState");
+        function onDrag(e) {
+            if (!activeDrag) return;
 
-    document.body.classList.add("tabs-mode");
+            const floating = activeDrag.floating;
+            const offsetY = activeDrag.offsetY;
+            const source = activeDrag.source;
+            const placeholder = activeDrag.placeholder;
+            const container = activeDrag.container;
 
-    allTaskLists.forEach(list => list.style.display = "none");
-    if (completedSection) completedSection.style.display = "none";
-    if (overdueSection) overdueSection.style.display = "none";
-    if (emptyMyTasksState) emptyMyTasksState.style.display = "none";
+            startAutoScroll(e.clientY);
 
-    if (type === "all") {
-        allTaskLists.forEach(list => list.style.display = "block");
-        if (emptyMyTasksState) emptyMyTasksState.style.display = "block";
-    }
+            floating.style.top = (e.clientY - offsetY) + "px";
 
-    if (type === "completed" && completedSection) {
-        completedSection.style.display = "block";
-        if (completedList) completedList.style.display = "block";
-    }
+            const items = Array.from(container.querySelectorAll(".task-block"))
+                .filter(item => item !== source);
 
-    if (type === "overdue" && overdueSection) {
-        overdueSection.style.display = "block";
-        if (overdueList) overdueList.style.display = "block";
-    }
+            for (let item of items) {
+                const rect = item.getBoundingClientRect();
+                if (e.clientY < rect.top + rect.height / 2) {
+                    container.insertBefore(placeholder, item);
+                    return;
+                }
+            }
 
-    document.querySelectorAll(".tabs span").forEach(tab => tab.classList.remove("active"));
-    const tab = clickedTab ? clickedTab.closest("span") : document.querySelector(".tabs span");
-    if (tab) tab.classList.add("active");
+            container.appendChild(placeholder);
+        }
+        function stopDrag() {
+            if (!activeDrag) return;
 
-    document.body.classList.add("tabs-ready");
-}
-document.addEventListener("DOMContentLoaded", function () {
-    const savedTab = localStorage.getItem("activeTaskTab") || "all";
+            stopAutoScroll();
 
-    const tabElement =
-        savedTab === "completed"
-            ? document.querySelector(".tabs span:nth-child(2)")
-            : savedTab === "overdue"
-                ? document.querySelector(".tabs span:nth-child(3)")
-                : document.querySelector(".tabs span:nth-child(1)");
+            const source = activeDrag.source;
+            const floating = activeDrag.floating;
+            const placeholder = activeDrag.placeholder;
+            const container = activeDrag.container;
 
-    showTaskTab(savedTab, tabElement);
-});
+            container.insertBefore(source, placeholder);
+            source.classList.remove("drag-source-hidden");
 
-                   function toggleEditInlineOverdue(id) {
-                       var view = document.getElementById("taskView-overdue-" + id);
-                       var edit = document.getElementById("taskEdit-overdue-" + id);
+            floating.remove();
+            placeholder.remove();
 
-                       if (!view || !edit) return;
+            activeDrag = null;
 
-                       var isOpen = edit.classList.contains("active");
+            document.removeEventListener("mousemove", onDrag);
+            document.removeEventListener("mouseup", stopDrag);
 
-                       closeAllEditInline();
+            saveOrder();
+        }
+        function saveOrder() {
+            const ids = [];
 
-                       if (!isOpen) {
-                           view.style.display = "none";
-                           edit.classList.add("active");
+            document.querySelectorAll(".task-block").forEach(el => {
+                const id = el.getAttribute("data-id");
+                if (id) {
+                    ids.push(Number(id));
+                }
+            });
 
-                           var titleInput = edit.querySelector(".inline-edit-title");
-                           if (titleInput) {
-                               setTimeout(function () {
-                                   titleInput.focus();
-                                   titleInput.select();
-                               }, 50);
-                           }
-                       }
-                   }
+            fetch("/tasks/reorder", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(ids)
+            });
+        }
 
-              function startAutoScroll(y) {
-               stopAutoScroll();
+        document.addEventListener("DOMContentLoaded", function () {
+            var quickAddBox = document.getElementById("quickAddBox");
+            var quickAddTitle = document.getElementById("quickAddTitle");
+            var quickAddDescription = document.getElementById("quickAddDescription");
+            var dateInput = document.getElementById("dueDatePicker");
+            var datePill = document.getElementById("datePill");
 
-               autoScrollInterval = setInterval(() => {
-                   const scrollContainer = document.querySelector(".tasks-main-column");
+            if (quickAddTitle && quickAddBox) {
+                quickAddTitle.addEventListener("focus", function () {
+                    quickAddBox.classList.add("expanded");
+                });
 
-                   if (scrollContainer) {
-                       const rect = scrollContainer.getBoundingClientRect();
-                       const canScrollInside =
-                           scrollContainer.scrollHeight > scrollContainer.clientHeight;
+                quickAddBox.addEventListener("keydown", function (e) {
+                    if (e.key === "Enter" && !e.shiftKey) {
 
-                       if (canScrollInside) {
-                           if (y < rect.top + 80) scrollContainer.scrollTop -= 12;
-                           if (y > rect.bottom - 80) scrollContainer.scrollTop += 12;
-                           return;
-                       }
-                   }
+                        if (e.target === quickAddDescription) return;
 
-                   if (y < 80) {
-                       window.scrollBy(0, -12);
-                   }
+                        e.preventDefault();
 
-                   if (y > window.innerHeight - 80) {
-                       window.scrollBy(0, 12);
-                   }
-               }, 16);
-           }
+                        if (quickAddTitle.value.trim() === "") {
+                            quickAddTitle.setCustomValidity("Your task needs a title");
+                            quickAddTitle.reportValidity();
+                            quickAddTitle.focus();
+                            return;
+                        }
 
+                        quickAddTitle.setCustomValidity("");
 
-       function toggleCustomMenu(e, btn) {
-    e.stopPropagation();
+                        localStorage.setItem("activeTaskTab", "all");
+                        quickAddBox.classList.remove("expanded");
+                        quickAddTitle.blur();
+                        quickAddBox.submit();
+                    }
+                });
+            }
 
-    var pill = btn.closest(".custom-menu-pill");
-    var list = pill.querySelector(".custom-menu-list");
-    var wasOpen = pill.classList.contains("open");
+            if (quickAddDescription && quickAddBox) {
+                quickAddDescription.addEventListener("focus", function () {
+                    quickAddBox.classList.add("expanded");
+                });
+            }
 
-    document.querySelectorAll(".custom-menu-pill").forEach(function (p) {
-        p.classList.remove("open");
-        var l = p.querySelector(".custom-menu-list");
-        if (l) l.style.display = "none";
-    });
+            document.querySelectorAll(".inline-edit-box").forEach(function (edit) {
+                var titleInput = edit.querySelector(".inline-edit-title");
+                if (titleInput) {
+                    titleInput.addEventListener("keydown", function (e) {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                            e.preventDefault();
 
-    if (!wasOpen) {
-        pill.classList.add("open");
-        if (list) list.style.display = "block";
-    }
-}
-document.addEventListener("click", function (e) {
-    if (!e.target.closest(".custom-menu-pill")) {
-        document.querySelectorAll(".custom-menu-pill").forEach(function (pill) {
-            pill.classList.remove("open");
+                            if (titleInput.value.trim() === "") {
+                                titleInput.reportValidity();
+                                return;
+                            }
 
-            const list = pill.querySelector(".custom-menu-list");
-            if (list) list.style.display = "none";
+                            var form = edit.querySelector("form");
+                            if (form) {
+                                form.requestSubmit();
+                            }
+                        }
+                    });
+                }
+            });
+
+            document.addEventListener("click", function (e) {
+
+                var clickedCalendar = e.target.closest(".flatpickr-calendar");
+
+                if (quickAddBox && !quickAddBox.contains(e.target) && !clickedCalendar) {
+                    quickAddBox.classList.remove("expanded");
+                }
+
+                var clickedEditButton = e.target.closest("[onclick*='toggleEditInline']");
+                var clickedEditBox = e.target.closest(".inline-edit-box");
+
+                if (!clickedEditButton && !clickedEditBox && !clickedCalendar) {
+                    closeAllEditInline();
+                }
+
+                // ===== SIDEBAR CLOSE =====
+
+                const sidebar = document.getElementById("sidebar");
+                const menuBtn = document.querySelector(".menu-global");
+
+                if (sidebar && menuBtn) {
+
+                    const clickedInsideSidebar = sidebar.contains(e.target);
+                    const clickedMenuBtn = menuBtn.contains(e.target);
+
+                    if (
+                        document.body.classList.contains("sidebar-open") &&
+                        !clickedInsideSidebar &&
+                        !clickedMenuBtn
+                    ) {
+                        document.body.classList.remove("sidebar-open");
+                    }
+                }
+            });
+
+            if (dateInput) {
+                var fp = flatpickr(dateInput, {
+                    dateFormat: "Y-m-d",
+                    allowInput: false,
+                    clickOpens: false,
+                    monthSelectorType: "dropdown",
+                    prevArrow: "&#10094;",
+                    nextArrow: "&#10095;",
+                    onChange: function (selectedDates, dateStr) {
+                        updateSmartPill(datePill, formatDateForPill(dateStr));
+                    }
+                });
+
+                if (datePill) {
+                    if (dateInput) {
+                        let calendarOpen = false;
+
+                        var fp = flatpickr(dateInput, {
+                            dateFormat: "Y-m-d",
+                            allowInput: false,
+                            clickOpens: false,
+                            monthSelectorType: "dropdown",
+                            prevArrow: "&#10094;",
+                            nextArrow: "&#10095;",
+                            onOpen: function () {
+                                calendarOpen = true;
+                            },
+                            onClose: function () {
+                                calendarOpen = false;
+                            },
+                            onChange: function (selectedDates, dateStr) {
+                                updateSmartPill(datePill, formatDateForPill(dateStr));
+                            }
+                        });
+
+                        if (datePill) {
+                            datePill.addEventListener("pointerdown", function (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                document.querySelectorAll(".custom-menu-pill").forEach(function (pill) {
+                                    pill.classList.remove("open");
+
+                                    const list = pill.querySelector(".custom-menu-list");
+                                    if (list) list.style.display = "none";
+                                });
+                                if (calendarOpen) {
+                                    fp.close();
+                                } else {
+                                    fp.open();
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+
+            const priorityPill = document.getElementById("priorityPill");
+            const prioritySelect = document.getElementById("prioritySelect");
+            const categoryPill = document.getElementById("categoryPill");
+            const categorySelect = document.getElementById("categorySelect");
+
+            if (dateInput && datePill) {
+                updateSmartPill(datePill, formatDateForPill(dateInput.value));
+            }
+
+            if (prioritySelect && priorityPill) {
+                updateSmartPill(priorityPill, prioritySelect.value);
+                prioritySelect.addEventListener("change", function () {
+                    updateSmartPill(priorityPill, this.value);
+                    quickAddTitle.focus();
+                });
+            }
+
+            if (categorySelect && categoryPill) {
+                updateSmartPill(categoryPill, categorySelect.value);
+                categorySelect.addEventListener("change", function () {
+                    updateSmartPill(categoryPill, this.value);
+                    quickAddTitle.focus();
+                });
+            }
+
+            document.querySelectorAll(".edit-date-pill").forEach(function (pill) {
+                const input = pill.querySelector("input");
+                if (input) {
+                    updateSmartPill(pill, formatDateForPill(input.value));
+                }
+            });
+
+            document.querySelectorAll(".edit-priority-pill").forEach(function (pill) {
+                const select = pill.querySelector("select");
+                if (select) {
+                    updateSmartPill(pill, select.value);
+                    select.addEventListener("change", function () {
+                        updateSmartPill(pill, this.value);
+                    });
+                }
+            });
+
+            document.querySelectorAll(".edit-category-pill").forEach(function (pill) {
+                const select = pill.querySelector("select");
+                if (select) {
+                    updateSmartPill(pill, select.value);
+                    select.addEventListener("change", function () {
+                        updateSmartPill(pill, this.value);
+                    });
+                }
+            });
+
+            initAdvancedDrag();
         });
-    }
-});
-         function chooseCustomOption(e, item, value) {
-    e.preventDefault();
-    e.stopPropagation();
 
-    const pill = item.closest(".custom-menu-pill");
-    const input = pill.querySelector("input");
-    const list = pill.querySelector(".custom-menu-list");
 
-    input.value = value;
-    input.dispatchEvent(new Event("change", { bubbles: true }));
+        document.addEventListener("click", function (e) {
+            var wrapper = document.querySelector(".sort-wrapper");
+            var menu = document.getElementById("sortMenu");
 
-    pill.dataset.value = value;
-
-    pill.classList.remove("open");
-    if (list) list.style.display = "none";
-
-    const title = pill.closest("form")?.querySelector(".quick-add-title");
-    if (title) title.focus();
-}
-function changeCount(id, amount) {
-    const el = document.getElementById(id);
-    if (!el) return;
-
-    const current = parseInt(el.textContent || "0", 10);
-    el.textContent = Math.max(0, current + amount);
-}
-
-function setDragHandle(taskBlock, show) {
-    const dragHandle = taskBlock.querySelector(".drag-handle");
-    if (!dragHandle) return;
-    dragHandle.style.display = show ? "" : "none";
-}
-
-function isTaskOverdue(taskBlock) {
-    if (taskBlock.closest("#overdueList")) return true;
-
-    const dueDate = taskBlock.dataset.dueDate;
-    if (!dueDate) return false;
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const taskDate = new Date(dueDate + "T00:00:00");
-    return taskDate < today;
-}
-
-function toggleTaskAjax(checkbox) {
-    const form = checkbox.closest("form");
-    const taskBlock = checkbox.closest(".task-block");
-
-    const wasInOverdue = taskBlock.closest("#overdueList") !== null;
-    const wasInCompleted = taskBlock.closest("#completedList") !== null;
-    const wasOverdue = wasInOverdue || isTaskOverdue(taskBlock);
-
-    fetch(form.action, {
-        method: "POST",
-        body: new FormData(form)
-    }).then(() => {
-        if (!taskBlock) return;
-
-        const completedList = document.getElementById("completedList");
-        const myTasksList = document.querySelector(".my-tasks-list");
-        const overdueList = document.getElementById("overdueList");
-
-        if (checkbox.checked) {
-            changeCount("completedCount", 1);
-            updateWeeklyBarByTask(taskBlock, 1);
-
-            if (isTaskToday(taskBlock)) {
-                changeCount("todayCompletedCount", 1);
-                changeCount("todayRemainingCount", -1);
+            if (wrapper && menu && !wrapper.contains(e.target)) {
+                menu.style.display = "none";
+            }
+        });
+        function toggleSortMenu(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
             }
 
-            if (wasOverdue) {
-                changeCount("overdueCount", -1);
+            var menu = document.getElementById("sortMenu");
+
+            // غلق priority/category بالقوة
+            document.querySelectorAll(".custom-menu-pill").forEach(function (pill) {
+                pill.classList.remove("open");
+
+                var list = pill.querySelector(".custom-menu-list");
+                if (list) {
+                    list.style.display = "none";
+                }
+            });
+
+            if (menu.style.display === "block") {
+                menu.style.display = "none";
             } else {
+                menu.style.display = "block";
+            }
+        }
+
+        document.addEventListener("click", function (e) {
+
+            // ========== SORT MENU ==========
+            var wrapper = document.querySelector(".sort-wrapper");
+            var menu = document.getElementById("sortMenu");
+
+            if (wrapper && menu && !wrapper.contains(e.target)) {
+                menu.style.display = "none";
+            }
+            // ========== SEARCH OVERLAY ==========
+            var overlay = document.getElementById("searchOverlay");
+            var box = document.querySelector(".search-box");
+
+            if (overlay && overlay.style.display === "block") {
+                if (box && !box.contains(e.target)) {
+                    overlay.style.display = "none";
+                }
+            }
+
+        });
+
+        document.addEventListener("keydown", function (e) {
+
+            if (e.key === "Enter") {
+
+                const input = document.getElementById("searchInput");
+
+                if (input && document.activeElement === input) {
+                    e.preventDefault();
+                    doSearch();
+                }
+            }
+
+        });
+
+        function openSearch(e) {
+            if (e) e.stopPropagation();
+
+            document.getElementById("searchOverlay").style.display = "block";
+
+            setTimeout(() => {
+                document.getElementById("searchInput").focus();
+            }, 100);
+        }
+
+        function closeSearch() {
+            document.getElementById("searchOverlay").style.display = "none";
+        }
+        function doSearch() {
+            let keyword = document.getElementById("searchInput").value;
+
+            window.location.href = "/tasks/search?keyword=" + encodeURIComponent(keyword);
+        }
+
+        function toggleOverdueSection() {
+            const list = document.getElementById("overdueList");
+            const header = document.querySelector(".section-toggle");
+            const arrow = document.getElementById("overdueArrow");
+
+            if (!list || !header || !arrow) return;
+
+            if (list.style.display === "none") {
+                list.style.display = "block";
+                header.classList.add("open");
+            } else {
+                list.style.display = "none";
+                header.classList.remove("open");
+            }
+        }
+
+        function toggleCompletedSection() {
+            const list = document.getElementById("completedList");
+            const header = document.querySelector(".completed-toggle");
+
+            if (!list || !header) return;
+
+            if (list.style.display === "none") {
+                list.style.display = "block";
+                header.classList.add("open");
+            } else {
+                list.style.display = "none";
+                header.classList.remove("open");
+            }
+        }
+        function updateAllScrollInputs() {
+            const scrollBox = document.querySelector(".tasks-main-column");
+            const value = scrollBox ? scrollBox.scrollTop : 0;
+
+            const mainInput = document.getElementById("scrollPosInput");
+            if (mainInput) {
+                mainInput.value = value;
+            }
+
+            document.querySelectorAll(".scroll-pos-input").forEach(input => {
+                input.value = value;
+            });
+
+            document.querySelectorAll('a[href*="/tasks/delete/"]').forEach(link => {
+                try {
+                    const url = new URL(link.href, window.location.origin);
+                    url.searchParams.set("scrollPos", value);
+                    link.href = url.toString();
+                } catch (e) {}
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const scrollBox = document.querySelector(".tasks-main-column");
+            if (scrollBox) {
+                scrollBox.addEventListener("scroll", updateAllScrollInputs);
+            }
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            updateAllScrollInputs();
+
+            const savedScroll = "[[${scrollPos}]]";
+            if (savedScroll && savedScroll !== "null" && savedScroll !== "") {
+                setTimeout(() => {
+                    const scrollBox = document.querySelector(".tasks-main-column");
+                    if (scrollBox) {
+                        scrollBox.scrollTop = parseInt(savedScroll);
+                    }
+                }, 50);
+            }
+        })
+
+
+        function showTaskTab(type, clickedTab) {
+            localStorage.setItem("activeTaskTab", type);
+
+            const allTaskLists = document.querySelectorAll(".my-tasks-list");
+            const completedSection = document.getElementById("completedTasksPanel");
+            const overdueSection = document.getElementById("overdueTasksPanel");
+            const completedList = document.getElementById("completedList");
+            const overdueList = document.getElementById("overdueList");
+            const emptyMyTasksState = document.getElementById("emptyMyTasksState");
+
+            document.body.classList.add("tabs-mode");
+
+            allTaskLists.forEach(list => list.style.display = "none");
+            if (completedSection) completedSection.style.display = "none";
+            if (overdueSection) overdueSection.style.display = "none";
+            if (emptyMyTasksState) emptyMyTasksState.style.display = "none";
+
+            if (type === "all") {
+                allTaskLists.forEach(list => list.style.display = "block");
+                if (emptyMyTasksState) emptyMyTasksState.style.display = "block";
+            }
+
+            if (type === "completed" && completedSection) {
+                completedSection.style.display = "block";
+                if (completedList) completedList.style.display = "block";
+            }
+
+            if (type === "overdue" && overdueSection) {
+                overdueSection.style.display = "block";
+                if (overdueList) overdueList.style.display = "block";
+            }
+
+            document.querySelectorAll(".tabs span").forEach(tab => tab.classList.remove("active"));
+            const tab = clickedTab ? clickedTab.closest("span") : document.querySelector(".tabs span");
+            if (tab) tab.classList.add("active");
+
+            document.body.classList.add("tabs-ready");
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            const savedTab = localStorage.getItem("activeTaskTab") || "all";
+
+            const tabElement =
+                savedTab === "completed"
+                    ? document.querySelector(".tabs span:nth-child(2)")
+                    : savedTab === "overdue"
+                        ? document.querySelector(".tabs span:nth-child(3)")
+                        : document.querySelector(".tabs span:nth-child(1)");
+
+            showTaskTab(savedTab, tabElement);
+        });
+
+        function toggleEditInlineOverdue(id) {
+            var view = document.getElementById("taskView-overdue-" + id);
+            var edit = document.getElementById("taskEdit-overdue-" + id);
+
+            if (!view || !edit) return;
+
+            var isOpen = edit.classList.contains("active");
+
+            closeAllEditInline();
+
+            if (!isOpen) {
+                view.style.display = "none";
+                edit.classList.add("active");
+
+                var titleInput = edit.querySelector(".inline-edit-title");
+                if (titleInput) {
+                    setTimeout(function () {
+                        titleInput.focus();
+                        titleInput.select();
+                    }, 50);
+                }
+            }
+        }
+
+        function startAutoScroll(y) {
+            stopAutoScroll();
+
+            autoScrollInterval = setInterval(() => {
+                const scrollContainer = document.querySelector(".tasks-main-column");
+
+                if (scrollContainer) {
+                    const rect = scrollContainer.getBoundingClientRect();
+                    const canScrollInside =
+                        scrollContainer.scrollHeight > scrollContainer.clientHeight;
+
+                    if (canScrollInside) {
+                        if (y < rect.top + 80) scrollContainer.scrollTop -= 12;
+                        if (y > rect.bottom - 80) scrollContainer.scrollTop += 12;
+                        return;
+                    }
+                }
+
+                if (y < 80) {
+                    window.scrollBy(0, -12);
+                }
+
+                if (y > window.innerHeight - 80) {
+                    window.scrollBy(0, 12);
+                }
+            }, 16);
+        }
+
+
+        function toggleCustomMenu(e, btn) {
+            e.stopPropagation();
+
+            var pill = btn.closest(".custom-menu-pill");
+            var list = pill.querySelector(".custom-menu-list");
+            var wasOpen = pill.classList.contains("open");
+
+            document.querySelectorAll(".custom-menu-pill").forEach(function (p) {
+                p.classList.remove("open");
+                var l = p.querySelector(".custom-menu-list");
+                if (l) l.style.display = "none";
+            });
+
+            if (!wasOpen) {
+                pill.classList.add("open");
+                if (list) list.style.display = "block";
+            }
+        }
+        document.addEventListener("click", function (e) {
+            if (!e.target.closest(".custom-menu-pill")) {
+                document.querySelectorAll(".custom-menu-pill").forEach(function (pill) {
+                    pill.classList.remove("open");
+
+                    const list = pill.querySelector(".custom-menu-list");
+                    if (list) list.style.display = "none";
+                });
+            }
+        });
+        function chooseCustomOption(e, item, value) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const pill = item.closest(".custom-menu-pill");
+            const input = pill.querySelector("input");
+            const list = pill.querySelector(".custom-menu-list");
+
+            input.value = value;
+            input.dispatchEvent(new Event("change", { bubbles: true }));
+
+            pill.dataset.value = value;
+
+            pill.classList.remove("open");
+            if (list) list.style.display = "none";
+
+            const title = pill.closest("form")?.querySelector(".quick-add-title");
+            if (title) title.focus();
+        }
+        function changeCount(id, amount) {
+            const el = document.getElementById(id);
+            if (!el) return;
+
+            const current = parseInt(el.textContent || "0", 10);
+            el.textContent = Math.max(0, current + amount);
+        }
+
+        function setDragHandle(taskBlock, show) {
+            const dragHandle = taskBlock.querySelector(".drag-handle");
+            if (!dragHandle) return;
+            dragHandle.style.display = show ? "" : "none";
+        }
+
+        function isTaskOverdue(taskBlock) {
+            if (taskBlock.closest("#overdueList")) return true;
+
+            const dueDate = taskBlock.dataset.dueDate;
+            if (!dueDate) return false;
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const taskDate = new Date(dueDate + "T00:00:00");
+            return taskDate < today;
+        }
+
+        function toggleTaskAjax(checkbox) {
+            const form = checkbox.closest("form");
+            const taskBlock = checkbox.closest(".task-block");
+
+            const wasInOverdue = taskBlock.closest("#overdueList") !== null;
+            const wasInCompleted = taskBlock.closest("#completedList") !== null;
+            const wasOverdue = wasInOverdue || isTaskOverdue(taskBlock);
+
+            fetch(form.action, {
+                method: "POST",
+                body: new FormData(form)
+            }).then(() => {
+                if (!taskBlock) return;
+
+                const completedList = document.getElementById("completedList");
+                const myTasksList = document.querySelector(".my-tasks-list");
+                const overdueList = document.getElementById("overdueList");
+
+                if (checkbox.checked) {
+                    changeCount("completedCount", 1);
+                    updateWeeklyBarByTask(taskBlock, 1);
+
+                    if (isTaskToday(taskBlock)) {
+                        changeCount("todayCompletedCount", 1);
+                        changeCount("todayRemainingCount", -1);
+                    }
+
+                    if (wasOverdue) {
+                        changeCount("overdueCount", -1);
+                    } else {
+                        changeCount("myTasksCount", -1);
+                    }
+
+                    taskBlock.querySelector(".task-title")?.classList.add("done");
+                    taskBlock.querySelector(".task-title")?.classList.remove("active");
+                    taskBlock.querySelector(".task-desc")?.classList.add("done");
+                    taskBlock.querySelector(".task-date")?.classList.add("done");
+                    taskBlock.querySelector(".overdue-icon")?.classList.remove("overdue-icon");
+                    taskBlock.querySelector(".overdue-date")?.classList.remove("overdue-date");
+                    setDragHandle(taskBlock, false);
+
+                    if (completedList) {
+                        completedList.prepend(taskBlock);
+                    } else {
+                        window.location.reload();
+                    }
+
+                } else {
+
+                    changeCount("completedCount", -1);
+                    updateWeeklyBarByTask(taskBlock, -1);
+
+                    if (isTaskToday(taskBlock)) {
+                        changeCount("todayCompletedCount", -1);
+                        changeCount("todayRemainingCount", 1);
+                    }
+
+                    taskBlock.querySelector(".task-title")?.classList.remove("done");
+                    taskBlock.querySelector(".task-title")?.classList.add("active");
+                    taskBlock.querySelector(".task-desc")?.classList.remove("done");
+                    taskBlock.querySelector(".task-date")?.classList.remove("done");
+
+                    if (wasOverdue) {
+                        changeCount("overdueCount", 1);
+                        setDragHandle(taskBlock, false);
+
+                        taskBlock.querySelector(".task-date i")?.classList.add("overdue-icon");
+                        taskBlock.querySelector(".task-date span")?.classList.add("overdue-date");
+
+                        if (overdueList) {
+                            overdueList.prepend(taskBlock);
+                        } else {
+                            window.location.reload();
+                        }
+
+                    } else {
+                        changeCount("myTasksCount", 1);
+                        if (!taskBlock.querySelector(".drag-handle")) {
+                            const taskLeft = taskBlock.querySelector(".task-left");
+                            if (taskLeft) {
+                                taskLeft.insertAdjacentHTML(
+                                    "afterbegin",
+                                    `<span class="drag-handle" title="Move task">
+                <i class="fa-solid fa-grip-lines"></i>
+            </span>`
+                                );
+                            }
+                        }
+                        setDragHandle(taskBlock, true);
+
+                        if (myTasksList) {
+                            myTasksList.prepend(taskBlock);
+                        } else {
+                            window.location.reload();
+                        }
+                    }
+                }
+            }).catch(() => {
+                checkbox.checked = !checkbox.checked;
+                alert("Something went wrong");
+            });
+        }
+
+
+        function isTaskToday(taskBlock) {
+            const dueDate = taskBlock.dataset.dueDate;
+            if (!dueDate) return false;
+
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, "0");
+            const dd = String(today.getDate()).padStart(2, "0");
+
+            return dueDate === `${yyyy}-${mm}-${dd}`;
+        }
+
+        function saveTaskAjax(event, form) {
+            event.preventDefault();
+
+            const taskBlock = form.closest(".task-block");
+            const titleInput = form.querySelector('input[name="title"]');
+            const descInput = form.querySelector('textarea[name="description"]');
+            const dateInput = form.querySelector('input[name="dueDate"]');
+            const prioritySelect = form.querySelector('input[name="priority"]');
+            const categorySelect = form.querySelector('input[name="category"]');
+            const sourceInput = form.querySelector('input[name="source"]');
+            const currentCategoryInput = form.querySelector('input[name="currentCategory"]');
+            const priorityFilterInput = form.querySelector('input[name="priorityFilter"]');
+            fetch(form.action, {
+                method: "POST",
+                body: new FormData(form)
+            }).then(() => {
+                if (!taskBlock) return;
+
+                taskBlock.querySelector(".task-title").textContent = titleInput.value;
+
+                const descBox = taskBlock.querySelector(".task-desc");
+                if (descBox && descInput) descBox.textContent = descInput.value;
+
+                updatePriorityUI(taskBlock, prioritySelect?.value);
+                updateCategoryUI(taskBlock, categorySelect?.value);
+                updateDateUI(taskBlock, dateInput?.value);
+                moveTaskAfterEdit(taskBlock, dateInput?.value);
+
+                if (sourceInput?.value === "category") {
+                    const currentCategory = currentCategoryInput?.value;
+                    const newCategory = categorySelect?.value;
+
+                    if (currentCategory && newCategory && currentCategory !== newCategory) {
+                        window.location.reload();
+                        return;
+                    }
+                }
+
+                if (sourceInput?.value === "priority") {
+                    const currentPriority = priorityFilterInput?.value;
+                    const newPriority = prioritySelect?.value;
+
+                    if (currentPriority && newPriority && currentPriority !== newPriority) {
+                        window.location.reload();
+                        return;
+                    }
+                }
+
+                closeAllEditInline();
+            }).catch(() => {
+                alert("Something went wrong");
+            });
+        }
+        function moveTaskAfterEdit(taskBlock, dueDate) {
+            if (!dueDate) return;
+
+            const isDone = taskBlock.querySelector(".task-checkbox")?.checked;
+            if (isDone) return;
+
+            const overdue = isDateOverdue(dueDate);
+            const isCurrentlyOverdue = taskBlock.closest("#overdueList") !== null;
+
+            if (overdue && !isCurrentlyOverdue) {
                 changeCount("myTasksCount", -1);
-            }
-
-            taskBlock.querySelector(".task-title")?.classList.add("done");
-            taskBlock.querySelector(".task-title")?.classList.remove("active");
-            taskBlock.querySelector(".task-desc")?.classList.add("done");
-            taskBlock.querySelector(".task-date")?.classList.add("done");
-            taskBlock.querySelector(".overdue-icon")?.classList.remove("overdue-icon");
-            taskBlock.querySelector(".overdue-date")?.classList.remove("overdue-date");
-            setDragHandle(taskBlock, false);
-
-            if (completedList) {
-                completedList.prepend(taskBlock);
-            } else {
-                window.location.reload();
-            }
-
-        } else {
-
-            changeCount("completedCount", -1);
-            updateWeeklyBarByTask(taskBlock, -1);
-
-            if (isTaskToday(taskBlock)) {
-                changeCount("todayCompletedCount", -1);
-                changeCount("todayRemainingCount", 1);
-            }
-
-            taskBlock.querySelector(".task-title")?.classList.remove("done");
-            taskBlock.querySelector(".task-title")?.classList.add("active");
-            taskBlock.querySelector(".task-desc")?.classList.remove("done");
-            taskBlock.querySelector(".task-date")?.classList.remove("done");
-
-            if (wasOverdue) {
                 changeCount("overdueCount", 1);
-                setDragHandle(taskBlock, false);
 
                 taskBlock.querySelector(".task-date i")?.classList.add("overdue-icon");
                 taskBlock.querySelector(".task-date span")?.classList.add("overdue-date");
+                setDragHandle(taskBlock, false);
 
-                if (overdueList) {
-                    overdueList.prepend(taskBlock);
-                } else {
-                    window.location.reload();
-                }
+                const overdueList = document.getElementById("overdueList");
+                if (overdueList) overdueList.prepend(taskBlock);
 
-            } else {
+            } else if (!overdue && isCurrentlyOverdue) {
+                changeCount("overdueCount", -1);
                 changeCount("myTasksCount", 1);
-                if (!taskBlock.querySelector(".drag-handle")) {
-    const taskLeft = taskBlock.querySelector(".task-left");
-    if (taskLeft) {
-        taskLeft.insertAdjacentHTML(
-            "afterbegin",
-            `<span class="drag-handle" title="Move task">
-                <i class="fa-solid fa-grip-lines"></i>
-            </span>`
-        );
-    }
-}
+
+                taskBlock.querySelector(".task-date i")?.classList.remove("overdue-icon");
+                taskBlock.querySelector(".task-date span")?.classList.remove("overdue-date");
                 setDragHandle(taskBlock, true);
 
-                if (myTasksList) {
-                    myTasksList.prepend(taskBlock);
-                } else {
-                    window.location.reload();
-                }
+                const myTasksList = document.querySelector(".my-tasks-list");
+                if (myTasksList) myTasksList.prepend(taskBlock);
             }
         }
-    }).catch(() => {
-        checkbox.checked = !checkbox.checked;
-        alert("Something went wrong");
-    });
-}
+
+        function isDateOverdue(dueDate) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const taskDate = new Date(dueDate + "T00:00:00");
+            return taskDate < today;
+        }
+
+        function updatePriorityUI(taskBlock, value) {
+            let metaRow = taskBlock.querySelector(".task-meta-row");
+            if (!metaRow || !value) return;
+
+            let label = taskBlock.querySelector(".priority-label");
+            if (!label) {
+                label = document.createElement("div");
+                label.className = "priority-label";
+                label.innerHTML = `<span class="priority-dot"></span><span></span>`;
+                metaRow.prepend(label);
+            }
+
+            const dot = label.querySelector(".priority-dot");
+            const text = label.querySelector("span:last-child");
+
+            text.textContent = value;
+
+            const colors = {
+                P1: "red",
+                P2: "#ff8800",
+                P3: "#eab308",
+                P4: "gray"
+            };
+
+            dot.style.background = colors[value] || "gray";
+        }
+
+        function updateCategoryUI(taskBlock, value) {
+            let metaRow = taskBlock.querySelector(".task-meta-row");
+            if (!metaRow || !value) return;
+
+            let label = taskBlock.querySelector(".category-label");
+            if (!label) {
+                label = document.createElement("div");
+                label.className = "category-label";
+                label.innerHTML = `<span class="category-dot"></span><span></span>`;
+
+                const priority = taskBlock.querySelector(".priority-label");
+                if (priority) priority.after(label);
+                else metaRow.prepend(label);
+            }
+
+            const dot = label.querySelector(".category-dot");
+            const text = label.querySelector("span:last-child");
+
+            text.textContent = value;
+
+            const colors = {
+                Work: "#4a90e2",
+                Study: "#9b59b6",
+                Personal: "#ff6fa5",
+                Daily: "#22c55e"
+            };
+
+            dot.style.background = colors[value] || "#cfcfcf";
+        }
+
+        function updateDateUI(taskBlock, value) {
+            let metaRow = taskBlock.querySelector(".task-meta-row");
+            if (!metaRow || !value) return;
+
+            let dateBox = taskBlock.querySelector(".task-date");
+            if (!dateBox) {
+                dateBox = document.createElement("div");
+                dateBox.className = "task-date";
+                dateBox.innerHTML = `<i class="fa-regular fa-calendar"></i> <span></span>`;
+                metaRow.appendChild(dateBox);
+            }
+
+            const span = dateBox.querySelector("span");
+            span.textContent = formatDateLabel(value);
+        }
+
+        function formatDateLabel(value) {
+            if (!value) return "";
+
+            const date = new Date(value + "T00:00:00");
+            const currentYear = new Date().getFullYear();
+            const taskYear = date.getFullYear();
+
+            if (taskYear === currentYear) {
+                return date.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric"
+                });
+            }
+
+            return date.toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric"
+            });
+        }
+        function updateTodayWeeklyBar(change) {
+            const todayBar = document.querySelector(".weekly-bar.active");
+            if (!todayBar) return;
+
+            let count = parseInt(todayBar.dataset.count || "0", 10);
+            count = Math.max(0, count + change);
+
+            todayBar.dataset.count = count;
+            todayBar.style.height = (count * 22 + 20) + "px";
+        }
 
 
-function isTaskToday(taskBlock) {
-    const dueDate = taskBlock.dataset.dueDate;
-    if (!dueDate) return false;
-
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const dd = String(today.getDate()).padStart(2, "0");
-
-    return dueDate === `${yyyy}-${mm}-${dd}`;
-}
-
-   function saveTaskAjax(event, form) {
-    event.preventDefault();
-
-    const taskBlock = form.closest(".task-block");
-    const titleInput = form.querySelector('input[name="title"]');
-    const descInput = form.querySelector('textarea[name="description"]');
-    const dateInput = form.querySelector('input[name="dueDate"]');
-    const prioritySelect = form.querySelector('input[name="priority"]');
-    const categorySelect = form.querySelector('input[name="category"]');
-    const sourceInput = form.querySelector('input[name="source"]');
-    const currentCategoryInput = form.querySelector('input[name="currentCategory"]');
-   const priorityFilterInput = form.querySelector('input[name="priorityFilter"]');
-    fetch(form.action, {
-        method: "POST",
-        body: new FormData(form)
-    }).then(() => {
-        if (!taskBlock) return;
-
-        taskBlock.querySelector(".task-title").textContent = titleInput.value;
-
-        const descBox = taskBlock.querySelector(".task-desc");
-        if (descBox && descInput) descBox.textContent = descInput.value;
-
-        updatePriorityUI(taskBlock, prioritySelect?.value);
-        updateCategoryUI(taskBlock, categorySelect?.value);
-        updateDateUI(taskBlock, dateInput?.value);
-        moveTaskAfterEdit(taskBlock, dateInput?.value);
-
-if (sourceInput?.value === "category") {
-    const currentCategory = currentCategoryInput?.value;
-    const newCategory = categorySelect?.value;
-
-    if (currentCategory && newCategory && currentCategory !== newCategory) {
-        window.location.reload();
-        return;
-    }
-}
-
-if (sourceInput?.value === "priority") {
-    const currentPriority = priorityFilterInput?.value;
-    const newPriority = prioritySelect?.value;
-
-    if (currentPriority && newPriority && currentPriority !== newPriority) {
-        window.location.reload();
-        return;
-    }
-}
-
-closeAllEditInline();
-    }).catch(() => {
-        alert("Something went wrong");
-    });
-}
-function moveTaskAfterEdit(taskBlock, dueDate) {
-    if (!dueDate) return;
-
-    const isDone = taskBlock.querySelector(".task-checkbox")?.checked;
-    if (isDone) return;
-
-    const overdue = isDateOverdue(dueDate);
-    const isCurrentlyOverdue = taskBlock.closest("#overdueList") !== null;
-
-    if (overdue && !isCurrentlyOverdue) {
-        changeCount("myTasksCount", -1);
-        changeCount("overdueCount", 1);
-
-        taskBlock.querySelector(".task-date i")?.classList.add("overdue-icon");
-        taskBlock.querySelector(".task-date span")?.classList.add("overdue-date");
-        setDragHandle(taskBlock, false);
-
-        const overdueList = document.getElementById("overdueList");
-        if (overdueList) overdueList.prepend(taskBlock);
-
-    } else if (!overdue && isCurrentlyOverdue) {
-        changeCount("overdueCount", -1);
-        changeCount("myTasksCount", 1);
-
-        taskBlock.querySelector(".task-date i")?.classList.remove("overdue-icon");
-        taskBlock.querySelector(".task-date span")?.classList.remove("overdue-date");
-        setDragHandle(taskBlock, true);
-
-        const myTasksList = document.querySelector(".my-tasks-list");
-        if (myTasksList) myTasksList.prepend(taskBlock);
-    }
-}
-
-function isDateOverdue(dueDate) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const taskDate = new Date(dueDate + "T00:00:00");
-    return taskDate < today;
-}
-
-function updatePriorityUI(taskBlock, value) {
-    let metaRow = taskBlock.querySelector(".task-meta-row");
-    if (!metaRow || !value) return;
-
-    let label = taskBlock.querySelector(".priority-label");
-    if (!label) {
-        label = document.createElement("div");
-        label.className = "priority-label";
-        label.innerHTML = `<span class="priority-dot"></span><span></span>`;
-        metaRow.prepend(label);
-    }
-
-    const dot = label.querySelector(".priority-dot");
-    const text = label.querySelector("span:last-child");
-
-    text.textContent = value;
-
-    const colors = {
-        P1: "red",
-        P2: "#ff8800",
-        P3: "#eab308",
-        P4: "gray"
-    };
-
-    dot.style.background = colors[value] || "gray";
-}
-
-function updateCategoryUI(taskBlock, value) {
-    let metaRow = taskBlock.querySelector(".task-meta-row");
-    if (!metaRow || !value) return;
-
-    let label = taskBlock.querySelector(".category-label");
-    if (!label) {
-        label = document.createElement("div");
-        label.className = "category-label";
-        label.innerHTML = `<span class="category-dot"></span><span></span>`;
-
-        const priority = taskBlock.querySelector(".priority-label");
-        if (priority) priority.after(label);
-        else metaRow.prepend(label);
-    }
-
-    const dot = label.querySelector(".category-dot");
-    const text = label.querySelector("span:last-child");
-
-    text.textContent = value;
-
-    const colors = {
-        Work: "#4a90e2",
-        Study: "#9b59b6",
-        Personal: "#ff6fa5",
-       Daily: "#22c55e"
-    };
-
-    dot.style.background = colors[value] || "#cfcfcf";
-}
-
-function updateDateUI(taskBlock, value) {
-    let metaRow = taskBlock.querySelector(".task-meta-row");
-    if (!metaRow || !value) return;
-
-    let dateBox = taskBlock.querySelector(".task-date");
-    if (!dateBox) {
-        dateBox = document.createElement("div");
-        dateBox.className = "task-date";
-        dateBox.innerHTML = `<i class="fa-regular fa-calendar"></i> <span></span>`;
-        metaRow.appendChild(dateBox);
-    }
-
-    const span = dateBox.querySelector("span");
-    span.textContent = formatDateLabel(value);
-}
-
-function formatDateLabel(value) {
-    if (!value) return "";
-
-    const date = new Date(value + "T00:00:00");
-    const currentYear = new Date().getFullYear();
-    const taskYear = date.getFullYear();
-
-    if (taskYear === currentYear) {
-        return date.toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric"
-        });
-    }
-
-    return date.toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric"
-    });
-}
-function updateTodayWeeklyBar(change) {
-    const todayBar = document.querySelector(".weekly-bar.active");
-    if (!todayBar) return;
-
-    let count = parseInt(todayBar.dataset.count || "0", 10);
-    count = Math.max(0, count + change);
-
-    todayBar.dataset.count = count;
-    todayBar.style.height = (count * 22 + 20) + "px";
-}
+        function updateWeeklyBarByTask(taskBlock, change) {
+            let dueDate = taskBlock.dataset.dueDate;
 
 
-    function updateWeeklyBarByTask(taskBlock, change) {
-    let dueDate = taskBlock.dataset.dueDate;
+            if (!dueDate) {
+                const today = new Date();
+                const yyyy = today.getFullYear();
+                const mm = String(today.getMonth() + 1).padStart(2, "0");
+                const dd = String(today.getDate()).padStart(2, "0");
+                dueDate = `${yyyy}-${mm}-${dd}`;
+            }
 
+            const date = new Date(dueDate + "T00:00:00");
 
-    if (!dueDate) {
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, "0");
-        const dd = String(today.getDate()).padStart(2, "0");
-        dueDate = `${yyyy}-${mm}-${dd}`;
-    }
+            let dayIndex = date.getDay(); // Sunday=0
+            dayIndex = dayIndex === 0 ? 6 : dayIndex - 1; // Monday=0
 
-    const date = new Date(dueDate + "T00:00:00");
+            const bar = document.querySelector(`.weekly-bar[data-day-index="${dayIndex}"]`);
+            if (!bar) return;
 
-    let dayIndex = date.getDay(); // Sunday=0
-    dayIndex = dayIndex === 0 ? 6 : dayIndex - 1; // Monday=0
+            let count = parseInt(bar.dataset.count || "0", 10);
+            count = Math.max(0, count + change);
 
-    const bar = document.querySelector(`.weekly-bar[data-day-index="${dayIndex}"]`);
-    if (!bar) return;
+            bar.dataset.count = count;
 
-    let count = parseInt(bar.dataset.count || "0", 10);
-    count = Math.max(0, count + change);
+            const allBars = document.querySelectorAll(".weekly-bar");
+            let maxCount = 0;
 
- bar.dataset.count = count;
+            allBars.forEach(b => {
+                const c = parseInt(b.dataset.count || "0", 10);
+                if (c > maxCount) maxCount = c;
+            });
 
-const allBars = document.querySelectorAll(".weekly-bar");
-let maxCount = 0;
+            const maxHeight = 120;
 
-allBars.forEach(b => {
-    const c = parseInt(b.dataset.count || "0", 10);
-    if (c > maxCount) maxCount = c;
-});
+            const height = maxCount > 0
+                ? (count / maxCount) * maxHeight
+                : 10;
 
-const maxHeight = 120;
+            bar.style.height = height + "px";
+        }
 
-const height = maxCount > 0
-    ? (count / maxCount) * maxHeight
-    : 10;
-
-bar.style.height = height + "px";
-}
 
     </script>
 </div>
