@@ -6,145 +6,285 @@
     <title>Priorities</title>
 
     <style>
+        :root {
+            --primary-50: #e4ecf6;
+            --primary-500: #2563eb;
+            --primary-700: #003e8f;
+            --primary-900: #001229;
+            --bg: #f5f8ff;
+            --surface: #ffffff;
+            --border: rgba(12, 108, 233, 0.16);
+            --text: #08213f;
+            --shadow-card: 0 8px 22px rgba(12, 108, 233, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-           margin: 0;
-           font-family: 'Segoe UI', sans-serif;
-           background: #f5f8ff;
-           color: #1e293b;
-       }
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-       .container {
-           width: 550px;
-           margin: 70px auto;
-       }
+        /* ===== MENU BUTTON ===== */
 
-       .priority-btn {
-           display: flex;
-           align-items: center;
-           justify-content: center;
-           gap: 20px;
-           height: 68px;
-           width: 100%;
-           margin-bottom: 18px;
-           border: 1px solid #e2e8f0;
-           border-radius: 12px;
-           text-decoration: none;
-           font-size: 18px;
-           font-weight: 600;
-           color: #0f172a;
-           background: white;
-           box-shadow: 0 3px 10px rgba(0,0,0,0.06);
-           transition: all 0.25s ease;
-       }
-.priority-btn:hover {
-    transform: translateY(-3px) scale(1.01);
-    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
-}
+        .menu-global {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 46px;
+            height: 46px;
+            font-size: 20px;
+            background: #ffffff;
+            color: #2563eb;
+            border: 1px solid #dbeafe;
+            cursor: pointer;
+            z-index: 2000;
+            padding: 0;
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+        }
 
+        .menu-global:hover {
+            background: var(--primary-50);
+            transform: translateY(-1px);
+        }
 
-       .p1 { border-left: 6px solid #ef4444; }
-       .p2 { border-left: 6px solid #f97316; }
-       .p3 { border-left: 6px solid #eab308; }
-       .p4 { border-left: 6px solid #6b7280; }
+        /* ===== SIDEBAR ===== */
 
+        #sidebar {
+            width: 200px;
+            min-height: 100vh;
+            padding: 90px 16px 20px;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translateX(-200px);
+            transition: transform 0.28s ease;
+            z-index: 1200;
+            background: #cbe2ff;
+            border-right: 1px solid rgba(0,0,0,0.05);
+        }
 
-       .menu-global {
-           position: fixed;
-           top: 15px;
-           left: 15px;
-           font-size: 20px;
-           background: white;
-           border: 1px solid #e2e8f0;
-           cursor: pointer;
-           z-index: 1100;
-           padding: 8px 10px;
-           border-radius: 10px;
-       }
+        body.sidebar-open #sidebar {
+            transform: translateX(0);
+        }
 
-       .menu-global:hover {
-           background: #f1f5f9;
-       }
+        .sidebar-label {
+            margin: 20px 10px 10px;
+            color: #475569;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-       a { color: inherit; }
+        #sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #1e293b;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 10px 12px;
+            border-radius: 14px;
+            margin-bottom: 6px;
+            transition: 0.2s ease;
+        }
 
-       #sidebar a {
-           text-decoration: none;
-           color: #1e293b;
-       }
+        #sidebar a i {
+            width: 20px;
+            text-align: center;
+            color: #2563eb;
+        }
 
-       #sidebar a:hover {
-           color: #2563eb;
-       }
+        #sidebar a:hover {
+            background: rgba(255,255,255,0.7);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+            color: #2563eb;
+        }
+
+        /* ===== PAGE ===== */
+
+        .page-content {
+            flex: 1;
+            width: 100%;
+            min-height: 100vh;
+            padding: 34px 34px 34px 78px;
+            display: flex;
+            justify-content: center;
+            transition: 0.3s ease;
+        }
+
+        body.sidebar-open .page-content {
+            padding-left: 260px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 620px;
+            margin-top: 35px;
+        }
+
+        h1 {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-900);
+            letter-spacing: -0.5px;
+        }
+
+        /* ===== PRIORITY CARDS ===== */
+
+        .priority-btn {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            height: 76px;
+            width: 100%;
+            margin-bottom: 18px;
+            padding: 0 24px;
+            border-radius: 18px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            background: white;
+            border: 1px solid #dbeafe;
+            box-shadow: var(--shadow-card);
+            transition: 0.2s ease;
+        }
+
+        .priority-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(12, 108, 233, 0.14);
+        }
+
+        .priority-btn i {
+            font-size: 18px;
+        }
+
+        .p1 {
+            border-left: 6px solid #ef4444;
+        }
+
+        .p2 {
+            border-left: 6px solid #f97316;
+        }
+
+        .p3 {
+            border-left: 6px solid #eab308;
+        }
+
+        .p4 {
+            border-left: 6px solid #6b7280;
+        }
+
+        @media (max-width: 1000px) {
+
+            .page-content {
+                padding: 80px 16px 24px !important;
+            }
+
+            body.sidebar-open .page-content {
+                padding-left: 16px !important;
+            }
+
+            .container {
+                margin-top: 10px;
+            }
+        }
     </style>
 </head>
 
 <body>
 
-<!-- ✅ MENU BUTTON -->
-<button class="menu-global" onclick="toggleSidebar()">
+<button type="button"
+        class="menu-global"
+        onclick="document.body.classList.toggle('sidebar-open')">
     <i class="fa-solid fa-bars"></i>
 </button>
 
 <div style="display:flex; min-height:100vh; position:relative;">
 
     <!-- SIDEBAR -->
-    <div id="sidebar"
-         style="width:220px; background:#f5f5f5; min-height:100vh; padding:20px; box-sizing:border-box; position:fixed; top:0; left:0; transform:translateX(-100%); transition:transform 0.3s ease; z-index:3000;">
-        <h3 style="margin-top:45px;">Menu</h3>
 
-        <div style="margin-top:15px;">
-            <a href="/today"><i class="fa-solid fa-calendar-day"></i> Today </a>
-        </div>
+    <div id="sidebar">
 
-        <div style="margin-top:20px;">
-            <a href="/tasks"><i class="fa-solid fa-list"></i> All Tasks</a>
-        </div>
+        <div class="sidebar-label">Menu</div>
 
-        <div style="margin-top:15px;">
-            <a href="/priorities"><i class="fa-solid fa-filter"></i> Filter by priority</a>
-        </div>
+        <a href="/today">
+            <i class="fa-solid fa-calendar-day"></i>
+            Today
+        </a>
 
-        <div style="margin-top:15px;">
-            <a href="/categories"><i class="fa-solid fa-layer-group"></i> Categories</a>
-        </div>
+        <a href="/tasks">
+            <i class="fa-solid fa-list"></i>
+            All Tasks
+        </a>
 
-        <div style="margin-top:15px;">
-            <a href="/upcoming"><i class="fa-solid fa-calendar"></i> Upcoming</a>
-        </div>
+        <a href="/upcoming">
+            <i class="fa-solid fa-calendar"></i>
+            Upcoming
+        </a>
 
-        <div style="margin-top:15px;">
-            <a href="/notes"><i class="fa-solid fa-sticky-note"></i> Notes</a>
-        </div>
+        <div class="sidebar-label">Organize</div>
 
-        <div style="margin-top:15px;">
-            <a href="/shopping"><i class="fa-solid fa-cart-shopping"></i> Shopping</a>
-        </div>
+        <a href="/categories">
+            <i class="fa-solid fa-layer-group"></i>
+            Categories
+        </a>
+
+        <a href="/priorities">
+            <i class="fa-solid fa-filter"></i>
+            Priorities
+        </a>
+
+        <a href="/notes">
+            <i class="fa-solid fa-note-sticky"></i>
+            Notes
+        </a>
+
+        <a href="/shopping">
+            <i class="fa-solid fa-cart-shopping"></i>
+            Shopping
+        </a>
+
     </div>
 
-    <!-- OVERLAY -->
-    <div id="overlay" onclick="toggleSidebar()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.2); z-index:1500;"></div>
-
     <!-- CONTENT -->
-    <div style="flex:1; padding:30px; width:100%; padding-left:70px; box-sizing:border-box;">
+
+    <div class="page-content">
 
         <div class="container">
 
-            <h1 style="font-size:36px; text-align:center; margin-bottom:30px;">Priority</h1>
+            <h1>Priorities</h1>
 
             <a th:href="@{/tasks/priority/{p}(p='P1')}" class="priority-btn p1">
-                <i class="fa-solid fa-flag" style="color:red;"></i> Priority 1
+                <i class="fa-solid fa-flag" style="color:#ef4444;"></i>
+                Priority 1
             </a>
 
             <a th:href="@{/tasks/priority/{p}(p='P2')}" class="priority-btn p2">
-                <i class="fa-solid fa-flag" style="color:#ff8800;"></i> Priority 2
+                <i class="fa-solid fa-flag" style="color:#f97316;"></i>
+                Priority 2
             </a>
 
             <a th:href="@{/tasks/priority/{p}(p='P3')}" class="priority-btn p3">
-                <i class="fa-solid fa-flag" style="color:#f4f128;"></i> Priority 3
+                <i class="fa-solid fa-flag" style="color:#eab308;"></i>
+                Priority 3
             </a>
 
             <a th:href="@{/tasks/priority/{p}(p='P4')}" class="priority-btn p4">
-                <i class="fa-solid fa-flag" style="color:gray;"></i> Priority 4
+                <i class="fa-solid fa-flag" style="color:#6b7280;"></i>
+                Priority 4
             </a>
 
         </div>
@@ -152,20 +292,23 @@
     </div>
 
 </div>
-
 <script>
-    function toggleSidebar() {
-        var sidebar = document.getElementById("sidebar");
-        var overlay = document.getElementById("overlay");
+    document.addEventListener("click", function (e) {
 
-        if (sidebar.style.transform === "translateX(0%)") {
-            sidebar.style.transform = "translateX(-100%)";
-            overlay.style.display = "none";
-        } else {
-            sidebar.style.transform = "translateX(0%)";
-            overlay.style.display = "block";
+        const sidebar = document.getElementById("sidebar");
+        const menuBtn = document.querySelector(".menu-global");
+
+        const clickedInsideSidebar = sidebar.contains(e.target);
+        const clickedMenuBtn = menuBtn.contains(e.target);
+
+        if (
+            document.body.classList.contains("sidebar-open") &&
+            !clickedInsideSidebar &&
+            !clickedMenuBtn
+        ) {
+            document.body.classList.remove("sidebar-open");
         }
-    }
+    });
 </script>
 
 </body>
