@@ -6,38 +6,154 @@
     <title>Categories</title>
 
     <style>
+        :root {
+            --primary-50: #e4ecf6;
+            --primary-500: #2563eb;
+            --primary-700: #003e8f;
+            --primary-900: #001229;
+            --bg: #f5f8ff;
+            --surface: #ffffff;
+            --border: rgba(12, 108, 233, 0.16);
+            --text: #08213f;
+            --shadow-card: 0 8px 22px rgba(12, 108, 233, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            background: white;
+            background: var(--bg);
+            color: var(--text);
             margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .menu-global {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 46px;
+            height: 46px;
+            font-size: 20px;
+            background: #ffffff;
+            color: #2563eb;
+            border: 1px solid #dbeafe;
+            cursor: pointer;
+            z-index: 2000;
+            padding: 0;
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+        }
+
+        .menu-global:hover {
+            background: var(--primary-50);
+            transform: translateY(-1px);
+        }
+
+        #sidebar {
+            width: 200px;
+            min-height: 100vh;
+            padding: 90px 16px 20px;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translateX(-200px);
+            transition: transform 0.28s ease;
+            z-index: 1200;
+            background: #cbe2ff;
+            border-right: 1px solid rgba(0,0,0,0.05);
+        }
+
+        body.sidebar-open #sidebar {
+            transform: translateX(0);
+        }
+
+        .sidebar-label {
+            margin: 20px 10px 10px;
+            color: #475569;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #1e293b;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 10px 12px;
+            border-radius: 14px;
+            margin-bottom: 6px;
+            transition: 0.2s ease;
+        }
+
+        #sidebar a i {
+            width: 20px;
+            text-align: center;
+            color: #2563eb;
+        }
+
+        #sidebar a:hover {
+            background: rgba(255,255,255,0.7);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+            color: #2563eb;
+        }
+
+        .page-content {
+            flex: 1;
+            width: 100%;
+            min-height: 100vh;
+            padding: 34px 34px 34px 78px;
+            display: flex;
+            justify-content: center;
+            transition: 0.3s ease;
+        }
+
+        body.sidebar-open .page-content {
+            padding-left: 260px;
         }
 
         .container {
-            width: 550px;
-            margin: 70px auto;
+            width: 100%;
+            max-width: 620px;
+            margin-top: 35px;
         }
 
         h1 {
-            margin-bottom: 30px;
+            margin-bottom: 28px;
             text-align: center;
+            font-size: 32px;
+            color: var(--primary-900);
+            letter-spacing: -0.5px;
         }
 
         .category-card {
             display: flex;
             align-items: center;
             text-decoration: none;
-            color: black;
-            border: 1px solid #ddd;
-            border-radius: 14px;
-            margin-bottom: 20px;
+            color: #0f172a;
+            border: 1px solid #dbeafe;
+            border-radius: 18px;
+            margin-bottom: 18px;
             overflow: hidden;
-            height: 72px;
-            background: white;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            height: 76px;
+            background: var(--surface);
+            box-shadow: var(--shadow-card);
+            transition: 0.2s ease;
         }
 
         .category-card:hover {
-            box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(12, 108, 233, 0.14);
+            border-color: rgba(37, 99, 235, 0.25);
         }
 
         .color-bar {
@@ -49,97 +165,86 @@
             flex: 1;
             text-align: center;
             font-size: 20px;
+            font-weight: 700;
         }
 
-        .menu-global {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            font-size: 22px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            z-index: 1100;
-            padding: 8px 10px;
-            border-radius: 8px;
-        }
+        .work { background: #4a90e2; }
+        .study { background: #7c3aed; }
+        .personal { background: #ec4899; }
+        .daily { background: #22c55e; }
 
-        .menu-global:hover {
-            background: #f5f5f5;
-        }
+        @media (max-width: 1000px) {
+            .page-content {
+                padding: 80px 16px 24px !important;
+            }
 
-        /* COLORS */
-        .work { background-color: #4a90e2; }
-        .study { background-color: #9b59b6; }
-        .personal { background-color: #ff6fa5; }
-        .shopping { background-color: #2ecc71; }
+            body.sidebar-open .page-content {
+                padding-left: 16px !important;
+            }
 
-        a { color: black; }
-
-        #sidebar a {
-            text-decoration: none;
-            color: black;
-        }
-
-        #sidebar a:hover {
-            text-decoration: underline;
+            .container {
+                margin-top: 10px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<!-- MENU BUTTON IN FAR LEFT -->
-<button class="menu-global" onclick="toggleSidebar()">
+<button type="button" class="menu-global" onclick="document.body.classList.toggle('sidebar-open')">
     <i class="fa-solid fa-bars"></i>
 </button>
 
 <div style="display:flex; min-height:100vh; position:relative;">
 
-    <!-- SIDEBAR -->
-    <div id="sidebar"
-         style="width:220px; background:#f5f5f5; min-height:100vh; padding:20px; box-sizing:border-box; position:fixed; top:0; left:0; transform:translateX(-100%); transition:transform 0.3s ease; z-index:3000;">
-        <h3 style="margin-top:45px;">Menu</h3>
+    <div id="sidebar">
 
-        <div style="margin-top:15px;">
-            <a href="/today"><i class="fa-solid fa-calendar-day"></i> Today </a>
-        </div>
-        <div style="margin-top:20px;">
-            <a href="/tasks"><i class="fa-solid fa-list"></i> All Tasks</a>
-        </div>
+        <div class="sidebar-label">Menu</div>
 
-        <div style="margin-top:15px;">
-            <a href="/priorities"><i class="fa-solid fa-filter"></i> Filter by priority</a>
-        </div>
+        <a href="/today">
+            <i class="fa-solid fa-calendar-day"></i>
+            Today
+        </a>
 
-        <div style="margin-top:15px;">
-            <a href="/categories"><i class="fa-solid fa-layer-group"></i> Categories</a>
-        </div>
+        <a href="/tasks">
+            <i class="fa-solid fa-list"></i>
+            All Tasks
+        </a>
 
-        <div style="margin-top:15px;">
-            <a href="/upcoming"><i class="fa-solid fa-calendar"></i> Upcoming</a>
-        </div>
+        <a href="/upcoming">
+            <i class="fa-solid fa-calendar"></i>
+            Upcoming
+        </a>
 
-        <div style="margin-top:15px;">
-            <a href="/notes"><i class="fa-solid fa-sticky-note"></i> Notes</a>
-        </div>
+        <div class="sidebar-label">Organize</div>
 
-        <div style="margin-top:15px;">
-            <a href="/shopping"><i class="fa-solid fa-cart-shopping"></i> Shopping</a>
-        </div>
+        <a href="/categories">
+            <i class="fa-solid fa-layer-group"></i>
+            Categories
+        </a>
+
+        <a href="/priorities">
+            <i class="fa-solid fa-filter"></i>
+            Priorities
+        </a>
+
+        <a href="/notes">
+            <i class="fa-solid fa-note-sticky"></i>
+            Notes
+        </a>
+
+        <a href="/shopping">
+            <i class="fa-solid fa-cart-shopping"></i>
+            Shopping
+        </a>
+
     </div>
 
-    <!-- OVERLAY -->
-    <div id="overlay" onclick="toggleSidebar()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.2); z-index:1500;"></div>
-
-    <!-- CONTENT -->
-    <div style="flex:1; padding:30px; width:100%; padding-left:70px; box-sizing:border-box;">
-
+    <div class="page-content">
         <div class="container">
 
             <h1>Categories</h1>
 
-            <!-- Categories -->
             <a href="/tasks/category/Work" class="category-card">
                 <div class="color-bar work"></div>
                 <div class="category-title">Work</div>
@@ -155,6 +260,10 @@
                 <div class="category-title">Personal</div>
             </a>
 
+            <a href="/tasks/category/Daily" class="category-card">
+                <div class="color-bar daily"></div>
+                <div class="category-title">Daily</div>
+            </a>
 
         </div>
     </div>
@@ -162,18 +271,22 @@
 </div>
 
 <script>
-    function toggleSidebar() {
-        var sidebar = document.getElementById("sidebar");
-        var overlay = document.getElementById("overlay");
+    document.addEventListener("click", function (e) {
 
-        if (sidebar.style.transform === "translateX(0%)") {
-            sidebar.style.transform = "translateX(-100%)";
-            overlay.style.display = "none";
-        } else {
-            sidebar.style.transform = "translateX(0%)";
-            overlay.style.display = "block";
+        const sidebar = document.getElementById("sidebar");
+        const menuBtn = document.querySelector(".menu-global");
+
+        const clickedInsideSidebar = sidebar.contains(e.target);
+        const clickedMenuBtn = menuBtn.contains(e.target);
+
+        if (
+            document.body.classList.contains("sidebar-open") &&
+            !clickedInsideSidebar &&
+            !clickedMenuBtn
+        ) {
+            document.body.classList.remove("sidebar-open");
         }
-    }
+    });
 </script>
 
 </body>
